@@ -13,18 +13,15 @@
 
 /// <reference path="typings/tsd.d.ts" />
 import express = require('express');
+import config = require('./config');
 
-// Configuration Constants
-var FF_DEFAULT_PORT = 8080;
-
-// Initialize Express
+// Initialize Express and set our routes
 var app = express();
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+import indexController = require('./controllers/index');
+app.get('/', indexController);
 
 // Run it!
-var server = app.listen(process.env.PORT || FF_DEFAULT_PORT, () => {
-	console.log('Firefly - Running on port %s', server.address().port);
+var server = app.listen(process.env.PORT || config.DEFAULT_PORT, () => {
+	console.log('%s - Running on port %s', config.DISPLAY_NAME, server.address().port);
 });
