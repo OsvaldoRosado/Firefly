@@ -1,0 +1,26 @@
+{
+  "name": "firefly",
+  "version": "0.0.1",
+  "description": "Firefly - A new way to lecture",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.13.3",
+    "typescript": "^1.6.2",
+    "typescript-require": "^0.2.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://OsvaldoRosado@github.com/OsvaldoRosado/Firefly.git"
+  },
+  "author": "Firefly Authors",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OsvaldoRosado/Firefly/issues"
+  },
+  "homepage": "https://github.com/OsvaldoRosado/Firefly#readme"
+}
