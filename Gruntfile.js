@@ -2,12 +2,12 @@ module.exports = function(grunt) {
   grunt.initConfig({
     ts: {
       default : {
-        src: ["public/*.ts"]
+        src: ["public/**/*.ts"]
       }
     },
     watch: {
         ts: {
-            files: ["public/*.ts"],
+            files: ["public/**/*.ts"],
             tasks: ["ts"]
         }
     }
