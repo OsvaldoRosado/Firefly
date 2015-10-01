@@ -1,6 +1,6 @@
-// Firefly Index Controller
-import {RequestHandler} from 'express';
-import processing = require('../processing');
+// Sample Controller
+import {RequestHandler} from "express";
+import processing = require("../processing");
 
 var controller:RequestHandler = function (req, res) {
 	var body = "<h1>Firefly!</h1>";
