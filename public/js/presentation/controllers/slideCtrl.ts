@@ -5,7 +5,7 @@ module PresentationApp.Controllers{
 		slideId: string;
 
 		constructor(){
-            this.slideId = Utils.getUrlHashParam("id");
+			this.slideId = Utils.getUrlHashParam("id");
 			this.slideUrl = Utils.processingServerImg(this.slideId);
 		}
 	}
