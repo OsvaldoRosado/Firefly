@@ -1,10 +1,13 @@
 <!doctype html>
 <html>
-    <head>
-        <title>Presentation</title>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
-    </head>
-    <body>
-        This is a presentation.
-    </body>
+	<head>
+		<title>Presentation</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
+		<script src="js/master.js"></script>
+	</head>
+	<body ng-app="presentation">
+		<div ng-controller="SlideCtrl as sc">
+			<img src="{{ sc.slideUrl }}"/>
+		</div>
+	</body>
 </html>
