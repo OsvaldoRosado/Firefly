@@ -124,6 +124,9 @@ hr {
 	padding: 0.75em 0;
 	text-decoration: none;
 }
+.mainContent div.getStarted a:hover h3 {
+	color: $primary-yellow-light;
+}
 .mainContent div.getStarted span {
 	float: left;
 	color: $secondary-green;
@@ -172,3 +175,82 @@ footer ul li:last-child {
 footer ul li:last-child:after {
 	content: none;
 }
+
+// Class Listings
+.classList ul li {
+	margin-bottom: 0.5em;
+}
+.classList ul li a {
+	display: block;
+	text-decoration: none;
+}
+.classList ul li a:hover h2, .classList ul li a:hover h3 {
+	color: $primary-yellow-light;
+}
+.classListItem {
+	display: table;	
+}	
+.classListItemDot {
+	display: table-cell;
+	vertical-align: middle;
+}	
+.classListItemText {
+	display: table-cell;
+	vertical-align: middle;
+	padding-left: 2em;
+}
+.classListItemLecture {
+	padding: 1em 0;
+}
+.classListItemLecture h3 {
+	font-weight: normal;
+	font-size: 12px;
+	margin: 0.5em 0 0;
+}
+
+// Pulsing Live Dot
+// http://jsfiddle.net/24GXr/
+
+.no-pulse {
+	display: block;
+	margin: 0 auto;
+	width: 10px;
+	height: 10px;
+	background-color: $secondary-green;
+	border-radius: 5px;
+}
+
+.pulse {
+	display: block;
+	margin: 0 auto;
+	width: 10px;
+	height: 10px;
+	background-color: $primary-yellow-light;
+	border-radius: 5px;
+	-webkit-animation-name: Pulse;
+	-webkit-animation-duration: 2s;
+	-webkit-animation-iteration-count: infinite;
+	transition-timing-function: ease-in-out;
+}
+
+@-webkit-keyframes Pulse {
+    from {
+        background-color: $primary-yellow-light;
+        -webkit-box-shadow: 0 0 9px $primary-yellow-dark;
+    }
+    50% {
+        background-color: $primary-yellow-light;
+        -webkit-box-shadow: 0 0 18px $primary-yellow-light;
+    }
+    to {
+        background-color: $primary-yellow-light;
+        -webkit-box-shadow: 0 0 9px $primary-yellow-dark;
+    }
+}
+
+
+
+
+
+
+
