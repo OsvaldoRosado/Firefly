@@ -44,8 +44,10 @@ html {
 
 body {
 	font-family: $content-font-stack;
-	background-color: $primary-brand;
 	margin: 0 0 50px;
+}
+body.splash {
+	background-color: $primary-brand;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -96,23 +98,23 @@ hr {
 	font-size: 115%;
 }
 
-.mainContent div.splash h2 {
+.mainContent div.splashOverview h2 {
 	text-align: center;
 	margin: 1.75em 0;
 	color: $content-text-light;
 }
-.mainContent div.splash div.splash-content {
+.mainContent div.splashOverview div.splashContent {
 	margin-bottom: 35px;
 }
-.mainContent div.splash div.intro-left {
+.mainContent div.splashOverview div.intro-left {
 	width: 25%;
 	float: left;
 }
-.mainContent div.splash div.intro-right {
+.mainContent div.splashOverview div.intro-right {
 	width: 75%;
 	float: right;
 }
-.mainContent div.splash div.intro-text {
+.mainContent div.splashOverview div.intro-text {
 	padding: 0 0 0 1.5em;
 }
 
@@ -143,6 +145,7 @@ hr {
 }
 
 footer {
+	background: $primary-brand;
 	text-align: center;
 	color: $content-text-light;
 	font-size: 12px;
@@ -248,7 +251,42 @@ footer ul li:last-child:after {
     }
 }
 
-
+// Viewer Lower Nav Bar
+nav.viewer {
+	background: $primary-brand;
+	width: 100%;
+	position: fixed;
+	bottom: 0;
+}
+nav.viewer ul {
+	display: flex;
+	flex-direction: row;
+}
+nav.viewer ul li {
+	list-style: none;
+	flex-grow: 1;
+	text-align: center;
+}
+nav.viewer ul li a {
+	display: block;
+	text-decoration: none;
+	padding: 5px 0;
+}
+nav.viewer ul li a.active h1, nav.viewer ul li a.active span {
+	color: $primary-yellow-light;
+}
+nav.viewer ul li a:hover h1, nav.viewer ul li a:hover span {
+	color: $primary-yellow-light;
+}
+nav.viewer ul li a span {
+	color: $content-text-light;
+	font-size: 12px;
+}
+nav.viewer ul li a h1 {
+	font-family: $title-font-stack;
+	font-size: 10px;
+	text-transform: uppercase;
+}
 
 
 
