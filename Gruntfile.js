@@ -1,14 +1,14 @@
+var shared = ["public/js/typings/**/*.ts", "public/js/shared/*.ts"];
+
 module.exports = function(grunt) {
 	grunt.initConfig({
 		ts: {
-			default : {
-				src: [
-					"public/js/typings/**/*.ts",
-					"public/js/shared/*.ts",
+			presentation: {
+				src: shared.concat([
 					"public/js/presentation/controllers/*.ts",
 					"public/js/presentation/app.ts"
-				],
-				dest: "public/js/master.js",
+				]),
+				dest: "public/js/presentation/master.js",
 				options: {
 					sourceMap: false
 				}
