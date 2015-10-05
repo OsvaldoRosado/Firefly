@@ -1,0 +1,174 @@
+// Import main Google Fonts Montserrat and Roboto
+@import url(https://fonts.googleapis.com/css?family=Montserrat:400);
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,500,700);
+
+// Import reset
+@import url('reset.css');
+@import url('skeleton.css');
+
+// Define typography
+$title-font-stack: 'Montserrat', sans-serif;
+$content-font-stack: 'Roboto', sans-serif;
+
+// Define colors
+$primary-brand: #2A8E6A;
+$primary-yellow-dark: #FFF680;
+$primary-yellow-light: #F5FFA9;
+
+$background-light: #FAFAF5;
+$background-dark: #263C34;
+
+$secondary-red: #FF6B60;
+$secondary-yellow: #FFF680;
+$secondary-green: #6CD3AE;
+
+$callout-light: #F2F2EB;
+$callout-lighter: #FCFCFA;
+$callout-lightest: #FFFFFF;
+
+$content-border: #C7C7C7;
+$content-text-light: #FFFFFF;
+$content-text-dark: #7C7C79;
+$content-text-darker: #646462;
+$content-text-darkest: #000000;
+
+$dark-layers-light: #FCFCFA;
+$dark-layers-medium: #B5BCB9;
+$dark-layers-dark: #6E7C76;
+
+// ************************* //
+html {
+	position: relative;
+	min-height: 100%;
+}
+
+body {
+	font-family: $content-font-stack;
+	background-color: $primary-brand;
+	margin: 0 0 50px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: $content-text-light;
+	font-family: $title-font-stack;
+	font-weight: bold;
+	letter-spacing: 1px;
+}
+
+h1 {
+	font-size: 24px;
+	line-height: 1.25;
+}
+h2 {
+	font-size: 16px;
+	line-height: 1.3;
+}
+h3 {
+	font-size: 14px;
+	margin-bottom: 0.5em;
+}
+
+p {
+	font-size: 14px;
+	line-height: 1.25;
+	color: $content-text-light;
+}
+
+hr {
+	opacity: 0.7;
+	border: 0;
+	height: 1px;
+	background-image: linear-gradient(to right, rgba(255, 255, 255, 0), $primary-yellow-light 50%, rgba(255, 255, 255, 0));
+}
+
+// Audience Main Page
+.mainContent {
+	max-width: 380px;
+	padding: 30px 0;
+}
+
+.mainContent h1.mainTitle {
+	color: $primary-yellow-light;
+	text-align: center;
+	text-transform: uppercase;
+}
+.mainContent h1.mainTitle:first-letter {
+	font-size: 115%;
+}
+
+.mainContent div.splash h2 {
+	text-align: center;
+	margin: 1.75em 0;
+	color: $content-text-light;
+}
+.mainContent div.splash div.splash-content {
+	margin-bottom: 35px;
+}
+.mainContent div.splash div.intro-left {
+	width: 25%;
+	float: left;
+}
+.mainContent div.splash div.intro-right {
+	width: 75%;
+	float: right;
+}
+.mainContent div.splash div.intro-text {
+	padding: 0 0 0 1.5em;
+}
+
+.mainContent div.getStarted {
+	text-align: center;
+}
+.mainContent div.getStarted a {
+	display: block;
+	padding: 0.75em 0;
+	text-decoration: none;
+}
+.mainContent div.getStarted span {
+	float: left;
+	color: $secondary-green;
+}
+.mainContent div.getStarted h3 {
+	margin: 0;
+	font-style: italic;
+}
+.mainContent div.getStarted h3:before {
+	content: '+';
+	margin-right: 15px;
+	font-style: normal;
+	color: $secondary-green;
+}
+
+footer {
+	text-align: center;
+	color: $content-text-light;
+	font-size: 12px;
+	position: absolute;
+	bottom: 0;
+	height: 50px;
+	width: 100%;
+}
+footer a {
+	color: $content-text-light;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+footer ul, footer ul li {
+	display: inline-block;
+	vertical-align: top;
+}
+footer ul li a {
+	padding: 0.5em 1em;
+}
+footer ul li a:hover {
+	color: $primary-yellow-light;
+}
+footer ul li:after {
+	content: '\2022';
+}
+footer ul li:last-child {
+	font-weight: bold;
+}
+footer ul li:last-child:after {
+	content: none;
+}

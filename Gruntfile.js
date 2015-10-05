@@ -15,13 +15,37 @@ module.exports = function(grunt) {
 			}
 		},
 		watch: {
+			options: {
+				livereload: true,
+			},
 			ts: {
 				files: ["public/**/*.ts"],
 				tasks: ["ts"]
+			},
+			css: {
+				files: "public/**/*.scss",
+				tasks: ["sass"]
+			},
+			html: {
+				files: ['public/index.html'],
+				options: {
+					livereload: true
+				}
+			}
+		},
+		sass: {
+			dist: {
+				options: {
+					style: "compressed"
+				},
+				files: {
+					"public/css/style.css" : "public/sass/style.scss"
+				}
 			}
 		}
 	});
 	grunt.loadNpmTasks("grunt-ts");
+	grunt.loadNpmTasks("grunt-contrib-sass");
 	grunt.loadNpmTasks("grunt-contrib-watch");
-	grunt.registerTask("default", ["ts", "watch"]);
+	grunt.registerTask("default", ["ts", "sass", "watch"]);
 };
