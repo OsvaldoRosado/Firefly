@@ -1,0 +1,294 @@
+// Import main Google Fonts Montserrat and Roboto
+@import url(https://fonts.googleapis.com/css?family=Montserrat:400);
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,500,700);
+
+// Import reset
+@import url('reset.css');
+@import url('skeleton.css');
+
+// Define typography
+$title-font-stack: 'Montserrat', sans-serif;
+$content-font-stack: 'Roboto', sans-serif;
+
+// Define colors
+$primary-brand: #2A8E6A;
+$primary-yellow-dark: #FFF680;
+$primary-yellow-light: #F5FFA9;
+
+$background-light: #FAFAF5;
+$background-dark: #263C34;
+
+$secondary-red: #FF6B60;
+$secondary-yellow: #FFF680;
+$secondary-green: #6CD3AE;
+
+$callout-light: #F2F2EB;
+$callout-lighter: #FCFCFA;
+$callout-lightest: #FFFFFF;
+
+$content-border: #C7C7C7;
+$content-text-light: #FFFFFF;
+$content-text-dark: #7C7C79;
+$content-text-darker: #646462;
+$content-text-darkest: #000000;
+
+$dark-layers-light: #FCFCFA;
+$dark-layers-medium: #B5BCB9;
+$dark-layers-dark: #6E7C76;
+
+// ************************* //
+html {
+	position: relative;
+	min-height: 100%;
+}
+
+body {
+	font-family: $content-font-stack;
+	margin: 0 0 50px;
+}
+body.splash {
+	background-color: $primary-brand;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: $content-text-light;
+	font-family: $title-font-stack;
+	font-weight: bold;
+	letter-spacing: 1px;
+}
+
+h1 {
+	font-size: 24px;
+	line-height: 1.25;
+}
+h2 {
+	font-size: 16px;
+	line-height: 1.3;
+}
+h3 {
+	font-size: 14px;
+	margin-bottom: 0.5em;
+}
+
+p {
+	font-size: 14px;
+	line-height: 1.25;
+	color: $content-text-light;
+}
+
+hr {
+	opacity: 0.7;
+	border: 0;
+	height: 1px;
+	background-image: linear-gradient(to right, rgba(255, 255, 255, 0), $primary-yellow-light 50%, rgba(255, 255, 255, 0));
+}
+
+// Audience Main Page
+.mainContent {
+	max-width: 380px;
+	padding: 30px 0;
+}
+
+.mainContent h1.mainTitle {
+	color: $primary-yellow-light;
+	text-align: center;
+	text-transform: uppercase;
+}
+.mainContent h1.mainTitle:first-letter {
+	font-size: 115%;
+}
+
+.mainContent div.splashOverview h2 {
+	text-align: center;
+	margin: 1.75em 0;
+	color: $content-text-light;
+}
+.mainContent div.splashOverview div.splashContent {
+	margin-bottom: 35px;
+}
+.mainContent div.splashOverview div.intro-left {
+	width: 25%;
+	float: left;
+}
+.mainContent div.splashOverview div.intro-right {
+	width: 75%;
+	float: right;
+}
+.mainContent div.splashOverview div.intro-text {
+	padding: 0 0 0 1.5em;
+}
+
+.mainContent div.getStarted {
+	text-align: center;
+}
+.mainContent div.getStarted a {
+	display: block;
+	padding: 0.75em 0;
+	text-decoration: none;
+}
+.mainContent div.getStarted a:hover h3 {
+	color: $primary-yellow-light;
+}
+.mainContent div.getStarted span {
+	float: left;
+	color: $secondary-green;
+}
+.mainContent div.getStarted h3 {
+	margin: 0;
+	font-style: italic;
+}
+.mainContent div.getStarted h3:before {
+	content: '+';
+	margin-right: 15px;
+	font-style: normal;
+	color: $secondary-green;
+}
+
+footer {
+	background: $primary-brand;
+	text-align: center;
+	color: $content-text-light;
+	font-size: 12px;
+	position: absolute;
+	bottom: 0;
+	height: 50px;
+	width: 100%;
+}
+footer a {
+	color: $content-text-light;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+footer ul, footer ul li {
+	display: inline-block;
+	vertical-align: top;
+}
+footer ul li a {
+	padding: 0.5em 1em;
+}
+footer ul li a:hover {
+	color: $primary-yellow-light;
+}
+footer ul li:after {
+	content: '\2022';
+}
+footer ul li:last-child {
+	font-weight: bold;
+}
+footer ul li:last-child:after {
+	content: none;
+}
+
+// Class Listings
+.classList ul li {
+	margin-bottom: 0.5em;
+}
+.classList ul li a {
+	display: block;
+	text-decoration: none;
+}
+.classList ul li a:hover h2, .classList ul li a:hover h3 {
+	color: $primary-yellow-light;
+}
+.classListItem {
+	display: table;	
+}	
+.classListItemDot {
+	display: table-cell;
+	vertical-align: middle;
+}	
+.classListItemText {
+	display: table-cell;
+	vertical-align: middle;
+	padding-left: 2em;
+}
+.classListItemLecture {
+	padding: 1em 0;
+}
+.classListItemLecture h3 {
+	font-weight: normal;
+	font-size: 12px;
+	margin: 0.5em 0 0;
+}
+
+// Pulsing Live Dot
+// http://jsfiddle.net/24GXr/
+
+.no-pulse {
+	display: block;
+	margin: 0 auto;
+	width: 10px;
+	height: 10px;
+	background-color: $secondary-green;
+	border-radius: 5px;
+}
+
+.pulse {
+	display: block;
+	margin: 0 auto;
+	width: 10px;
+	height: 10px;
+	background-color: $primary-yellow-light;
+	border-radius: 5px;
+	-webkit-animation-name: Pulse;
+	-webkit-animation-duration: 2s;
+	-webkit-animation-iteration-count: infinite;
+	transition-timing-function: ease-in-out;
+}
+
+@-webkit-keyframes Pulse {
+    from {
+        background-color: $primary-yellow-light;
+        -webkit-box-shadow: 0 0 9px $primary-yellow-dark;
+    }
+    50% {
+        background-color: $primary-yellow-light;
+        -webkit-box-shadow: 0 0 18px $primary-yellow-light;
+    }
+    to {
+        background-color: $primary-yellow-light;
+        -webkit-box-shadow: 0 0 9px $primary-yellow-dark;
+    }
+}
+
+// Viewer Lower Nav Bar
+nav.viewer {
+	background: $primary-brand;
+	width: 100%;
+	position: fixed;
+	bottom: 0;
+}
+nav.viewer ul {
+	display: flex;
+	flex-direction: row;
+}
+nav.viewer ul li {
+	list-style: none;
+	flex-grow: 1;
+	text-align: center;
+}
+nav.viewer ul li a {
+	display: block;
+	text-decoration: none;
+	padding: 5px 0;
+}
+nav.viewer ul li a.active h1, nav.viewer ul li a.active span {
+	color: $primary-yellow-light;
+}
+nav.viewer ul li a:hover h1, nav.viewer ul li a:hover span {
+	color: $primary-yellow-light;
+}
+nav.viewer ul li a span {
+	color: $content-text-light;
+	font-size: 12px;
+}
+nav.viewer ul li a h1 {
+	font-family: $title-font-stack;
+	font-size: 10px;
+	text-transform: uppercase;
+}
+
+
+
+
+
