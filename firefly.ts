@@ -19,8 +19,8 @@ import config = require("./config");
 // Initialize Express and set our routes
 var app = express();
 
-//import indexController = require('./controllers/index');
-//app.get('/', indexController);
+import GetPresentationFromID = require('./controllers/GetPresentationFromID');
+app.get('/getPresentationFromID/:id', (req,res)=>new GetPresentationFromID().do(req,res));
 
 // If no matches, use the static files directory
 // We do a special rewrite for .html
