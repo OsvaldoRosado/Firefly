@@ -6,8 +6,8 @@
 		<script src="js/presentation/master.js"></script>
 	</head>
 	<body ng-app="presentation">
-		<div ng-controller="SlideCtrl as sc">
-			<img src="{{ sc.slideUrl }}"/>
+		<div ng-controller="ViewableCtrl as vc">
+			<img ng-src="{{ vc.slideUrl }}"/>
 		</div>
 	</body>
 </html>

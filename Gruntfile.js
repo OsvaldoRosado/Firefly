@@ -12,6 +12,16 @@ module.exports = function(grunt) {
 				options: {
 					sourceMap: false
 				}
+			},
+			presenter: {
+				src: shared.concat([
+					"public/js/presenter/controllers/*.ts",
+					"public/js/presenter/app.ts"
+				]),
+				dest: "public/js/presenter/master.js",
+				options: {
+					sourceMap: false
+				}
 			}
 		},
 		watch: {
