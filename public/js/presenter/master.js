@@ -10,10 +10,8 @@ var PresenterApp;
     (function (Controllers) {
         var SlideCtrl = (function () {
             function SlideCtrl($http) {
-                var _this = this;
                 this.http = $http;
                 this.presRunning = false;
-                window.addEventListener("message", function () { return _this.updateSlide(); });
             }
             SlideCtrl.prototype.presCommand = function (action, data) {
                 this.presWindow.postMessage(JSON.stringify({
@@ -38,7 +36,7 @@ var PresenterApp;
                     _this.slideUrls = result.data.slides;
                     _this.presRunning = true;
                     _this.presWindow = window.open("presentation.html", _this.presName, "width=800,height=600");
-                    _this.updateSlide();
+                    setTimeout(function () { return _this.updateSlide(); }, 1000);
                 }, function () { return _this.error = "Your presentation was not found!"; });
             };
             SlideCtrl.prototype.prevSlide = function () {

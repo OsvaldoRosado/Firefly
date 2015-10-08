@@ -14,8 +14,6 @@ module PresentationApp.Controllers{
 				}
 				$scope.$apply();
 			});
-
-			window.parent.postMessage("ready", Config.HOST);
 		}
 	}
 }

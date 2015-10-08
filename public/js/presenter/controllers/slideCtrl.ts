@@ -18,9 +18,6 @@ module PresenterApp.Controllers{
 		constructor($http: ng.IHttpService){
 			this.http = $http;
 			this.presRunning = false;
-
-			//TODO: Make this actually work.
-			window.addEventListener("message", () => this.updateSlide());
 		}
 
 		presCommand(action: string, data: string){
@@ -51,7 +48,7 @@ module PresenterApp.Controllers{
 						"presentation.html", this.presName, "width=800,height=600"
 					);
 
-					this.updateSlide();
+					setTimeout(() => this.updateSlide(), 1000);
 				}, () => this.error = "Your presentation was not found!");
 		}
 

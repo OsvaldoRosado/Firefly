@@ -22,7 +22,6 @@ var PresentationApp;
                     }
                     $scope.$apply();
                 });
-                window.parent.postMessage("ready", Config.HOST);
             }
             return ViewableCtrl;
         })();
