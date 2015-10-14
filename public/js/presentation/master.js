@@ -19,6 +19,15 @@ var PresentationApp;
                     switch (order.action) {
                         case "changeSlide":
                             _this.slideUrl = order.data;
+                            break;
+                        case "showOverlay":
+                            _this.overlayUrl = order.data;
+                            _this.overlayActive = true;
+                            break;
+                        case "hideOverlay":
+                            _this.overlayUrl = null;
+                            _this.overlayActive = false;
+                            break;
                     }
                     $scope.$apply();
                 });

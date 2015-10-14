@@ -9,14 +9,13 @@ var PresenterApp;
     var Controllers;
     (function (Controllers) {
         var SlideCtrl = (function () {
-            function SlideCtrl($http) {
+            function SlideCtrl($scope, $http) {
+                this.scope = $scope;
                 this.http = $http;
                 this.presRunning = false;
             }
             SlideCtrl.prototype.presCommand = function (action, data) {
-                this.presWindow.postMessage(JSON.stringify({
-                    action: action, data: data
-                }), Config.HOST);
+                this.presWindow.postMessage(angular.toJson({ action: action, data: data }), Config.HOST);
             };
             SlideCtrl.prototype.updateSlide = function () {
                 this.presCommand("changeSlide", this.slideUrls[this.currentSlide]);
@@ -47,7 +46,15 @@ var PresenterApp;
                 this.currentSlide++;
                 this.updateSlide();
             };
-            SlideCtrl.$inject = ["$http"];
+            SlideCtrl.prototype.showOverlay = function () {
+                this.overlayActive = true;
+                this.presCommand("showOverlay", "http://placehold.it/300x300");
+            };
+            SlideCtrl.prototype.hideOverlay = function () {
+                this.overlayActive = false;
+                this.presCommand("hideOverlay", "");
+            };
+            SlideCtrl.$inject = ["$scope", "$http"];
             return SlideCtrl;
         })();
         Controllers.SlideCtrl = SlideCtrl;

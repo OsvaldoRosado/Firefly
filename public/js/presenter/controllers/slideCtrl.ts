@@ -1,6 +1,7 @@
 module PresenterApp.Controllers{
 	export class SlideCtrl{
 
+		scope: ng.IScope;
 		http: ng.IHttpService;
 
 		presRunning: boolean;
@@ -11,19 +12,23 @@ module PresenterApp.Controllers{
 		slideCount: number;
 		slideUrls: string[];
 
+		overlayActive: boolean;
+
 		error: string;
 
-		static $inject = ["$http"];
+		static $inject = ["$scope", "$http"];
 
-		constructor($http: ng.IHttpService){
+		constructor($scope: ng.IScope, $http: ng.IHttpService){
+			this.scope = $scope;
 			this.http = $http;
 			this.presRunning = false;
 		}
 
 		presCommand(action: string, data: string){
-			this.presWindow.postMessage(JSON.stringify({
-				action: action, data: data
-			}), Config.HOST);
+			this.presWindow.postMessage(
+				angular.toJson({action: action,  data: data}),
+				Config.HOST
+			);
 		}
 
 		updateSlide(){
@@ -62,5 +67,15 @@ module PresenterApp.Controllers{
 			this.updateSlide();
 		}
 
+		showOverlay(){
+			this.overlayActive = true;
+			this.presCommand("showOverlay", "http://placehold.it/300x300");
 		}
+
+		hideOverlay(){
+			this.overlayActive = false;
+			this.presCommand("hideOverlay", "");
+		}
+
+	}
 }

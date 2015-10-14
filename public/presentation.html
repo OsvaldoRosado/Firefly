@@ -1,13 +1,19 @@
 <!doctype html>
-<html>
+<html lang="en">
 	<head>
+		<meta charset="utf-8">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Presentation</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
+		<script src="https://raw.githubusercontent.com/kylewelsby/angular-post-message/master/dist/angular-post-message.js"></script>
 		<script src="js/presentation/master.js"></script>
 	</head>
 	<body ng-app="presentation">
 		<div ng-controller="ViewableCtrl as vc">
 			<img ng-src="{{ vc.slideUrl }}"/>
+			<img ng-src="{{ vc.overlayUrl }}" ng-show="vc.overlayActive"/>
 		</div>
 	</body>
 </html>

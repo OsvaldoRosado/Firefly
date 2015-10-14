@@ -1,9 +1,15 @@
 <!doctype html>
-<html>
+<html lang="en">
 	<head>
+		<meta charset="utf-8">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Presentation</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
+		<script src="https://raw.githubusercontent.com/kylewelsby/angular-post-message/master/dist/angular-post-message.js"></script>
 		<script src="js/presenter/master.js"></script>
+		<link rel="stylesheet" href="css/style.css">
 	</head>
 	<body ng-app="presenter">
 		<div ng-controller="SlideCtrl as sc">
@@ -13,6 +19,8 @@
 				<img ng-src="{{ sc.nextSlideId }}">
 				<button ng-show="sc.currentSlide > 0" ng-click="sc.prevSlide()">Previous</button>
 				<button ng-show="sc.currentSlide < sc.slideCount-1" ng-click="sc.nextSlide()">Next</button>
+				<button ng-show="!sc.overlayActive" ng-click="sc.showOverlay()">Show Overlay</button>
+				<button ng-show="sc.overlayActive" ng-click="sc.hideOverlay()">Hide Overlay</button>
 			</div>
 			<div ng-show="sc.error">{{ sc.error }}</div>
 		</div>
