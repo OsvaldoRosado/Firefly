@@ -13,6 +13,9 @@ var PresenterApp;
                 this.scope = $scope;
                 this.http = $http;
                 this.presRunning = false;
+                this.submissions = [
+                    { imgUrl: "http://placehold.it/300x300", caption: "Test caption" }
+                ];
             }
             SlideCtrl.prototype.presCommand = function (action, data) {
                 this.presWindow.postMessage(angular.toJson({ action: action, data: data }), Config.HOST);
@@ -46,13 +49,15 @@ var PresenterApp;
                 this.currentSlide++;
                 this.updateSlide();
             };
-            SlideCtrl.prototype.showOverlay = function () {
-                this.overlayActive = true;
-                this.presCommand("showOverlay", "http://placehold.it/300x300");
-            };
-            SlideCtrl.prototype.hideOverlay = function () {
-                this.overlayActive = false;
-                this.presCommand("hideOverlay", "");
+            SlideCtrl.prototype.showOverlay = function (url) {
+                if (url !== this.currentOverlay) {
+                    this.currentOverlay = url;
+                    this.presCommand("showOverlay", url);
+                }
+                else {
+                    this.currentOverlay = undefined;
+                    this.presCommand("hideOverlay", "");
+                }
             };
             SlideCtrl.$inject = ["$scope", "$http"];
             return SlideCtrl;

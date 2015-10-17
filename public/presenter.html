@@ -19,6 +19,12 @@
 				<img ng-src="{{ sc.nextSlideId }}">
 				<button ng-show="sc.currentSlide > 0" ng-click="sc.prevSlide()">Previous</button>
 				<button ng-show="sc.currentSlide < sc.slideCount-1" ng-click="sc.nextSlide()">Next</button>
+				<div ng-repeat="submission in sc.submissions">
+					<figure class="submitted-content">
+						<img ng-src="{{ submission.imgUrl }}" ng-click="sc.showOverlay(submission.imgUrl)"/>
+						<figcaption ng-show="submission.caption">{{ submission.caption }}</figcaption>
+					</figure>
+				</div>
 				<button ng-show="!sc.overlayActive" ng-click="sc.showOverlay()">Show Overlay</button>
 				<button ng-show="sc.overlayActive" ng-click="sc.hideOverlay()">Hide Overlay</button>
 			</div>

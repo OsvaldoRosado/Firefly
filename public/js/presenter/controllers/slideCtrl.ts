@@ -12,7 +12,8 @@ module PresenterApp.Controllers{
 		slideCount: number;
 		slideUrls: string[];
 
-		overlayActive: boolean;
+		currentOverlay: string;
+		submissions: Object[];
 
 		error: string;
 
@@ -22,6 +23,11 @@ module PresenterApp.Controllers{
 			this.scope = $scope;
 			this.http = $http;
 			this.presRunning = false;
+
+			// Test submissions
+			this.submissions = [
+				{ imgUrl: "http://placehold.it/300x300", caption: "Test caption"}
+			];
 		}
 
 		presCommand(action: string, data: string){
@@ -67,14 +73,14 @@ module PresenterApp.Controllers{
 			this.updateSlide();
 		}
 
-		showOverlay(){
-			this.overlayActive = true;
-			this.presCommand("showOverlay", "http://placehold.it/300x300");
-		}
-
-		hideOverlay(){
-			this.overlayActive = false;
-			this.presCommand("hideOverlay", "");
+		showOverlay(url?: string){
+			if (url !== this.currentOverlay) {
+				this.currentOverlay = url;
+				this.presCommand("showOverlay", url);
+			} else {
+				this.currentOverlay = undefined;
+				this.presCommand("hideOverlay", "");
+			}
 		}
 
 	}
