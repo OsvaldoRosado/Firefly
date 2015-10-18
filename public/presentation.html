@@ -14,6 +14,17 @@
 		<div ng-controller="ViewableCtrl as vc">
 			<img ng-src="{{ vc.slideUrl }}"/>
 			<img ng-src="{{ vc.overlayUrl }}" ng-show="vc.overlayActive"/>
+			<aside ng-show="vc.qaActive" class="sidebar">
+				Q&amp;A
+				<div class="question-thread">
+					<div class="question">
+						{{ vc.question.text }}
+					</div>
+					<div class="reply" ng-repeat="reply in vc.question.replies">
+						{{ reply.text }}
+					</div>
+				</div>
+			</aside>
 		</div>
 	</body>
 </html>

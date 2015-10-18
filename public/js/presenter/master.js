@@ -8,14 +8,46 @@ var PresenterApp;
 (function (PresenterApp) {
     var Controllers;
     (function (Controllers) {
+        var ContentCtrl = (function () {
+            function ContentCtrl($scope, $http) {
+                this.scope = $scope;
+                this.http = $http;
+                this.content = [
+                    {
+                        url: "http://placehold.it/300x300",
+                        caption: "Test caption",
+                        user: "Rick",
+                        score: 0
+                    }
+                ];
+                this.questions = [
+                    {
+                        text: "How do I art?",
+                        user: "Mr. Meeseeks",
+                        score: 0,
+                        replies: [{
+                                text: "Look inside yourself",
+                                user: "Pensylvester",
+                                score: 0
+                            }]
+                    }
+                ];
+            }
+            ContentCtrl.$inject = ["$scope", "$http"];
+            return ContentCtrl;
+        })();
+        Controllers.ContentCtrl = ContentCtrl;
+    })(Controllers = PresenterApp.Controllers || (PresenterApp.Controllers = {}));
+})(PresenterApp || (PresenterApp = {}));
+var PresenterApp;
+(function (PresenterApp) {
+    var Controllers;
+    (function (Controllers) {
         var SlideCtrl = (function () {
             function SlideCtrl($scope, $http) {
                 this.scope = $scope;
                 this.http = $http;
                 this.presRunning = false;
-                this.submissions = [
-                    { imgUrl: "http://placehold.it/300x300", caption: "Test caption" }
-                ];
             }
             SlideCtrl.prototype.presCommand = function (action, data) {
                 this.presWindow.postMessage(angular.toJson({ action: action, data: data }), Config.HOST);
@@ -49,7 +81,7 @@ var PresenterApp;
                 this.currentSlide++;
                 this.updateSlide();
             };
-            SlideCtrl.prototype.showOverlay = function (url) {
+            SlideCtrl.prototype.toggleOverlay = function (url) {
                 if (url !== this.currentOverlay) {
                     this.currentOverlay = url;
                     this.presCommand("showOverlay", url);
@@ -57,6 +89,16 @@ var PresenterApp;
                 else {
                     this.currentOverlay = undefined;
                     this.presCommand("hideOverlay", "");
+                }
+            };
+            SlideCtrl.prototype.toggleQASidebar = function (question, showReplies) {
+                if (!this.currentQA || this.currentQA.text !== question.text) {
+                    this.currentQA = question;
+                    this.presCommand("showQASidebar", angular.toJson(question));
+                }
+                else {
+                    this.currentQA = undefined;
+                    this.presCommand("hideQASidebar", "");
                 }
             };
             SlideCtrl.$inject = ["$scope", "$http"];

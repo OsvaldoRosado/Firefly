@@ -13,7 +13,7 @@ module PresenterApp.Controllers{
 		slideUrls: string[];
 
 		currentOverlay: string;
-		submissions: Object[];
+		currentQA: UserQuestion;
 
 		error: string;
 
@@ -23,11 +23,6 @@ module PresenterApp.Controllers{
 			this.scope = $scope;
 			this.http = $http;
 			this.presRunning = false;
-
-			// Test submissions
-			this.submissions = [
-				{ imgUrl: "http://placehold.it/300x300", caption: "Test caption"}
-			];
 		}
 
 		presCommand(action: string, data: string){
@@ -44,7 +39,7 @@ module PresenterApp.Controllers{
 		startPresentation(){
 			var sampleId = "59227f68-0818-4493-91df-c4b065a5011b-2";
 			this.http.get("/getPresentationFromId/" + sampleId)
-				.then((response: ng.IHttpPromiseCallbackArg<ApiResponses.PresentationFromId>) => {
+				.then((response: ng.IHttpPromiseCallbackArg<PresentationFromId>) => {
 					var result = response.data;
 					if(!result.success || result.data.length < 1){
 						this.error = "Your presentation was not found!";
@@ -73,13 +68,24 @@ module PresenterApp.Controllers{
 			this.updateSlide();
 		}
 
-		showOverlay(url?: string){
+		toggleOverlay(url: string){
 			if (url !== this.currentOverlay) {
 				this.currentOverlay = url;
 				this.presCommand("showOverlay", url);
 			} else {
 				this.currentOverlay = undefined;
 				this.presCommand("hideOverlay", "");
+			}
+		}
+
+		// TODO: implement showReplies
+		toggleQASidebar(question: UserQuestion, showReplies: boolean){
+			if(!this.currentQA || this.currentQA.text !== question.text){
+				this.currentQA = question;
+				this.presCommand("showQASidebar", angular.toJson(question));
+			} else {
+				this.currentQA = undefined;
+				this.presCommand("hideQASidebar", "");
 			}
 		}
 

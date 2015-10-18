@@ -22,11 +22,21 @@ var PresentationApp;
                             break;
                         case "showOverlay":
                             _this.overlayUrl = order.data;
+                            _this.qaActive = false;
                             _this.overlayActive = true;
                             break;
                         case "hideOverlay":
-                            _this.overlayUrl = null;
+                            _this.overlayUrl = undefined;
                             _this.overlayActive = false;
+                            break;
+                        case "showQASidebar":
+                            _this.question = JSON.parse(order.data);
+                            _this.overlayActive = false;
+                            _this.qaActive = true;
+                            break;
+                        case "hideQASidebar":
+                            _this.question = undefined;
+                            _this.qaActive = false;
                             break;
                     }
                     $scope.$apply();
