@@ -9,22 +9,23 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
 		<script src="https://raw.githubusercontent.com/kylewelsby/angular-post-message/master/dist/angular-post-message.js"></script>
 		<script src="js/presentation/master.js"></script>
+		<link rel="stylesheet" href="css/style.css">
 	</head>
-	<body ng-app="presentation">
-		<div ng-controller="ViewableCtrl as vc">
-			<img ng-src="{{ vc.slideUrl }}"/>
-			<img ng-src="{{ vc.overlayUrl }}" ng-show="vc.overlayActive"/>
-			<aside ng-show="vc.qaActive" class="sidebar">
-				Q&amp;A
-				<div class="question-thread">
-					<div class="question">
-						{{ vc.question.text }}
-					</div>
-					<div class="reply" ng-repeat="reply in vc.question.replies">
-						{{ reply.text }}
-					</div>
-				</div>
-			</aside>
+	<body ng-app="presentation" ng-controller="ViewableCtrl as vc" class="presentation">
+		<img ng-src="{{ vc.slideUrl }}" class="slide u-full-width"/>
+		<div class="overlayContainer">
+			<img ng-src="{{ vc.overlayUrl }}" ng-show="vc.overlayActive" class="overlay"/>
 		</div>
+		<aside ng-show="vc.qaActive" class="sidebar">
+			Q&amp;A
+			<div class="question-thread">
+				<div class="question">
+					{{ vc.question.text }}
+				</div>
+				<div class="reply" ng-repeat="reply in vc.question.replies">
+					{{ reply.text }}
+				</div>
+			</div>
+		</aside>
 	</body>
 </html>

@@ -19,13 +19,27 @@ module PresenterApp.Controllers{
 
 		static $inject = ["$scope", "$http"];
 
-		constructor($scope: ng.IScope, $http: ng.IHttpService){
+		constructor($scope: ng.IScope, $http: ng.IHttpService) {
 			this.scope = $scope;
 			this.http = $http;
 			this.presRunning = false;
+
+			var sampleId = "59227f68-0818-4493-91df-c4b065a5011b-2";
+			this.http.get("/getPresentationFromId/" + sampleId)
+				.then((response: ng.IHttpPromiseCallbackArg<PresentationFromId>) => {
+					var result = response.data;
+					if (!result.success || result.data.length < 1) {
+						this.error = "Your presentation was not found!";
+					}
+					this.currentSlide = 0;
+					this.slideCount = result.data.length;
+					this.presName = result.data.name;
+					this.slideUrls = result.data.slides;
+				}, () => this.error = "Your presentation was not found!");
 		}
 
-		presCommand(action: string, data: string){
+
+		presCommand(action: string, data: string) {
 			this.presWindow.postMessage(
 				angular.toJson({action: action,  data: data}),
 				Config.HOST
@@ -37,25 +51,11 @@ module PresenterApp.Controllers{
 		}
 
 		startPresentation(){
-			var sampleId = "59227f68-0818-4493-91df-c4b065a5011b-2";
-			this.http.get("/getPresentationFromId/" + sampleId)
-				.then((response: ng.IHttpPromiseCallbackArg<PresentationFromId>) => {
-					var result = response.data;
-					if(!result.success || result.data.length < 1){
-						this.error = "Your presentation was not found!";
-					}
-
-					this.currentSlide = 0;
-					this.slideCount = result.data.length;
-					this.presName = result.data.name;
-					this.slideUrls = result.data.slides;
-					this.presRunning = true;
-					this.presWindow = window.open(
-						"presentation.html", this.presName, "width=800,height=600"
-					);
-
-					setTimeout(() => this.updateSlide(), 1000);
-				}, () => this.error = "Your presentation was not found!");
+			this.presRunning = true;
+			this.presWindow = window.open(
+				"presentation.html", this.presName, "width=802,height=450"
+			);
+			setTimeout(() => this.updateSlide(), 1000);
 		}
 
 		prevSlide() {

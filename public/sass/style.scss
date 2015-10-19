@@ -288,7 +288,58 @@ nav.viewer ul li a h1 {
 	text-transform: uppercase;
 }
 
+// Presenter Main Page
+body.presenter {
+	background: $background-dark;
 
+	header {
+		background: $primary-brand;
+		padding: 10px;
 
+		h2 {
+			display: inline-block;
 
+			&.presName{
+				font-family: $content-font-stack;
+				color: #fff;
+			}
 
+			&.mainTitle {
+				text-transform: uppercase;
+				color: $primary-yellow-light;
+
+				&:first-letter {
+					font-size: 115%;
+				}
+			}
+		}
+	}
+
+	.contentBox {
+		background: $background-light;
+		padding: 10px;
+		margin: 10px;
+	}
+}
+
+// Presentation Main Page
+
+body.presentation {
+
+	img.slide{
+		position: absolute;
+	}
+
+	.overlayContainer{
+		width: 100%;
+		text-align: center;
+	}
+
+	img.overlay{
+		position: absolute;
+		margin: 0 auto;
+		left: 0;
+		right: 0;
+		bottom: 100px;
+	}
+}
