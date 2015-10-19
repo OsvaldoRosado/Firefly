@@ -315,10 +315,41 @@ body.presenter {
 		}
 	}
 
-	.contentBox {
+	div.livePresentation{
+		margin: 10px;
+	}
+
+	div.contentBox {
 		background: $background-light;
 		padding: 10px;
 		margin: 10px;
+
+		h2{
+			color: $content-text-darkest;
+			margin-bottom: 10px;
+		}
+
+		figure.submission{
+			margin: 5px;
+			background: $callout-light;
+			text-align: center;
+
+			img{
+				margin: 5px;
+				max-width: 95%;
+			}
+
+			figcaption, div.meta{
+				margin: 5px;
+				text-align: left;
+			}
+
+			div.meta{
+				font-size: 12px;
+				padding-bottom: 5px;
+				color: $content-text-dark;
+			}
+		}
 	}
 }
 
