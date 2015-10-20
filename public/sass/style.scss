@@ -288,7 +288,89 @@ nav.viewer ul li a h1 {
 	text-transform: uppercase;
 }
 
+// Presenter Main Page
+body.presenter {
+	background: $background-dark;
 
+	header {
+		background: $primary-brand;
+		padding: 10px;
 
+		h2 {
+			display: inline-block;
 
+			&.presName{
+				font-family: $content-font-stack;
+				color: #fff;
+			}
 
+			&.mainTitle {
+				text-transform: uppercase;
+				color: $primary-yellow-light;
+
+				&:first-letter {
+					font-size: 115%;
+				}
+			}
+		}
+	}
+
+	div.livePresentation{
+		margin: 10px;
+	}
+
+	div.contentBox {
+		background: $background-light;
+		padding: 10px;
+		margin: 10px;
+
+		h2{
+			color: $content-text-darkest;
+			margin-bottom: 10px;
+		}
+
+		figure.submission{
+			margin: 5px;
+			background: $callout-light;
+			text-align: center;
+
+			img{
+				margin: 5px;
+				max-width: 95%;
+			}
+
+			figcaption, div.meta{
+				margin: 5px;
+				text-align: left;
+			}
+
+			div.meta{
+				font-size: 12px;
+				padding-bottom: 5px;
+				color: $content-text-dark;
+			}
+		}
+	}
+}
+
+// Presentation Main Page
+
+body.presentation {
+
+	img.slide{
+		position: absolute;
+	}
+
+	.overlayContainer{
+		width: 100%;
+		text-align: center;
+	}
+
+	img.overlay{
+		position: absolute;
+		margin: 0 auto;
+		left: 0;
+		right: 0;
+		bottom: 100px;
+	}
+}
