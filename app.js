@@ -11,6 +11,8 @@
 ========== Server Initialization ===============
 */
 
+process.stdin = function(){};
+
 // This project uses TypeScript
 // We compile at runtime
 require('typescript-require')({
