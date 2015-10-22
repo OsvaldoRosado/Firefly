@@ -11,7 +11,11 @@
 ========== Server Initialization ===============
 */
 
-process.stdin = function(){};
+// IISNode doesn't have a functional process.stdin
+// Replace it so things dont complain
+if(process.env.IISNODE_VERSION){ 
+	process.__defineGetter__('stdin', function(){});
+}
 
 // This project uses TypeScript
 // We compile at runtime
