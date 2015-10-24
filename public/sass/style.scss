@@ -5,36 +5,11 @@
 // Import reset
 @import url('reset.css');
 @import url('skeleton.css');
+@import 'colors';
 
 // Define typography
 $title-font-stack: 'Montserrat', sans-serif;
 $content-font-stack: 'Roboto', sans-serif;
-
-// Define colors
-$primary-brand: #2A8E6A;
-$primary-yellow-dark: #FFF680;
-$primary-yellow-light: #F5FFA9;
-
-$background-light: #FAFAF5;
-$background-dark: #263C34;
-
-$secondary-red: #FF6B60;
-$secondary-yellow: #FFF680;
-$secondary-green: #6CD3AE;
-
-$callout-light: #F2F2EB;
-$callout-lighter: #FCFCFA;
-$callout-lightest: #FFFFFF;
-
-$content-border: #C7C7C7;
-$content-text-light: #FFFFFF;
-$content-text-dark: #7C7C79;
-$content-text-darker: #646462;
-$content-text-darkest: #000000;
-
-$dark-layers-light: #FCFCFA;
-$dark-layers-medium: #B5BCB9;
-$dark-layers-dark: #6E7C76;
 
 // ************************* //
 html {
@@ -191,12 +166,12 @@ footer ul li:last-child:after {
 	color: $primary-yellow-light;
 }
 .classListItem {
-	display: table;	
-}	
+	display: table;
+}
 .classListItemDot {
 	display: table-cell;
 	vertical-align: middle;
-}	
+}
 .classListItemText {
 	display: table-cell;
 	vertical-align: middle;

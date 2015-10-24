@@ -1,0 +1,58 @@
+@import "../ff-content/_style.scss";
+
+ff-content-box {
+  display: block;
+  overflow: auto;
+
+  border: 1px solid $content-border;
+  border-radius: 2px;
+  background-color: $callout-light;
+
+  ff-content {
+    max-width: 100%;
+  }
+
+  .desc {
+    padding: 3%;
+
+    > * {
+      padding: 0;
+      margin: 0
+    }
+
+    ff-content {
+      padding-bottom: 3%;
+      width: 30%;
+      float: left;
+    }
+
+    .meta {
+      width: 64%;
+      float: left;
+      margin-left: 4%;
+    }
+
+  }
+
+  h2 {
+    margin-top: 0px;
+    margin-bottom: 8px;
+  }
+
+  .bottomrow {
+    position: relative;
+    height: 30px;
+
+    cite {
+      position: absolute;
+      left: 0;
+    }
+
+    p {
+      margin: 0;
+      position: absolute;
+      right: 0;
+    }
+  }
+
+}

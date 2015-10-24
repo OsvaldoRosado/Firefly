@@ -1,11 +1,11 @@
 // Standardized format for exchanging data between different interfaces and the server.
 
 enum FFContentType {
-  FFTextContent,
-  FFImageContent,
-  FFVideoContent,
-  FFQuestion,
-  FFQuestionResponse
+  Text,
+  Image,
+  Video,
+  Question,
+  QuestionResponse
 }
 
 interface FFUser {
@@ -16,6 +16,7 @@ interface FFUser {
 
 interface FFGenericContent {
   type: FFContentType;
+  title: string;
   submitter: FFUser;
   timestamp: number;
   upvotes: number;
@@ -23,11 +24,12 @@ interface FFGenericContent {
 }
 
 interface FFTextContent extends FFGenericContent {
-  htmlText: string;
+  text: string;
 }
 
 interface FFLinkContent extends FFGenericContent {
   link: string;
+  text?: string; // Used here for notes
 }
 
 interface FFQuestion extends FFTextContent {
