@@ -62,61 +62,65 @@ hr {
 .mainContent {
 	max-width: 380px;
 	padding: 30px 0;
-}
 
-.mainContent h1.mainTitle {
-	color: $primary-yellow-light;
-	text-align: center;
-	text-transform: uppercase;
-}
-.mainContent h1.mainTitle:first-letter {
-	font-size: 115%;
-}
+	h1.mainTitle {
+		color: $primary-yellow-light;
+		text-align: center;
+		text-transform: uppercase;
+		&:first-letter {
+			font-size: 115%;
+		}
+	}
+	
+	div.splashOverview {
+		h2 {
+			text-align: center;
+			margin: 1.75em 0;
+			color: $content-text-light;
+		}
+		div.splashContent {
+			margin-bottom: 35px;
+		}
+		div.intro-left {
+			width: 25%;
+			float: left;
+		}
+		div.intro-right {
+			width: 75%;
+			float: right;
+		}
+		div.intro-text {
+			padding: 0 0 0 1.5em;
+		}
+	}
 
-.mainContent div.splashOverview h2 {
-	text-align: center;
-	margin: 1.75em 0;
-	color: $content-text-light;
-}
-.mainContent div.splashOverview div.splashContent {
-	margin-bottom: 35px;
-}
-.mainContent div.splashOverview div.intro-left {
-	width: 25%;
-	float: left;
-}
-.mainContent div.splashOverview div.intro-right {
-	width: 75%;
-	float: right;
-}
-.mainContent div.splashOverview div.intro-text {
-	padding: 0 0 0 1.5em;
-}
-
-.mainContent div.getStarted {
-	text-align: center;
-}
-.mainContent div.getStarted a {
-	display: block;
-	padding: 0.75em 0;
-	text-decoration: none;
-}
-.mainContent div.getStarted a:hover h3 {
-	color: $primary-yellow-light;
-}
-.mainContent div.getStarted span {
-	float: left;
-	color: $secondary-green;
-}
-.mainContent div.getStarted h3 {
-	margin: 0;
-	font-style: italic;
-}
-.mainContent div.getStarted h3:before {
-	content: '+';
-	margin-right: 15px;
-	font-style: normal;
-	color: $secondary-green;
+	div.getStarted {
+		text-align: center;
+		 a {
+			display: block;
+			padding: 0.75em 0;
+			text-decoration: none;
+			&:hover {
+				h3 {
+					color: $primary-yellow-light;
+				}
+			}
+		}
+		span {
+			float: left;
+			color: $secondary-green;
+		}
+		h3 {
+			margin: 0;
+			font-style: italic;
+			:before {
+				content: '+';
+				margin-right: 15px;
+				font-style: normal;
+				color: $secondary-green;
+			}
+		}
+	}
 }
 
 footer {
@@ -128,63 +132,79 @@ footer {
 	bottom: 0;
 	height: 50px;
 	width: 100%;
-}
-footer a {
-	color: $content-text-light;
-	text-decoration: none;
-	text-transform: uppercase;
-}
-footer ul, footer ul li {
-	display: inline-block;
-	vertical-align: top;
-}
-footer ul li a {
-	padding: 0.5em 1em;
-}
-footer ul li a:hover {
-	color: $primary-yellow-light;
-}
-footer ul li:after {
-	content: '\2022';
-}
-footer ul li:last-child {
-	font-weight: bold;
-}
-footer ul li:last-child:after {
-	content: none;
+	a {
+		color: $content-text-light;
+		text-decoration: none;
+		text-transform: uppercase;
+	}
+	ul {
+		display: inline-block;
+		vertical-align: top;
+		li {
+			display: inline-block;
+			vertical-align: top;
+			a {
+				padding: 0.5em 1em;
+				:hover {
+					color: $primary-yellow-light;
+				}
+			}
+			&:after {
+				content: '\2022';
+			}
+			&:last-child {
+				font-weight: bold;
+				&:after {
+					content: none;
+				}
+			}
+		}
+	}
 }
 
 // Class Listings
-.classList ul li {
-	margin-bottom: 0.5em;
+.classList {
+	ul {
+		li {
+			margin-bottom: 0.5em;
+			a {
+				display: block;
+				text-decoration: none;
+				&:hover {
+					h2, h3 {
+						color: $primary-yellow-light;
+					}
+				}
+			}
+		}
+	}
+	.classListItem {
+		display: table;	
+	}	
+	.classListItemDot {
+		display: table-cell;
+		vertical-align: middle;
+		h2 {
+			color: $secondary-green;
+		}
+	}	
+	.classListItemText {
+		display: table-cell;
+		vertical-align: middle;
+		padding-left: 2em;
+	}
+	.classListItemLecture {
+		padding: 1em 0;
+		h3 {
+			font-weight: normal;
+			font-size: 12px;
+			margin: 0.5em 0 0;
+		}
+	}
 }
-.classList ul li a {
-	display: block;
-	text-decoration: none;
-}
-.classList ul li a:hover h2, .classList ul li a:hover h3 {
-	color: $primary-yellow-light;
-}
-.classListItem {
-	display: table;
-}
-.classListItemDot {
-	display: table-cell;
-	vertical-align: middle;
-}
-.classListItemText {
-	display: table-cell;
-	vertical-align: middle;
-	padding-left: 2em;
-}
-.classListItemLecture {
-	padding: 1em 0;
-}
-.classListItemLecture h3 {
-	font-weight: normal;
-	font-size: 12px;
-	margin: 0.5em 0 0;
-}
+
+
+
 
 // Pulsing Live Dot
 // http://jsfiddle.net/24GXr/
@@ -232,35 +252,39 @@ nav.viewer {
 	width: 100%;
 	position: fixed;
 	bottom: 0;
-}
-nav.viewer ul {
-	display: flex;
-	flex-direction: row;
-}
-nav.viewer ul li {
-	list-style: none;
-	flex-grow: 1;
-	text-align: center;
-}
-nav.viewer ul li a {
-	display: block;
-	text-decoration: none;
-	padding: 5px 0;
-}
-nav.viewer ul li a.active h1, nav.viewer ul li a.active span {
-	color: $primary-yellow-light;
-}
-nav.viewer ul li a:hover h1, nav.viewer ul li a:hover span {
-	color: $primary-yellow-light;
-}
-nav.viewer ul li a span {
-	color: $content-text-light;
-	font-size: 12px;
-}
-nav.viewer ul li a h1 {
-	font-family: $title-font-stack;
-	font-size: 10px;
-	text-transform: uppercase;
+	ul {
+		display: flex;
+		flex-direction: row;
+		li {
+			list-style: none;
+			flex-grow: 1;
+			text-align: center;
+			a {
+				display: block;
+				text-decoration: none;
+				padding: 5px 0;
+				.active {
+					h1, span {
+						color: $primary-yellow-light;
+					}
+				}
+				&:hover {
+					h1, span {
+						color: $primary-yellow-light;
+					}
+				}
+				span {
+					color: $content-text-light;
+					font-size: 12px;
+				}
+				h1 {
+					font-family: $title-font-stack;
+					font-size: 10px;
+					text-transform: uppercase;
+				}
+			}
+		}
+	}
 }
 
 // Presenter Main Page
