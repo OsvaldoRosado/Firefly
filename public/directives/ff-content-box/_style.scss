@@ -1,0 +1,95 @@
+@import "../ff-content/_style.scss";
+
+.ffContentBox {
+  display: block;
+  overflow: auto;
+  overflow: hidden;
+
+  border: 1px solid $content-border;
+  border-radius: 2px;
+  background-color: $callout-light;
+
+  transition: box-shadow 200ms ease-out, background-color 200ms ease-out;
+  box-shadow: $standard-shadow;
+  &.expanded {
+    background-color: $callout-lightest;
+    box-shadow: $highlight-shadow;
+  }
+
+  // Top Content
+  ff-content.full {
+    max-width: 100%;
+    border-bottom: 1px solid $content-border;
+  }
+
+  // Description Block
+  .desc {
+    padding: 2%;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    > * {
+      padding: 0;
+      margin: 0
+    }
+
+    ff-content {
+      width: 30%;
+    }
+
+    .meta {
+      width: 62%;
+      margin-left: 6%;
+    }
+  }
+
+
+  h3 {
+    margin-top: 5px;
+    margin-bottom: 8px;
+    font-size: 13pt;
+    
+    &::before, &::after {
+      content: "\"";
+    }
+  }
+
+  .bottomrow {
+    position: relative;
+    font-size: 10pt;
+    height: 27px;
+
+    cite {
+      position: absolute;
+      right: 0;
+    }
+
+    p {
+      margin: 0;
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+    }
+  }
+
+  .commands {
+    background-color: $callout-lighter;
+    padding: 10px 0 12px 0;
+    display: flex;
+    border-top: 1px solid $content-border;
+    
+    & > * {
+      flex-grow: 1;
+      flex-basis: 0;
+      cursor: pointer;
+      text-align: center;
+      
+      p {
+        margin: 0;
+        font-size: 10pt;
+      }
+    }
+  }
+
+}

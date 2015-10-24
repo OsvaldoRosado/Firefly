@@ -1,0 +1,19 @@
+// Import main Google Fonts Montserrat and Roboto
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,500,700);
+
+// Common Imports
+@import 'colors';
+
+// Import components
+@import '../directives/ff-content-box/_style.scss';
+
+body {
+  background-color: $background-light;
+  font-family: "Roboto", sans-serif;
+  padding: 8px;
+}
+
+.ffContentBox {
+  width: 350px;
+  margin: 18px;
+}
