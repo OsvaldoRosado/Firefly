@@ -1,3 +1,6 @@
+/// <reference path="../../../shared/data-types.ts" />
+/// <reference path="../../js/typings/angular/angular.d.ts" />
+
 module Shared.Directives {
 
   /**
@@ -7,7 +10,8 @@ module Shared.Directives {
   export function ffContent(): ng.IDirective {
     return {
       restrict: "E",
-      scope: {
+      scope: true,
+      bindToController: {
         content: "="
       },
       controller: Shared.Controllers.FFContentViewController,
@@ -27,14 +31,18 @@ module Shared.Controllers {
     isFrame: boolean;
     reducesToIcon: boolean;
 
-    static $inject = [
-      "$scope"
-    ];
-    constructor($scope: Object) {
-      this.content = $scope['content'];
-
-      this.isImage = ($scope['content'].type == FFContentType.Image);
-      this.isFrame = ($scope['content'].type == FFContentType.Video);
+    static $inject = ["$scope"];
+		constructor($scope: ng.IScope) {
+      this.updateRenderDetails()
+      
+      // This line here makes me very sad as a person
+      $scope.$watch(function(){return this.content;}, this.updateRenderDetails.bind(this));
+    }
+    
+    updateRenderDetails() {
+      if (this.content == undefined) {return;}
+      this.isImage = (this.content.type == FFContentType.Image);
+      this.isFrame = (this.content.type == FFContentType.Video);
       this.reducesToIcon = !this.isImage && !this.isFrame;
     }
   }

@@ -17,7 +17,7 @@ module Shared.Directives {
     return {
       restrict: "E",
       scope: {
-        expanded: "@",
+        expanded: "=",
         duration: "@"
       },
       replace: false,
@@ -35,18 +35,17 @@ module Shared.Directives {
         element.style.display = "block";
 
         // Start collapsed if requested
-        console.log()
-        if (!(scope.expanded == "true")) {
+        if (!scope.expanded) {
           element.style.height = "0px";
         }
 
         // Wait for the collapsedness value to change
-        scope.$watch("expanded", function(newValue: string, oldValue: string) {
+        scope.$watch("expanded", function(newValue: boolean, oldValue: boolean) {
           if (newValue == oldValue) {return;} // This should never happen
 
           // How big do we want this directive to be?
           var destinationHeight : string = "0px";
-          if (newValue == "true") {
+          if (newValue) {
             var child : HTMLElement = <HTMLElement>element.children[0]; if (!child) {return;}
             child = <HTMLElement>child.children[0]; if (!child) {return;}
             destinationHeight = (child.getBoundingClientRect().height+"px") || "100%";

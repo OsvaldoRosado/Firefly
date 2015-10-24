@@ -21,10 +21,11 @@ module Shared.Directives {
   export function ffContentBox(): ng.IDirective {
     return {
       restrict: "E",
-      scope: {
+      scope: true,
+      bindToController: {
         content: "=",
         display: "@",
-        expanded: "@"
+        expanded: "="
       },
       controller: Shared.Controllers.FFContentBoxController,
       controllerAs: "cc",
@@ -41,19 +42,5 @@ module Shared.Controllers {
     content: FFGenericContent;
     display: FFContentDisplayType;
     expanded: boolean;
-
-    static $inject = [
-      "$scope"
-    ];
-    constructor($scope: FFContentDisplayAttr) {
-      console.log($scope);
-      this.content = $scope.content;
-      this.display = $scope.display;
-      this.expanded = $scope.expanded || false;
-    }
-
-    toggleExpansion() {
-      this.expanded = !this.expanded;
-    }
   }
 }

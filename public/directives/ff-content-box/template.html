@@ -1,7 +1,7 @@
-<div class="ffContentBox" ng-class="{expanded: cc.expanded}" ng-click="cc.toggleExpansion()">
+<div class="ffContentBox" ng-class="{expanded: cc.expanded}">
 
   <!-- This this large view is displayed when the element is displayed -->
-  <collapse expanded="{{cc.expanded}}">
+  <collapse expanded="cc.expanded">
     <ff-content content="cc.content" class="full"></ff-content>
   </collapse>
 
@@ -18,7 +18,7 @@
   </div>
   
   <!-- Command palatte to show when expanded -->
-  <collapse expanded="{{cc.expanded}}">
+  <collapse expanded="cc.expanded">
     <div class="commands">
       <div class="action">
         <img src="/public/images/Actions-ThumbsUp.svg" alt="Upvote">

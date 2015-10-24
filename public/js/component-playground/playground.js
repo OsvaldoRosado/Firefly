@@ -21,7 +21,7 @@ var Shared;
             return {
                 restrict: "E",
                 scope: {
-                    expanded: "@",
+                    expanded: "=",
                     duration: "@"
                 },
                 replace: false,
@@ -31,8 +31,7 @@ var Shared;
                     var element = jq[0];
                     element.style.overflow = "hidden";
                     element.style.display = "block";
-                    console.log();
-                    if (!(scope.expanded == "true")) {
+                    if (!scope.expanded) {
                         element.style.height = "0px";
                     }
                     scope.$watch("expanded", function (newValue, oldValue) {
@@ -40,7 +39,7 @@ var Shared;
                             return;
                         }
                         var destinationHeight = "0px";
-                        if (newValue == "true") {
+                        if (newValue) {
                             var child = element.children[0];
                             if (!child) {
                                 return;
@@ -66,6 +65,8 @@ var Shared;
         Directives.collapse = collapse;
     })(Directives = Shared.Directives || (Shared.Directives = {}));
 })(Shared || (Shared = {}));
+/// <reference path="../../../shared/data-types.ts" />
+/// <reference path="../../js/typings/angular/angular.d.ts" />
 var Shared;
 (function (Shared) {
     var Directives;
@@ -73,7 +74,8 @@ var Shared;
         function ffContent() {
             return {
                 restrict: "E",
-                scope: {
+                scope: true,
+                bindToController: {
                     content: "="
                 },
                 controller: Shared.Controllers.FFContentViewController,
@@ -91,14 +93,18 @@ var Shared;
     (function (Controllers) {
         var FFContentViewController = (function () {
             function FFContentViewController($scope) {
-                this.content = $scope['content'];
-                this.isImage = ($scope['content'].type == FFContentType.Image);
-                this.isFrame = ($scope['content'].type == FFContentType.Video);
-                this.reducesToIcon = !this.isImage && !this.isFrame;
+                this.updateRenderDetails();
+                $scope.$watch(function () { return this.content; }, this.updateRenderDetails.bind(this));
             }
-            FFContentViewController.$inject = [
-                "$scope"
-            ];
+            FFContentViewController.prototype.updateRenderDetails = function () {
+                if (this.content == undefined) {
+                    return;
+                }
+                this.isImage = (this.content.type == FFContentType.Image);
+                this.isFrame = (this.content.type == FFContentType.Video);
+                this.reducesToIcon = !this.isImage && !this.isFrame;
+            };
+            FFContentViewController.$inject = ["$scope"];
             return FFContentViewController;
         })();
         Controllers.FFContentViewController = FFContentViewController;
@@ -121,10 +127,11 @@ var Shared;
         function ffContentBox() {
             return {
                 restrict: "E",
-                scope: {
+                scope: true,
+                bindToController: {
                     content: "=",
                     display: "@",
-                    expanded: "@"
+                    expanded: "="
                 },
                 controller: Shared.Controllers.FFContentBoxController,
                 controllerAs: "cc",
@@ -140,18 +147,8 @@ var Shared;
     var Controllers;
     (function (Controllers) {
         var FFContentBoxController = (function () {
-            function FFContentBoxController($scope) {
-                console.log($scope);
-                this.content = $scope.content;
-                this.display = $scope.display;
-                this.expanded = $scope.expanded || false;
+            function FFContentBoxController() {
             }
-            FFContentBoxController.prototype.toggleExpansion = function () {
-                this.expanded = !this.expanded;
-            };
-            FFContentBoxController.$inject = [
-                "$scope"
-            ];
             return FFContentBoxController;
         })();
         Controllers.FFContentBoxController = FFContentBoxController;
@@ -162,7 +159,8 @@ var Shared;
 var Playground;
 (function (Playground) {
     var AppController = (function () {
-        function AppController() {
+        function AppController($scope) {
+            this.expandedIndex = 1;
             this.testUser1 = {
                 id: 1,
                 name: "Keaton Brandt"
@@ -174,7 +172,7 @@ var Playground;
                 upvotes: 3,
                 flagged: 0,
                 title: "view.png",
-                link: "https://lh3.googleusercontent.com/Ta9OV6qh8vAUcPWPat5M2e6IgXjVDbVUdMX1qXxTPWNJyPybi339G8nFjnlO1c4FaafgtZEP0guYSbu9IG3du3TQBgo6hofue34C4BXZ_v0Rg51a9FOguC9juA7YBaLAoltsOuXRK4SvGk14ukg2ISyvBxH3xE69GgelAmeLXX3jIyDxaBmDT4cV5r73w1F-MOXF1o1gPUN8rQMcrkQ0AH4NJPmYR8ERyyfq7SrQMjlzfFFyxuh4eji86ijHK8rN87gyyF-HwTxoT0xahYDK_kLtFNTJJTz7VE7w6Zb_pA9TCX1Or0hrQsnPwUdnsArv081F04bmjrSwipKccvRjqfMaQXl970g100GuGLiq7n7GV2lgJy6jjpPfdb2_M5BaSJGiFHf33gEWI7W22KdySSQE5aWfwuDYVSj8Dg6OXj3fqASqTeb1KOBzAguDVwGkApDzhv42s4AY_ypkq6vV9RRmf-YLIUoNWScHUnqoMzDaPC07Mz86L3k0V_D6rv3JCyZRk4Cp8ss8BSKFVBSWa5pAzgVaLz9t-tbJRyVaawoy=w794-h590-no"
+                link: "https://goo.gl/jQBTBR"
             };
             this.imageContent2 = {
                 type: FFContentType.Image,
@@ -184,13 +182,25 @@ var Playground;
                 flagged: 0,
                 title: "montreal.png",
                 text: "Great view from the top of Mont Royal",
-                link: "https://lh3.googleusercontent.com/xk59JIhdsUAQQDJN8ZkUIfCvggThN3D9G0rn7gf8Uxj_n6QL3PeOgJH58-EWEhjthwItDzpEJoLHXLfjml0J3UWba5FcMukuPXfDkmM8v2nG0sSKoVF4bHssL-F-cZWYiYMdmANvRqgFAMEsf-6E6ZRLEKFRZaIWlPK8jv7GxfhA4ht1H8XlhQT6oBm6HreAzC0Yir5hdNnUvx9sOYsS7CL9Suew54r5aRTtk3YmptBLGoQQbKiFANu_mlbjLgZbFwFPc4DHur9BFLYwHK4CwtlkhEWd8Ql3upHop4lPxT-gjZ4ZYr0ha9RYf932d37Ij5q_Y0PZa7npQiDbDHZJQs1IiBZQ4RSt2ozfrR1VrZ1PgkY_q_a5N6evdSW7A58oxZv8-SHt80mBZ2_cbL5pofsXzxzol3iMrbIcNj0TUc_oL56RKNHljK2fvWD-n-u_9lRFC7hqMbd6C1ho4szurwmIXu2KZ7bZV7XU3jsImxUQG75d4CdyfWrTVcpbfqVoT5-z9mKS8ie-nHnUpoBAU3V3i6AYEH8b34E9lExz3kPS=w2362-h996-no"
+                link: "https://goo.gl/VJJujY"
             };
         }
+        AppController.prototype.expandItem = function ($scope, index) {
+            if (this.expandedIndex == index) {
+                this.expandedIndex = -1;
+            }
+            else {
+                this.expandedIndex = index;
+            }
+        };
+        AppController.$inject = ["$scope"];
         return AppController;
     })();
     var app = angular.module("playground", [])
         .controller(Shared.Controllers)
         .controller("AppController", AppController)
-        .directive(Shared.Directives);
+        .directive(Shared.Directives)
+        .filter("equals", function () {
+        return function (value, equals) { return value == equals; };
+    });
 })(Playground || (Playground = {}));

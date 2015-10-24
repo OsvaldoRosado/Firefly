@@ -13,9 +13,15 @@
 	</head>
 	<body ng-app="playground" class="presentation" ng-controller="AppController as app">
 
-    <ff-content-box display="0" content="app.imageContent"></ff-content-box>
+    <ff-content-box 
+		display="0" content="app.imageContent"
+		expanded="app.expandedIndex | equals:0" ng-click="app.expandItem($scope,0)"
+	></ff-content-box>
 	
-	<ff-content-box display="1" content="app.imageContent2"></ff-content-box>
+	<ff-content-box 
+		display="0" content="app.imageContent2"
+		expanded="app.expandedIndex | equals:1" ng-click="app.expandItem($scope,1)"
+	></ff-content-box>
 
 	</body>
 </html>
