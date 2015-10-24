@@ -1,3 +1,6 @@
+/// <reference path="../../../shared/data-types.ts" />
+/// <reference path="../../js/typings/angular/angular.d.ts" />
+
 module Shared {
 
   export enum FFContentDisplayType {

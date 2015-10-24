@@ -3,7 +3,6 @@
 .ffContentBox {
   display: block;
   overflow: auto;
-  cursor: pointer;
   overflow: hidden;
 
   border: 1px solid $content-border;
@@ -18,8 +17,9 @@
   }
 
   // Top Content
-  ff-content {
+  ff-content.full {
     max-width: 100%;
+    border-bottom: 1px solid $content-border;
   }
 
   // Description Block
@@ -27,6 +27,7 @@
     padding: 2%;
     display: flex;
     align-items: center;
+    cursor: pointer;
 
     > * {
       padding: 0;
@@ -44,9 +45,14 @@
   }
 
 
-  h2 {
-    margin-top: 0px;
+  h3 {
+    margin-top: 5px;
     margin-bottom: 8px;
+    font-size: 13pt;
+    
+    &::before, &::after {
+      content: "\"";
+    }
   }
 
   .bottomrow {
@@ -56,14 +62,33 @@
 
     cite {
       position: absolute;
-      left: 0;
+      right: 0;
     }
 
     p {
       margin: 0;
       position: absolute;
-      right: 0;
+      left: 0;
       font-weight: bold;
+    }
+  }
+
+  .commands {
+    background-color: $callout-lighter;
+    padding: 10px 0 12px 0;
+    display: flex;
+    border-top: 1px solid $content-border;
+    
+    & > * {
+      flex-grow: 1;
+      flex-basis: 0;
+      cursor: pointer;
+      text-align: center;
+      
+      p {
+        margin: 0;
+        font-size: 10pt;
+      }
     }
   }
 

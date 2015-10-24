@@ -71,7 +71,7 @@ module.exports = function(grunt) {
 				tasks: ["sass"]
 			},
 			html: {
-				files: ['public/*.html'],
+				files: ['public/**/*.html'],
 				tasks: ["ngtemplates"],
 				options: {
 					livereload: true
