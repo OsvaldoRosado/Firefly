@@ -17,6 +17,59 @@ var Shared;
 (function (Shared) {
     var Directives;
     (function (Directives) {
+        function collapse() {
+            return {
+                restrict: "E",
+                scope: {
+                    expanded: "@",
+                    duration: "@"
+                },
+                replace: false,
+                transclude: true,
+                template: "<ng-transclude></ng-transclude>",
+                link: function (scope, jq, attrs) {
+                    var element = jq[0];
+                    element.style.overflow = "hidden";
+                    element.style.display = "block";
+                    console.log();
+                    if (!(scope.expanded == "true")) {
+                        element.style.height = "0px";
+                    }
+                    scope.$watch("expanded", function (newValue, oldValue) {
+                        if (newValue == oldValue) {
+                            return;
+                        }
+                        var destinationHeight = "0px";
+                        if (newValue == "true") {
+                            var child = element.children[0];
+                            if (!child) {
+                                return;
+                            }
+                            child = child.children[0];
+                            if (!child) {
+                                return;
+                            }
+                            destinationHeight = (child.getBoundingClientRect().height + "px") || "100%";
+                        }
+                        var duration = parseInt(scope.duration) || 200;
+                        element.style.transition = "height " + duration + "ms ease-out";
+                        setTimeout(function () {
+                            element.style.height = destinationHeight;
+                            setTimeout(function () {
+                                element.style.transition = "";
+                            }, 100 + duration);
+                        }, 100);
+                    });
+                }
+            };
+        }
+        Directives.collapse = collapse;
+    })(Directives = Shared.Directives || (Shared.Directives = {}));
+})(Shared || (Shared = {}));
+var Shared;
+(function (Shared) {
+    var Directives;
+    (function (Directives) {
         function ffContent() {
             return {
                 restrict: "E",
@@ -38,9 +91,9 @@ var Shared;
     (function (Controllers) {
         var FFContentViewController = (function () {
             function FFContentViewController($scope) {
-                this.content = $scope.content;
-                this.isImage = ($scope.content.type == FFContentType.Image);
-                this.isFrame = ($scope.content.type == FFContentType.Video);
+                this.content = $scope['content'];
+                this.isImage = ($scope['content'].type == FFContentType.Image);
+                this.isFrame = ($scope['content'].type == FFContentType.Video);
                 this.reducesToIcon = !this.isImage && !this.isFrame;
             }
             FFContentViewController.$inject = [
@@ -73,7 +126,7 @@ var Shared;
                 },
                 controller: Shared.Controllers.FFContentBoxController,
                 controllerAs: "cc",
-                replace: false,
+                replace: true,
                 templateUrl: "public/directives/ff-content-box/template.html"
             };
         }
@@ -89,8 +142,11 @@ var Shared;
                 console.log($scope);
                 this.content = $scope.content;
                 this.display = $scope.display;
-                this.expanded = $scope.expanded;
+                this.expanded = $scope.expanded || false;
             }
+            FFContentBoxController.prototype.toggleExpansion = function () {
+                this.expanded = !this.expanded;
+            };
             FFContentBoxController.$inject = [
                 "$scope"
             ];

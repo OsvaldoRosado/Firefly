@@ -47,6 +47,7 @@ module.exports = function(grunt) {
 			playground: {
 				src: shared.concat([
 					"shared/data-types.ts",
+					"public/directives/collapse/*.ts",
 					"public/directives/ff-content/*.ts",
 					"public/directives/ff-content-box/*.ts",
 					"public/js/component-playground/playground.ts"

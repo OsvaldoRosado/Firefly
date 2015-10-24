@@ -30,11 +30,11 @@ module Shared.Controllers {
     static $inject = [
       "$scope"
     ];
-    constructor($scope: FFContentDisplayAttr) {
-      this.content = $scope.content;
+    constructor($scope: Object) {
+      this.content = $scope['content'];
 
-      this.isImage = ($scope.content.type == FFContentType.Image);
-      this.isFrame = ($scope.content.type == FFContentType.Video);
+      this.isImage = ($scope['content'].type == FFContentType.Image);
+      this.isFrame = ($scope['content'].type == FFContentType.Video);
       this.reducesToIcon = !this.isImage && !this.isFrame;
     }
   }

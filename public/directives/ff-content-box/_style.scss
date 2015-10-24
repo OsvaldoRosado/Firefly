@@ -1,19 +1,32 @@
 @import "../ff-content/_style.scss";
 
-ff-content-box {
+.ffContentBox {
   display: block;
   overflow: auto;
+  cursor: pointer;
+  overflow: hidden;
 
   border: 1px solid $content-border;
   border-radius: 2px;
   background-color: $callout-light;
 
+  transition: box-shadow 200ms ease-out, background-color 200ms ease-out;
+  box-shadow: $standard-shadow;
+  &.expanded {
+    background-color: $callout-lightest;
+    box-shadow: $highlight-shadow;
+  }
+
+  // Top Content
   ff-content {
     max-width: 100%;
   }
 
+  // Description Block
   .desc {
-    padding: 3%;
+    padding: 2%;
+    display: flex;
+    align-items: center;
 
     > * {
       padding: 0;
@@ -21,18 +34,15 @@ ff-content-box {
     }
 
     ff-content {
-      padding-bottom: 3%;
       width: 30%;
-      float: left;
     }
 
     .meta {
-      width: 64%;
-      float: left;
-      margin-left: 4%;
+      width: 62%;
+      margin-left: 6%;
     }
-
   }
+
 
   h2 {
     margin-top: 0px;
@@ -41,7 +51,8 @@ ff-content-box {
 
   .bottomrow {
     position: relative;
-    height: 30px;
+    font-size: 10pt;
+    height: 27px;
 
     cite {
       position: absolute;
@@ -52,6 +63,7 @@ ff-content-box {
       margin: 0;
       position: absolute;
       right: 0;
+      font-weight: bold;
     }
   }
 

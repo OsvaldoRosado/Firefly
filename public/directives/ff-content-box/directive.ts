@@ -25,7 +25,7 @@ module Shared.Directives {
       },
       controller: Shared.Controllers.FFContentBoxController,
       controllerAs: "cc",
-      replace: false,
+      replace: true,
 
       templateUrl: "public/directives/ff-content-box/template.html"
     }
@@ -46,7 +46,11 @@ module Shared.Controllers {
       console.log($scope);
       this.content = $scope.content;
       this.display = $scope.display;
-      this.expanded = $scope.expanded;
+      this.expanded = $scope.expanded || false;
+    }
+
+    toggleExpansion() {
+      this.expanded = !this.expanded;
     }
   }
 }
