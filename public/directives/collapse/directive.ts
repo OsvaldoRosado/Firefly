@@ -79,10 +79,10 @@ module Shared.Directives {
         
         // Watch for the content height changing
         var heightWatch = setInterval(()=>{
-          var newHeight : number = getInnerHeight();
-          if (newHeight != lastHeight) {
-            lastHeight = newHeight;
-            if (scope.expanded) {
+          if (scope.expanded) {
+            var newHeight : number = getInnerHeight();
+            if (newHeight != lastHeight) {
+              lastHeight = newHeight;
               element.style.height = lastHeight + "px";
             }
           }

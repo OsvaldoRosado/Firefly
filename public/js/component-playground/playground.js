@@ -123,10 +123,10 @@ var Shared;
                         }, 100);
                     });
                     var heightWatch = setInterval(function () {
-                        var newHeight = getInnerHeight();
-                        if (newHeight != lastHeight) {
-                            lastHeight = newHeight;
-                            if (scope.expanded) {
+                        if (scope.expanded) {
+                            var newHeight = getInnerHeight();
+                            if (newHeight != lastHeight) {
+                                lastHeight = newHeight;
                                 element.style.height = lastHeight + "px";
                             }
                         }
