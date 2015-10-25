@@ -6,7 +6,7 @@
   </collapse>
 
   <!-- This section is always visible -->
-  <div class="desc" ng-class="{nothumb: !cc.showThumbnail}">
+  <div class="desc" ng-class="{nothumb: !cc.showThumbnail}" ng-click="cc.onToggle()">
     <ff-content ng-if="cc.showThumbnail"
       class="thumb" content="cc.content" thumbnail="true"></ff-content>
     <div class="meta">
@@ -26,7 +26,7 @@
   <!-- Command palatte to show when expanded -->
   <collapse expanded="cc.expanded">
     <div class="commands">
-      <div class="action">
+      <div class="action" ng-click="cc.upvoteContent()">
         <img src="/images/Actions-ThumbsUp.svg" alt="Upvote">
         <p><b ng-bind="cc.content.upvotes"></b> Upvotes</p>
       </div>

@@ -26,16 +26,18 @@ module Playground {
 			};
 
 			this.imageContent = {
+				id: 1,
 				type: FFContentType.Image,
 				submitter: this.testUser1,
 				timestamp: new Date().getTime(),
 				upvotes: 3,
 				flagged: 0,
 				title: "view.png",
-				link: "https://goo.gl/jQBTBR"
+				link: "/images/dummy/view.jpg"
 			};
 			
 			this.imageContent2 = {
+				id: 2,
 				type: FFContentType.Image,
 				submitter: this.testUser1,
 				timestamp: new Date().getTime(),
@@ -43,10 +45,11 @@ module Playground {
 				flagged: 0,
 				title: "montreal.png",
 				text: "Great view from the top of Mont Royal",
-				link: "https://goo.gl/VJJujY"
+				link: "/images/dummy/montreal.jpg"
 			}
 			
 			this.videoContent = {
+				id: 3,
 				type: FFContentType.Video,
 				submitter: this.testUser1,
 				timestamp: new Date().getTime(),

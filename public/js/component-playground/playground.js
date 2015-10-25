@@ -1,9 +1,3 @@
-var Config = (function () {
-    function Config() {
-    }
-    Config.HOST = "http://" + window.location.host;
-    return Config;
-})();
 // Standardized format for exchanging data between different interfaces and the server.
 var FFContentType;
 (function (FFContentType) {
@@ -13,6 +7,70 @@ var FFContentType;
     FFContentType[FFContentType["Question"] = 3] = "Question";
     FFContentType[FFContentType["QuestionResponse"] = 4] = "QuestionResponse";
 })(FFContentType || (FFContentType = {}));
+var Config = (function () {
+    function Config() {
+    }
+    Config.HOST = "http://" + window.location.host;
+    return Config;
+})();
+/// <reference path="../../../shared/data-types.ts" />
+/// <reference path="../typings/angular/angular.d.ts" />
+/// <reference path="./config.ts" />
+var Shared;
+(function (Shared) {
+    (function (APIMethod) {
+        APIMethod[APIMethod["GET"] = 0] = "GET";
+        APIMethod[APIMethod["POST"] = 1] = "POST";
+    })(Shared.APIMethod || (Shared.APIMethod = {}));
+    var APIMethod = Shared.APIMethod;
+    var APIRequest = (function () {
+        function APIRequest($http, endpoint, data, method) {
+            if (method === void 0) { method = APIMethod.GET; }
+            if (endpoint[0] !== "/") {
+                endpoint = "/" + endpoint;
+            }
+            endpoint = Config.HOST + endpoint;
+            if (method == APIMethod.GET) {
+                if (data !== undefined && data !== {}) {
+                    endpoint += this.queryFormat(data);
+                }
+                $http.get(endpoint).then(this.finish.bind(this)).catch(this.fail.bind(this));
+            }
+            else {
+                $http.post(endpoint, data).then(this.finish.bind(this)).catch(this.fail.bind(this));
+            }
+        }
+        APIRequest.prototype.finish = function (response) {
+            if (response['status'] !== 200) {
+                return this.fail(response);
+            }
+            this.onsuccess(response['data'], response['headers']);
+        };
+        APIRequest.prototype.fail = function (error) {
+            if (this.onfail !== undefined) {
+                this.onfail(error);
+            }
+            console.log(error);
+        };
+        APIRequest.prototype.queryFormat = function (data) {
+            var s = [];
+            for (var i in data) {
+                s.push(encodeURIComponent(i) + "=" + encodeURIComponent(data[i]));
+            }
+            return "?" + s.join("&").replace(/%20/g, "+");
+        };
+        APIRequest.prototype.then = function (f, e) {
+            this.onsuccess = f;
+            if (e !== undefined) {
+                this.onfail = e;
+            }
+            return this;
+        };
+        APIRequest.prototype.catch = function (f) { this.onfail = f; return this; };
+        return APIRequest;
+    })();
+    Shared.APIRequest = APIRequest;
+})(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {
     var Directives;
@@ -125,7 +183,27 @@ var Shared;
     })(Controllers = Shared.Controllers || (Shared.Controllers = {}));
 })(Shared || (Shared = {}));
 /// <reference path="../../../shared/data-types.ts" />
+/// <reference path="../../js/shared/api.ts" />
 /// <reference path="../../js/typings/angular/angular.d.ts" />
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var Shared;
+(function (Shared) {
+    var UpvoteAPIRequest = (function (_super) {
+        __extends(UpvoteAPIRequest, _super);
+        function UpvoteAPIRequest($http, contentId) {
+            _super.call(this, $http, "/UpvotePresContent", { id: contentId }, Shared.APIMethod.GET);
+        }
+        return UpvoteAPIRequest;
+    })(Shared.APIRequest);
+    Shared.UpvoteAPIRequest = UpvoteAPIRequest;
+})(Shared || (Shared = {}));
+/// <reference path="../../../shared/data-types.ts" />
+/// <reference path="../../js/typings/angular/angular.d.ts" />
+/// <reference path="./api.ts" />
 var Shared;
 (function (Shared) {
     var Directives;
@@ -137,7 +215,8 @@ var Shared;
                 bindToController: {
                     content: "=",
                     showThumbnail: "=",
-                    expanded: "="
+                    expanded: "=",
+                    onToggle: "&"
                 },
                 controller: Shared.Controllers.FFContentBoxController,
                 controllerAs: "cc",
@@ -153,7 +232,9 @@ var Shared;
     var Controllers;
     (function (Controllers) {
         var FFContentBoxController = (function () {
-            function FFContentBoxController($element) {
+            function FFContentBoxController($scope, $element, $http) {
+                this.scope = $scope;
+                this.http = $http;
                 if (this.showThumbnail !== undefined) {
                     return;
                 }
@@ -167,7 +248,14 @@ var Shared;
                 this.showThumbnail = (this.content.type == FFContentType.Image ||
                     this.content.type == FFContentType.Video) && width > 300;
             };
-            FFContentBoxController.$inject = ["$element"];
+            FFContentBoxController.prototype.upvoteContent = function () {
+                var _this = this;
+                this.content.upvotes += 1;
+                new Shared.UpvoteAPIRequest(this.http, this.content.id).catch(function () {
+                    _this.content.upvotes -= 1;
+                });
+            };
+            FFContentBoxController.$inject = ["$scope", "$element", "$http"];
             return FFContentBoxController;
         })();
         Controllers.FFContentBoxController = FFContentBoxController;
@@ -185,15 +273,17 @@ var Playground;
                 name: "Keaton Brandt"
             };
             this.imageContent = {
+                id: 1,
                 type: FFContentType.Image,
                 submitter: this.testUser1,
                 timestamp: new Date().getTime(),
                 upvotes: 3,
                 flagged: 0,
                 title: "view.png",
-                link: "https://goo.gl/jQBTBR"
+                link: "/images/dummy/view.jpg"
             };
             this.imageContent2 = {
+                id: 2,
                 type: FFContentType.Image,
                 submitter: this.testUser1,
                 timestamp: new Date().getTime(),
@@ -201,9 +291,10 @@ var Playground;
                 flagged: 0,
                 title: "montreal.png",
                 text: "Great view from the top of Mont Royal",
-                link: "https://goo.gl/VJJujY"
+                link: "/images/dummy/montreal.jpg"
             };
             this.videoContent = {
+                id: 3,
                 type: FFContentType.Video,
                 submitter: this.testUser1,
                 timestamp: new Date().getTime(),

@@ -15,6 +15,7 @@ interface FFUser {
 }
 
 interface FFGenericContent {
+  id: number;
   type: FFContentType;
   title: string;
   submitter: FFUser;
