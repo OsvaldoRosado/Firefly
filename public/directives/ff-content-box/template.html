@@ -1,4 +1,4 @@
-<div class="ffContentBox" ng-class="{expanded: cc.expanded}">
+<div class="ffContentBox" ng-class="{expanded: cc.expanded, isQuestion: cc.isQuestion}">
 
   <!-- This this large view is displayed when the element is displayed -->
   <collapse expanded="cc.expanded">
@@ -20,7 +20,10 @@
       <div class="bottomrow">
         <p ng-bind="cc.content.filename" class="filename"
            ng-if="cc.content.filename && cc.content.text"></p>
-        <p ng-bind="cc.content.upvotes" ng-if="cc.showUpvotes"></p>
+        <p ng-if="cc.content.replies">
+          <span ng-bind="cc.content.replies.length"></span>
+          <span ng-bind="cc.content.replies.length > 1 ? ' Replies': ' Reply'"></span>
+        </p>
         <cite> - <span ng-bind="cc.content.submitter.name"></span></cite>
       </div>
     </div>
@@ -37,7 +40,7 @@
         <img src="/images/Actions-Flag.svg" alt="Flag">
         <p>Flag Content</p>
       </div>
-      <div class="action">
+      <div class="action" ng-hide="cc.isQuestion">
         <img src="/images/Actions-Share.svg" alt="Share">
         <p>Share</p>
       </div>

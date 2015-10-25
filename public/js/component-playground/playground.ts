@@ -11,6 +11,7 @@ module Playground {
 		imageContent: FFLinkContent;
 		imageContent2: FFLinkContent;
 		videoContent: FFYoutubeContent;
+		questionContent: FFQuestion;
 			
 		// Store the index of the currently expanded content item
 		expandedIndex: number;
@@ -58,6 +59,34 @@ module Playground {
 				title: "Beach House - On The Sea",
 				youtubeId: "0qz0IJXQ720",
 				channelTitle: "Sub Pop"
+			}
+			
+			this.questionContent = {
+				id: 4,
+				type: FFContentType.Question,
+				submitter: this.testUser1,
+				timestamp: new Date().getTime(),
+				upvotes: 0,
+				flagged: 0,
+				text: `
+					Is there any reason at all to use Model-View-Controller
+					instead of Model-View-ViewModel or whatever other sensible
+					alternative?
+				`,
+				replies: [
+					{
+						id: 5,
+						type: FFContentType.QuestionResponse,
+						submitter: this.testUser1,
+						timestamp: new Date().getTime(),
+						upvotes: 0,
+						flagged: 0,
+						text: `
+							No. Why would the model directly update the view?
+							That makes no sense.
+						`
+					}
+				]
 			}
 		}
 		

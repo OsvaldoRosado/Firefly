@@ -243,7 +243,7 @@ var Shared;
             function FFContentBoxController($scope, $element, $http) {
                 this.scope = $scope;
                 this.http = $http;
-                this.showUpvotes = (this.content.type == FFContentType.Question);
+                this.isQuestion = (this.content.type == FFContentType.Question);
                 if (this.showThumbnail !== undefined) {
                     return;
                 }
@@ -312,6 +312,26 @@ var Playground;
                 title: "Beach House - On The Sea",
                 youtubeId: "0qz0IJXQ720",
                 channelTitle: "Sub Pop"
+            };
+            this.questionContent = {
+                id: 4,
+                type: FFContentType.Question,
+                submitter: this.testUser1,
+                timestamp: new Date().getTime(),
+                upvotes: 0,
+                flagged: 0,
+                text: "\n\t\t\t\t\tIs there any reason at all to use Model-View-Controller\n\t\t\t\t\tinstead of Model-View-ViewModel or whatever other sensible\n\t\t\t\t\talternative?\n\t\t\t\t",
+                replies: [
+                    {
+                        id: 5,
+                        type: FFContentType.QuestionResponse,
+                        submitter: this.testUser1,
+                        timestamp: new Date().getTime(),
+                        upvotes: 0,
+                        flagged: 0,
+                        text: "\n\t\t\t\t\t\t\tNo. Why would the model directly update the view?\n\t\t\t\t\t\t\tThat makes no sense.\n\t\t\t\t\t\t"
+                    }
+                ]
             };
         }
         AppController.prototype.expandItem = function ($scope, index) {

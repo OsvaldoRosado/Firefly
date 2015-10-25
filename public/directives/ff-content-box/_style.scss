@@ -13,6 +13,10 @@
   &.expanded {
     background-color: $callout-lightest;
     box-shadow: $highlight-shadow;
+    
+    &.isQuestion {
+      background-color: $callout-light;
+    }
   }
 
   // Top Content

@@ -46,7 +46,7 @@ module Shared.Controllers {
     onToggle: Function;
     
     // Template rendering settings
-    showUpvotes: boolean;
+    isQuestion: boolean;
     
     
     // Watch for the content or element size changing
@@ -56,7 +56,7 @@ module Shared.Controllers {
       this.http = $http;
       
       // Analyze the content for ideal display
-      this.showUpvotes = (this.content.type == FFContentType.Question);
+      this.isQuestion = (this.content.type == FFContentType.Question);
       
       // If the user specifies a value, our work is done
       if (this.showThumbnail !== undefined) {return;}
