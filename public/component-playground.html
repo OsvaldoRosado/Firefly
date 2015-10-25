@@ -7,6 +7,8 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
 		<script src="./js/component-playground/playground.js"></script>
 		<script src="./js/component-playground/templates.js"></script>
+		
+		<meta name="viewport" content="width=388, user-scalable=no">
 
     <link rel="stylesheet" href="./css/component-playground.css" media="screen" title="no title" charset="utf-8">
 
@@ -26,6 +28,11 @@
 	<ff-content-box 
 		display="0" content="app.videoContent"
 		expanded="app.expandedIndex | equals:2" on-toggle="app.expandItem($scope,2)"
+	></ff-content-box>
+	
+	<ff-content-box 
+		display="0" content="app.questionContent"
+		expanded="app.expandedIndex | equals:3" on-toggle="app.expandItem($scope,3)"
 	></ff-content-box>
 
 	</body>

@@ -17,7 +17,6 @@ interface FFUser {
 interface FFGenericContent {
   id: number;
   type: FFContentType;
-  title: string;
   submitter: FFUser;
   timestamp: number;
   upvotes: number;
@@ -30,6 +29,7 @@ interface FFTextContent extends FFGenericContent {
 
 interface FFLinkContent extends FFGenericContent {
   link: string;
+  filename: string;
   text?: string; // Used here for notes
 }
 
