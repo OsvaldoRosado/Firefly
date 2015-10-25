@@ -87,16 +87,12 @@ var Shared;
                 template: "<ng-transclude></ng-transclude>",
                 link: function (scope, jq, attrs) {
                     var element = jq[0];
+                    var transclude = element.querySelector("ng-transclude");
+                    transclude.style.display = "block";
                     var getInnerHeight = function () {
-                        var child = element.children[0];
-                        if (!child) {
-                            return 0;
-                        }
-                        child = child.children[0];
-                        if (!child) {
-                            return 0;
-                        }
-                        return child.getBoundingClientRect().height;
+                        var lastChild = transclude.children[transclude.children.length - 1];
+                        var marginBottom = parseInt(window.getComputedStyle(lastChild).marginBottom);
+                        return transclude.getBoundingClientRect().height + marginBottom;
                     };
                     element.style.overflow = "hidden";
                     element.style.display = "block";
@@ -112,6 +108,7 @@ var Shared;
                         if (newValue == oldValue) {
                             return;
                         }
+                        element.setAttribute("is-expanded", newValue);
                         var destinationHeight = "0px";
                         if (newValue) {
                             destinationHeight = (getInnerHeight() + "px") || "100%";
@@ -272,6 +269,26 @@ var Shared;
 })(Shared || (Shared = {}));
 /// <reference path="../../../shared/data-types.ts" />
 /// <reference path="../../js/typings/angular/angular.d.ts" />
+var Shared;
+(function (Shared) {
+    var Directives;
+    (function (Directives) {
+        function ffQuestion() {
+            return {
+                restrict: "E",
+                scope: {
+                    content: "=",
+                    isReply: "="
+                },
+                replace: true,
+                templateUrl: "public/directives/ff-question/template.html"
+            };
+        }
+        Directives.ffQuestion = ffQuestion;
+    })(Directives = Shared.Directives || (Shared.Directives = {}));
+})(Shared || (Shared = {}));
+/// <reference path="../../../shared/data-types.ts" />
+/// <reference path="../../js/typings/angular/angular.d.ts" />
 var Playground;
 (function (Playground) {
     var AppController = (function () {
@@ -320,7 +337,7 @@ var Playground;
                 timestamp: new Date().getTime(),
                 upvotes: 0,
                 flagged: 0,
-                text: "\n\t\t\t\t\tIs there any reason at all to use Model-View-Controller\n\t\t\t\t\tinstead of Model-View-ViewModel or whatever other sensible\n\t\t\t\t\talternative?\n\t\t\t\t",
+                text: "Is there any reason at all to use Model-View-Controller\n\t\t\t\t\tinstead of Model-View-ViewModel or whatever other sensible\n\t\t\t\t\talternative?\n\t\t\t\t",
                 replies: [
                     {
                         id: 5,
@@ -329,7 +346,16 @@ var Playground;
                         timestamp: new Date().getTime(),
                         upvotes: 0,
                         flagged: 0,
-                        text: "\n\t\t\t\t\t\t\tNo. Why would the model directly update the view?\n\t\t\t\t\t\t\tThat makes no sense.\n\t\t\t\t\t\t"
+                        text: "No. Why would the model directly update the view?\n\t\t\t\t\t\t\tThat makes no sense.\n\t\t\t\t\t\t"
+                    },
+                    {
+                        id: 6,
+                        type: FFContentType.QuestionResponse,
+                        submitter: this.testUser1,
+                        timestamp: new Date().getTime(),
+                        upvotes: 0,
+                        flagged: 0,
+                        text: "I mean, seriously, it doesn't reduce glue code it\n\t\t\t\t\t\t\tjust makes sure every component has the same amount of glue.\n\t\t\t\t\t\t"
                     }
                 ]
             };

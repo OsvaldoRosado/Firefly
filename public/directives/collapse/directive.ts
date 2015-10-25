@@ -29,12 +29,14 @@ module Shared.Directives {
       // The only thing is does is expand or contract
       link: function(scope: Shared.CollapsedScope, jq: ng.IAugmentedJQuery, attrs: Object) {
         var element : HTMLElement = jq[0];
+        var transclude : HTMLElement = <HTMLElement>element.querySelector("ng-transclude");
+        transclude.style.display = "block";
         
         // Get the height of the inner element
         var getInnerHeight = function():number {
-          var child : HTMLElement = <HTMLElement>element.children[0]; if (!child) {return 0;}
-          child = <HTMLElement>child.children[0]; if (!child) {return 0;}
-          return child.getBoundingClientRect().height;
+          var lastChild : HTMLElement = <HTMLElement>transclude.children[transclude.children.length - 1];
+          var marginBottom : number = parseInt(window.getComputedStyle(lastChild).marginBottom);
+          return transclude.getBoundingClientRect().height + marginBottom;
         }
 
         // Make sure this actually does what it's supposed to do, visually
@@ -53,6 +55,7 @@ module Shared.Directives {
         // Wait for the collapsedness value to change
         scope.$watch("expanded", function(newValue: boolean, oldValue: boolean) {
           if (newValue == oldValue) {return;} // This should never happen
+          element.setAttribute("is-expanded", newValue);
 
           // How big do we want this directive to be?
           var destinationHeight : string = "0px";

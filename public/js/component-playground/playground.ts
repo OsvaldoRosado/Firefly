@@ -68,8 +68,7 @@ module Playground {
 				timestamp: new Date().getTime(),
 				upvotes: 0,
 				flagged: 0,
-				text: `
-					Is there any reason at all to use Model-View-Controller
+				text: `Is there any reason at all to use Model-View-Controller
 					instead of Model-View-ViewModel or whatever other sensible
 					alternative?
 				`,
@@ -81,9 +80,19 @@ module Playground {
 						timestamp: new Date().getTime(),
 						upvotes: 0,
 						flagged: 0,
-						text: `
-							No. Why would the model directly update the view?
+						text: `No. Why would the model directly update the view?
 							That makes no sense.
+						`
+					},
+					{
+						id: 6,
+						type: FFContentType.QuestionResponse,
+						submitter: this.testUser1,
+						timestamp: new Date().getTime(),
+						upvotes: 0,
+						flagged: 0,
+						text: `I mean, seriously, it doesn't reduce glue code it
+							just makes sure every component has the same amount of glue.
 						`
 					}
 				]
