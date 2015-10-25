@@ -15,6 +15,7 @@ interface FFUser {
 }
 
 interface FFGenericContent {
+  id: number;
   type: FFContentType;
   title: string;
   submitter: FFUser;
@@ -30,6 +31,14 @@ interface FFTextContent extends FFGenericContent {
 interface FFLinkContent extends FFGenericContent {
   link: string;
   text?: string; // Used here for notes
+}
+
+interface FFYoutubeContent extends FFGenericContent {
+  youtubeId: string;
+  title: string;
+  channelTitle: string;
+  thumbnail?: string;
+  embed?: string;
 }
 
 interface FFQuestion extends FFTextContent {

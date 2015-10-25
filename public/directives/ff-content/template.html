@@ -1,3 +1,13 @@
 <div ng-if="cview.isImage">
   <img ng-src="{{cview.content.link}}" alt="{{cview.content.name}}" />
 </div>
+
+<div ng-if="cview.isVideo">
+  <!-- Show a thumbnail -->
+  <img ng-if="cview.thumbnail" 
+      ng-src="{{cview.content.thumbnail}}" 
+      alt="{{cview.content.title}}" />
+  <!-- Show the full embed -->
+  <iframe ng-if="!cview.thumbnail" 
+      src="{{cview.content.embed}}" frameborder="0"></iframe>
+</div>

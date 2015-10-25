@@ -10,6 +10,7 @@ module Playground {
 		testUser1: FFUser;
 		imageContent: FFLinkContent;
 		imageContent2: FFLinkContent;
+		videoContent: FFYoutubeContent;
 			
 		// Store the index of the currently expanded content item
 		expandedIndex: number;
@@ -25,16 +26,18 @@ module Playground {
 			};
 
 			this.imageContent = {
+				id: 1,
 				type: FFContentType.Image,
 				submitter: this.testUser1,
 				timestamp: new Date().getTime(),
 				upvotes: 3,
 				flagged: 0,
 				title: "view.png",
-				link: "https://goo.gl/jQBTBR"
+				link: "/images/dummy/view.jpg"
 			};
 			
 			this.imageContent2 = {
+				id: 2,
 				type: FFContentType.Image,
 				submitter: this.testUser1,
 				timestamp: new Date().getTime(),
@@ -42,7 +45,19 @@ module Playground {
 				flagged: 0,
 				title: "montreal.png",
 				text: "Great view from the top of Mont Royal",
-				link: "https://goo.gl/VJJujY"
+				link: "/images/dummy/montreal.jpg"
+			}
+			
+			this.videoContent = {
+				id: 3,
+				type: FFContentType.Video,
+				submitter: this.testUser1,
+				timestamp: new Date().getTime(),
+				upvotes: 0,
+				flagged: 0,
+				title: "Beach House - On The Sea",
+				youtubeId: "0qz0IJXQ720",
+				channelTitle: "Sub Pop"
 			}
 		}
 		
@@ -62,5 +77,9 @@ module Playground {
   		.directive(Shared.Directives)
 		.filter("equals", function() {
 			return function(value, equals) : boolean {return value == equals;}
-		});
+		})
+		.config(["$sceProvider",function($sceProvider) {
+			// Completely disable SCE so Youtube embeds will work.
+			$sceProvider.enabled(false);
+		}]);
 }

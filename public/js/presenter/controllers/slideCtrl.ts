@@ -1,4 +1,12 @@
+/// <reference path="../../shared/api.ts" />
 module PresenterApp.Controllers{
+	
+	class GetPresentationAPIRequest extends Shared.APIRequest<PresentationFromId> {
+		constructor($http: ng.IHttpService, presentationId: string) {
+			super($http, "/getPresentationFromId/" + presentationId, {});
+		}
+	}
+	
 	export class SlideCtrl{
 
 		scope: ng.IScope;
@@ -18,19 +26,13 @@ module PresenterApp.Controllers{
 		error: string;
 
 		static $inject = ["$scope", "$http"];
-
 		constructor($scope: ng.IScope, $http: ng.IHttpService) {
 			this.scope = $scope;
-			this.http = $http;
 			this.presRunning = false;
 
 			var sampleId = "59227f68-0818-4493-91df-c4b065a5011b-2";
-			this.http.get("/getPresentationFromId/" + sampleId)
-				.then((response: ng.IHttpPromiseCallbackArg<PresentationFromId>) => {
-					var result = response.data;
-					if (!result.success || result.data.length < 1) {
-						this.error = "Your presentation was not found!";
-					}
+			new GetPresentationAPIRequest($http, sampleId)
+				.then((result: PresentationFromId) => {
 					this.currentSlide = 0;
 					this.slideCount = result.data.length;
 					this.presName = result.data.name;

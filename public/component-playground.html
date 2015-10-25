@@ -15,12 +15,17 @@
 
     <ff-content-box 
 		display="0" content="app.imageContent"
-		expanded="app.expandedIndex | equals:0" ng-click="app.expandItem($scope,0)"
+		expanded="app.expandedIndex | equals:0" on-toggle="app.expandItem($scope,0)"
 	></ff-content-box>
 	
 	<ff-content-box 
-		display="0" content="app.imageContent2"
-		expanded="app.expandedIndex | equals:1" ng-click="app.expandItem($scope,1)"
+		display="0" content="app.imageContent2" show-thumbnail="false"
+		expanded="app.expandedIndex | equals:1" on-toggle="app.expandItem($scope,1)"
+	></ff-content-box>
+	
+	<ff-content-box 
+		display="0" content="app.videoContent"
+		expanded="app.expandedIndex | equals:2" on-toggle="app.expandItem($scope,2)"
 	></ff-content-box>
 
 	</body>
