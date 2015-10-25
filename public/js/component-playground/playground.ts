@@ -32,7 +32,7 @@ module Playground {
 				timestamp: new Date().getTime(),
 				upvotes: 3,
 				flagged: 0,
-				title: "view.png",
+				filename: "view.png",
 				link: "/images/dummy/view.jpg"
 			};
 			
@@ -43,7 +43,7 @@ module Playground {
 				timestamp: new Date().getTime(),
 				upvotes: 0,
 				flagged: 0,
-				title: "montreal.png",
+				filename: "montreal.png",
 				text: "Great view from the top of Mont Royal",
 				link: "/images/dummy/montreal.jpg"
 			}

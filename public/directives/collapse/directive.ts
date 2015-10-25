@@ -29,6 +29,13 @@ module Shared.Directives {
       // The only thing is does is expand or contract
       link: function(scope: Shared.CollapsedScope, jq: ng.IAugmentedJQuery, attrs: Object) {
         var element : HTMLElement = jq[0];
+        
+        // Get the height of the inner element
+        var getInnerHeight = function():number {
+          var child : HTMLElement = <HTMLElement>element.children[0]; if (!child) {return 0;}
+          child = <HTMLElement>child.children[0]; if (!child) {return 0;}
+          return child.getBoundingClientRect().height;
+        }
 
         // Make sure this actually does what it's supposed to do, visually
         element.style.overflow = "hidden";
@@ -37,6 +44,10 @@ module Shared.Directives {
         // Start collapsed if requested
         if (!scope.expanded) {
           element.style.height = "0px";
+        } else {
+          setTimeout(function(){
+            element.style.height = getInnerHeight()+"px";
+          }, 100);
         }
 
         // Wait for the collapsedness value to change
@@ -46,9 +57,7 @@ module Shared.Directives {
           // How big do we want this directive to be?
           var destinationHeight : string = "0px";
           if (newValue) {
-            var child : HTMLElement = <HTMLElement>element.children[0]; if (!child) {return;}
-            child = <HTMLElement>child.children[0]; if (!child) {return;}
-            destinationHeight = (child.getBoundingClientRect().height+"px") || "100%";
+            destinationHeight = (getInnerHeight()+"px") || "100%";
           }
 
           // Start CSS3 animation

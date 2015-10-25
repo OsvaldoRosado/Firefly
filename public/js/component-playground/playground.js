@@ -87,10 +87,26 @@ var Shared;
                 template: "<ng-transclude></ng-transclude>",
                 link: function (scope, jq, attrs) {
                     var element = jq[0];
+                    var getInnerHeight = function () {
+                        var child = element.children[0];
+                        if (!child) {
+                            return 0;
+                        }
+                        child = child.children[0];
+                        if (!child) {
+                            return 0;
+                        }
+                        return child.getBoundingClientRect().height;
+                    };
                     element.style.overflow = "hidden";
                     element.style.display = "block";
                     if (!scope.expanded) {
                         element.style.height = "0px";
+                    }
+                    else {
+                        setTimeout(function () {
+                            element.style.height = getInnerHeight() + "px";
+                        }, 100);
                     }
                     scope.$watch("expanded", function (newValue, oldValue) {
                         if (newValue == oldValue) {
@@ -98,15 +114,7 @@ var Shared;
                         }
                         var destinationHeight = "0px";
                         if (newValue) {
-                            var child = element.children[0];
-                            if (!child) {
-                                return;
-                            }
-                            child = child.children[0];
-                            if (!child) {
-                                return;
-                            }
-                            destinationHeight = (child.getBoundingClientRect().height + "px") || "100%";
+                            destinationHeight = (getInnerHeight() + "px") || "100%";
                         }
                         var duration = parseInt(scope.duration) || 200;
                         element.style.transition = "height " + duration + "ms ease-out";
@@ -235,6 +243,7 @@ var Shared;
             function FFContentBoxController($scope, $element, $http) {
                 this.scope = $scope;
                 this.http = $http;
+                this.showUpvotes = (this.content.type == FFContentType.Question);
                 if (this.showThumbnail !== undefined) {
                     return;
                 }
@@ -279,7 +288,7 @@ var Playground;
                 timestamp: new Date().getTime(),
                 upvotes: 3,
                 flagged: 0,
-                title: "view.png",
+                filename: "view.png",
                 link: "/images/dummy/view.jpg"
             };
             this.imageContent2 = {
@@ -289,7 +298,7 @@ var Playground;
                 timestamp: new Date().getTime(),
                 upvotes: 0,
                 flagged: 0,
-                title: "montreal.png",
+                filename: "montreal.png",
                 text: "Great view from the top of Mont Royal",
                 link: "/images/dummy/montreal.jpg"
             };

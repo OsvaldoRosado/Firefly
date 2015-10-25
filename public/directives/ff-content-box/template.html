@@ -11,14 +11,17 @@
       class="thumb" content="cc.content" thumbnail="true"></ff-content>
     <div class="meta">
       <h3 ng-bind="cc.content.text" ng-if="cc.content.text"></h3>
+      <h3 ng-bind="cc.content.filename" 
+          ng-if="cc.content.filename && !cc.content.text"></h3>
+      <h3 ng-bind="cc.content.title" ng-if="cc.content.title"></h3>
+      <h5 ng-if="cc.content.channelTitle">
+        Posted by <span ng-bind="cc.content.channelTitle"></span>
+      </h5>
       <div class="bottomrow">
-        <p ng-bind="cc.content.title"></p>
-        <cite>
-          <span ng-bind="cc.content.submitter.name"></span>
-          <span ng-if="cc.content.channelTitle">
-            - by <span ng-bind="cc.content.channelTitle"></span>
-          </span>
-        </cite>
+        <p ng-bind="cc.content.filename" class="filename"
+           ng-if="cc.content.filename && cc.content.text"></p>
+        <p ng-bind="cc.content.upvotes" ng-if="cc.showUpvotes"></p>
+        <cite> - <span ng-bind="cc.content.submitter.name"></span></cite>
       </div>
     </div>
   </div>
