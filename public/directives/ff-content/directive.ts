@@ -47,7 +47,7 @@ module Shared.Controllers {
       return `http://img.youtube.com/vi/${(<FFYoutubeContent>this.content).youtubeId}/0.jpg`;
     }
     getEmbedCode() {
-      return `http://www.youtube.com/embed/${(<FFYoutubeContent>this.content).youtubeId}"`;
+      return `http://www.youtube.com/embed/${(<FFYoutubeContent>this.content).youtubeId}`;
     }
 
     // Watch for the content or element size changing

@@ -160,7 +160,7 @@ var Shared;
                 return "http://img.youtube.com/vi/" + this.content.youtubeId + "/0.jpg";
             };
             FFContentViewController.prototype.getEmbedCode = function () {
-                return "http://www.youtube.com/embed/" + this.content.youtubeId + "\"";
+                return "http://www.youtube.com/embed/" + this.content.youtubeId;
             };
             FFContentViewController.prototype.updateRenderDetails = function () {
                 if (this.content == undefined) {
