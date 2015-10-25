@@ -3,15 +3,10 @@
 
 module Shared {
 
-  export enum FFContentDisplayType {
-    FFContentThumbnail = 0,
-    FFContentLarge = 1
-  }
-
   export interface FFContentDisplayAttr {
     content: FFGenericContent;
-    display: FFContentDisplayType;
     expanded: boolean;
+    showThumbnail?: boolean;
   }
 
 }
@@ -24,7 +19,7 @@ module Shared.Directives {
       scope: true,
       bindToController: {
         content: "=",
-        display: "@",
+        showThumbnail: "=",
         expanded: "="
       },
       controller: Shared.Controllers.FFContentBoxController,
@@ -40,7 +35,31 @@ module Shared.Controllers {
 
   export class FFContentBoxController {
     content: FFGenericContent;
-    display: FFContentDisplayType;
+    showThumbnail: boolean;
     expanded: boolean;
+    
+    // Watch for the content or element size changing
+    static $inject = ["$element"];
+		constructor($element: ng.IAugmentedJQuery) {
+      
+      // If the user specifies a value, our work is done
+      if (this.showThumbnail !== undefined) {return;}
+      
+      // Otherwise the thumbnail depends on the size of the object
+      var element : HTMLElement = $element[0];
+      this.resize(element.offsetWidth);
+      
+      $element.on("resize", function(){
+        this.resize(element.offsetWidth);
+      }.bind(this));
+    }
+    
+    // Resize element
+    resize(width: number) {
+      this.showThumbnail = (
+        this.content.type == FFContentType.Image || 
+        this.content.type == FFContentType.Video
+      ) && width > 300;
+    }
   }
 }

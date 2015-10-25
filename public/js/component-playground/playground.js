@@ -128,14 +128,6 @@ var Shared;
 /// <reference path="../../js/typings/angular/angular.d.ts" />
 var Shared;
 (function (Shared) {
-    (function (FFContentDisplayType) {
-        FFContentDisplayType[FFContentDisplayType["FFContentThumbnail"] = 0] = "FFContentThumbnail";
-        FFContentDisplayType[FFContentDisplayType["FFContentLarge"] = 1] = "FFContentLarge";
-    })(Shared.FFContentDisplayType || (Shared.FFContentDisplayType = {}));
-    var FFContentDisplayType = Shared.FFContentDisplayType;
-})(Shared || (Shared = {}));
-var Shared;
-(function (Shared) {
     var Directives;
     (function (Directives) {
         function ffContentBox() {
@@ -144,7 +136,7 @@ var Shared;
                 scope: true,
                 bindToController: {
                     content: "=",
-                    display: "@",
+                    showThumbnail: "=",
                     expanded: "="
                 },
                 controller: Shared.Controllers.FFContentBoxController,
@@ -161,8 +153,21 @@ var Shared;
     var Controllers;
     (function (Controllers) {
         var FFContentBoxController = (function () {
-            function FFContentBoxController() {
+            function FFContentBoxController($element) {
+                if (this.showThumbnail !== undefined) {
+                    return;
+                }
+                var element = $element[0];
+                this.resize(element.offsetWidth);
+                $element.on("resize", function () {
+                    this.resize(element.offsetWidth);
+                }.bind(this));
             }
+            FFContentBoxController.prototype.resize = function (width) {
+                this.showThumbnail = (this.content.type == FFContentType.Image ||
+                    this.content.type == FFContentType.Video) && width > 300;
+            };
+            FFContentBoxController.$inject = ["$element"];
             return FFContentBoxController;
         })();
         Controllers.FFContentBoxController = FFContentBoxController;

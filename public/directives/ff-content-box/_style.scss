@@ -46,13 +46,22 @@
       width: 62%;
       margin-left: 6%;
     }
+    
+    &.nothumb {
+      display: block;
+      
+      .meta {
+        width: 94%;
+        margin: 0 3%;
+      }
+    }
   }
 
 
   h3 {
     margin-top: 5px;
     margin-bottom: 8px;
-    font-size: 13pt;
+    font-size: 11pt;
     
     &::before, &::after {
       content: "\"";

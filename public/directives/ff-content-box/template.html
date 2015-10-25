@@ -6,13 +6,19 @@
   </collapse>
 
   <!-- This section is always visible -->
-  <div class="desc">
-    <ff-content class="thumb" content="cc.content" thumbnail="true"></ff-content>
+  <div class="desc" ng-class="{nothumb: !cc.showThumbnail}">
+    <ff-content ng-if="cc.showThumbnail"
+      class="thumb" content="cc.content" thumbnail="true"></ff-content>
     <div class="meta">
       <h3 ng-bind="cc.content.text" ng-if="cc.content.text"></h3>
-      <div class="bottomrow" ng-class="{full: !(cc.content.text == undefined)}">
+      <div class="bottomrow">
         <p ng-bind="cc.content.title"></p>
-        <cite ng-bind="cc.content.submitter.name"></cite>
+        <cite>
+          <span ng-bind="cc.content.submitter.name"></span>
+          <span ng-if="cc.content.channelTitle">
+            - by <span ng-bind="cc.content.channelTitle"></span>
+          </span>
+        </cite>
       </div>
     </div>
   </div>
