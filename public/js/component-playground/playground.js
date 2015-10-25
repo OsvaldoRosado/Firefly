@@ -76,7 +76,8 @@ var Shared;
                 restrict: "E",
                 scope: true,
                 bindToController: {
-                    content: "="
+                    content: "=",
+                    thumbnail: "="
                 },
                 controller: Shared.Controllers.FFContentViewController,
                 controllerAs: "cview",
@@ -93,16 +94,29 @@ var Shared;
     (function (Controllers) {
         var FFContentViewController = (function () {
             function FFContentViewController($scope) {
+                this.thumbnailCutoffWidth = 150;
                 this.updateRenderDetails();
                 $scope.$watch(function () { return this.content; }, this.updateRenderDetails.bind(this));
             }
+            FFContentViewController.prototype.getThumbnail = function () {
+                return "http://img.youtube.com/vi/" + this.content.youtubeId + "/0.jpg";
+            };
+            FFContentViewController.prototype.getEmbedCode = function () {
+                return "http://www.youtube.com/embed/" + this.content.youtubeId + "\"";
+            };
             FFContentViewController.prototype.updateRenderDetails = function () {
                 if (this.content == undefined) {
                     return;
                 }
-                this.isImage = (this.content.type == FFContentType.Image);
-                this.isFrame = (this.content.type == FFContentType.Video);
-                this.reducesToIcon = !this.isImage && !this.isFrame;
+                this.isImage = this.content.type == FFContentType.Image;
+                this.isVideo = this.content.type == FFContentType.Video;
+                if (this.content.youtubeId !== undefined) {
+                    this.renderYouTube(this.content);
+                }
+            };
+            FFContentViewController.prototype.renderYouTube = function (content) {
+                content.thumbnail = this.getThumbnail();
+                content.embed = this.getEmbedCode();
             };
             FFContentViewController.$inject = ["$scope"];
             return FFContentViewController;
@@ -184,6 +198,16 @@ var Playground;
                 text: "Great view from the top of Mont Royal",
                 link: "https://goo.gl/VJJujY"
             };
+            this.videoContent = {
+                type: FFContentType.Video,
+                submitter: this.testUser1,
+                timestamp: new Date().getTime(),
+                upvotes: 0,
+                flagged: 0,
+                title: "Beach House - On The Sea",
+                youtubeId: "0qz0IJXQ720",
+                channelTitle: "Sub Pop"
+            };
         }
         AppController.prototype.expandItem = function ($scope, index) {
             if (this.expandedIndex == index) {
@@ -202,5 +226,8 @@ var Playground;
         .directive(Shared.Directives)
         .filter("equals", function () {
         return function (value, equals) { return value == equals; };
-    });
+    })
+        .config(["$sceProvider", function ($sceProvider) {
+            $sceProvider.enabled(false);
+        }]);
 })(Playground || (Playground = {}));

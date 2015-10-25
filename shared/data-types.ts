@@ -32,6 +32,14 @@ interface FFLinkContent extends FFGenericContent {
   text?: string; // Used here for notes
 }
 
+interface FFYoutubeContent extends FFGenericContent {
+  youtubeId: string;
+  title: string;
+  channelTitle: string;
+  thumbnail?: string;
+  embed?: string;
+}
+
 interface FFQuestion extends FFTextContent {
   replies: Array<FFTextContent>;
 }

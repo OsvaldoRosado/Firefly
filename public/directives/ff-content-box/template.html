@@ -2,15 +2,15 @@
 
   <!-- This this large view is displayed when the element is displayed -->
   <collapse expanded="cc.expanded">
-    <ff-content content="cc.content" class="full"></ff-content>
+    <ff-content content="cc.content" class="full" thumbnail="false"></ff-content>
   </collapse>
 
   <!-- This section is always visible -->
   <div class="desc">
-    <ff-content class="thumb" content="cc.content"></ff-content>
+    <ff-content class="thumb" content="cc.content" thumbnail="true"></ff-content>
     <div class="meta">
       <h3 ng-bind="cc.content.text" ng-if="cc.content.text"></h3>
-      <div class="bottomrow">
+      <div class="bottomrow" ng-class="{full: !(cc.content.text == undefined)}">
         <p ng-bind="cc.content.title"></p>
         <cite ng-bind="cc.content.submitter.name"></cite>
       </div>

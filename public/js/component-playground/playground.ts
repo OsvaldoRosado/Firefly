@@ -10,6 +10,7 @@ module Playground {
 		testUser1: FFUser;
 		imageContent: FFLinkContent;
 		imageContent2: FFLinkContent;
+		videoContent: FFYoutubeContent;
 			
 		// Store the index of the currently expanded content item
 		expandedIndex: number;
@@ -44,6 +45,17 @@ module Playground {
 				text: "Great view from the top of Mont Royal",
 				link: "https://goo.gl/VJJujY"
 			}
+			
+			this.videoContent = {
+				type: FFContentType.Video,
+				submitter: this.testUser1,
+				timestamp: new Date().getTime(),
+				upvotes: 0,
+				flagged: 0,
+				title: "Beach House - On The Sea",
+				youtubeId: "0qz0IJXQ720",
+				channelTitle: "Sub Pop"
+			}
 		}
 		
 		// Select a new item
@@ -62,5 +74,9 @@ module Playground {
   		.directive(Shared.Directives)
 		.filter("equals", function() {
 			return function(value, equals) : boolean {return value == equals;}
-		});
+		})
+		.config(["$sceProvider",function($sceProvider) {
+			// Completely disable SCE so Youtube embeds will work.
+			$sceProvider.enabled(false);
+		}]);
 }
