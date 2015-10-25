@@ -29,6 +29,15 @@ module Shared.Directives {
       // The only thing is does is expand or contract
       link: function(scope: Shared.CollapsedScope, jq: ng.IAugmentedJQuery, attrs: Object) {
         var element : HTMLElement = jq[0];
+        var transclude : HTMLElement = <HTMLElement>element.querySelector("ng-transclude");
+        transclude.style.display = "block";
+        
+        // Get the height of the inner element
+        var getInnerHeight = function():number {
+          var lastChild : HTMLElement = <HTMLElement>transclude.children[transclude.children.length - 1];
+          var marginBottom : number = parseInt(window.getComputedStyle(lastChild).marginBottom);
+          return transclude.getBoundingClientRect().height + marginBottom;
+        }
 
         // Make sure this actually does what it's supposed to do, visually
         element.style.overflow = "hidden";
@@ -37,18 +46,21 @@ module Shared.Directives {
         // Start collapsed if requested
         if (!scope.expanded) {
           element.style.height = "0px";
+        } else {
+          setTimeout(function(){
+            element.style.height = getInnerHeight()+"px";
+          }, 100);
         }
 
         // Wait for the collapsedness value to change
         scope.$watch("expanded", function(newValue: boolean, oldValue: boolean) {
           if (newValue == oldValue) {return;} // This should never happen
+          element.setAttribute("is-expanded", newValue);
 
           // How big do we want this directive to be?
           var destinationHeight : string = "0px";
           if (newValue) {
-            var child : HTMLElement = <HTMLElement>element.children[0]; if (!child) {return;}
-            child = <HTMLElement>child.children[0]; if (!child) {return;}
-            destinationHeight = (child.getBoundingClientRect().height+"px") || "100%";
+            destinationHeight = (getInnerHeight()+"px") || "100%";
           }
 
           // Start CSS3 animation

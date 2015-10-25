@@ -1,0 +1,58 @@
+.ffQuestion {
+  box-sizing: border-box;
+  display: block;
+  position: relative;
+  
+  background-color: white;
+  border: 1px solid $content-border;
+  border-radius: 4px;
+  
+  padding: 8px 14px;
+  margin-bottom: 25px;
+  
+  // The Amazing Arrow!
+  &::before, &::after {
+    content: "";
+    position: absolute;
+    left: 25px;
+    border-width: 12px 9px 0;
+    border-style: solid;
+    display: block;
+    width: 0;
+  }
+  &::before {
+    bottom: -12.5px;
+    border-color: $content-border transparent;    
+  }
+  &::after {
+    bottom: -11px;
+    border-color: white transparent;    
+  }
+  
+  // Special style for replies
+  &.reply {
+    width: 90%;
+    margin-left: 10%;
+    
+    &::before, &::after {
+      left: inherit;
+      right: 25px;
+    }
+  }
+  
+  // Actual text style
+  cite, p {
+    font-size: 9pt;
+  }
+  
+  p {
+    padding: 0;
+    padding-bottom: 3px;
+    display: inline;
+  }
+  
+  cite {
+    float: right;
+    padding-top: 3px;
+  }
+}

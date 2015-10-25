@@ -39,16 +39,24 @@ module Shared.Controllers {
     scope: ng.IScope;
     http: ng.IHttpService;
     
+    // Bound from scope
     content: FFGenericContent;
     showThumbnail: boolean;
     expanded: boolean;
     onToggle: Function;
+    
+    // Template rendering settings
+    isQuestion: boolean;
+    
     
     // Watch for the content or element size changing
     static $inject = ["$scope", "$element", "$http"];
 		constructor($scope: ng.IScope, $element: ng.IAugmentedJQuery, $http: ng.IHttpService) {
       this.scope = $scope;
       this.http = $http;
+      
+      // Analyze the content for ideal display
+      this.isQuestion = (this.content.type == FFContentType.Question);
       
       // If the user specifies a value, our work is done
       if (this.showThumbnail !== undefined) {return;}

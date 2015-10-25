@@ -87,26 +87,31 @@ var Shared;
                 template: "<ng-transclude></ng-transclude>",
                 link: function (scope, jq, attrs) {
                     var element = jq[0];
+                    var transclude = element.querySelector("ng-transclude");
+                    transclude.style.display = "block";
+                    var getInnerHeight = function () {
+                        var lastChild = transclude.children[transclude.children.length - 1];
+                        var marginBottom = parseInt(window.getComputedStyle(lastChild).marginBottom);
+                        return transclude.getBoundingClientRect().height + marginBottom;
+                    };
                     element.style.overflow = "hidden";
                     element.style.display = "block";
                     if (!scope.expanded) {
                         element.style.height = "0px";
                     }
+                    else {
+                        setTimeout(function () {
+                            element.style.height = getInnerHeight() + "px";
+                        }, 100);
+                    }
                     scope.$watch("expanded", function (newValue, oldValue) {
                         if (newValue == oldValue) {
                             return;
                         }
+                        element.setAttribute("is-expanded", newValue);
                         var destinationHeight = "0px";
                         if (newValue) {
-                            var child = element.children[0];
-                            if (!child) {
-                                return;
-                            }
-                            child = child.children[0];
-                            if (!child) {
-                                return;
-                            }
-                            destinationHeight = (child.getBoundingClientRect().height + "px") || "100%";
+                            destinationHeight = (getInnerHeight() + "px") || "100%";
                         }
                         var duration = parseInt(scope.duration) || 200;
                         element.style.transition = "height " + duration + "ms ease-out";
@@ -160,7 +165,7 @@ var Shared;
                 return "http://img.youtube.com/vi/" + this.content.youtubeId + "/0.jpg";
             };
             FFContentViewController.prototype.getEmbedCode = function () {
-                return "http://www.youtube.com/embed/" + this.content.youtubeId + "\"";
+                return "http://www.youtube.com/embed/" + this.content.youtubeId;
             };
             FFContentViewController.prototype.updateRenderDetails = function () {
                 if (this.content == undefined) {
@@ -235,6 +240,7 @@ var Shared;
             function FFContentBoxController($scope, $element, $http) {
                 this.scope = $scope;
                 this.http = $http;
+                this.isQuestion = (this.content.type == FFContentType.Question);
                 if (this.showThumbnail !== undefined) {
                     return;
                 }
@@ -263,6 +269,26 @@ var Shared;
 })(Shared || (Shared = {}));
 /// <reference path="../../../shared/data-types.ts" />
 /// <reference path="../../js/typings/angular/angular.d.ts" />
+var Shared;
+(function (Shared) {
+    var Directives;
+    (function (Directives) {
+        function ffQuestion() {
+            return {
+                restrict: "E",
+                scope: {
+                    content: "=",
+                    isReply: "="
+                },
+                replace: true,
+                templateUrl: "public/directives/ff-question/template.html"
+            };
+        }
+        Directives.ffQuestion = ffQuestion;
+    })(Directives = Shared.Directives || (Shared.Directives = {}));
+})(Shared || (Shared = {}));
+/// <reference path="../../../shared/data-types.ts" />
+/// <reference path="../../js/typings/angular/angular.d.ts" />
 var Playground;
 (function (Playground) {
     var AppController = (function () {
@@ -279,7 +305,7 @@ var Playground;
                 timestamp: new Date().getTime(),
                 upvotes: 3,
                 flagged: 0,
-                title: "view.png",
+                filename: "view.png",
                 link: "/images/dummy/view.jpg"
             };
             this.imageContent2 = {
@@ -289,7 +315,7 @@ var Playground;
                 timestamp: new Date().getTime(),
                 upvotes: 0,
                 flagged: 0,
-                title: "montreal.png",
+                filename: "montreal.png",
                 text: "Great view from the top of Mont Royal",
                 link: "/images/dummy/montreal.jpg"
             };
@@ -303,6 +329,35 @@ var Playground;
                 title: "Beach House - On The Sea",
                 youtubeId: "0qz0IJXQ720",
                 channelTitle: "Sub Pop"
+            };
+            this.questionContent = {
+                id: 4,
+                type: FFContentType.Question,
+                submitter: this.testUser1,
+                timestamp: new Date().getTime(),
+                upvotes: 0,
+                flagged: 0,
+                text: "Is there any reason at all to use Model-View-Controller\n\t\t\t\t\tinstead of Model-View-ViewModel or whatever other sensible\n\t\t\t\t\talternative?\n\t\t\t\t",
+                replies: [
+                    {
+                        id: 5,
+                        type: FFContentType.QuestionResponse,
+                        submitter: this.testUser1,
+                        timestamp: new Date().getTime(),
+                        upvotes: 0,
+                        flagged: 0,
+                        text: "No. Why would the model directly update the view?\n\t\t\t\t\t\t\tThat makes no sense.\n\t\t\t\t\t\t"
+                    },
+                    {
+                        id: 6,
+                        type: FFContentType.QuestionResponse,
+                        submitter: this.testUser1,
+                        timestamp: new Date().getTime(),
+                        upvotes: 0,
+                        flagged: 0,
+                        text: "I mean, seriously, it doesn't reduce glue code it\n\t\t\t\t\t\t\tjust makes sure every component has the same amount of glue.\n\t\t\t\t\t\t"
+                    }
+                ]
             };
         }
         AppController.prototype.expandItem = function ($scope, index) {

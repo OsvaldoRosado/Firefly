@@ -6,7 +6,8 @@ module.exports = function(grunt) {
 			playground: {
 				src: [
 					'public/directives/ff-content/*.html',
-					'public/directives/ff-content-box/*.html'
+					'public/directives/ff-content-box/*.html',
+					'public/directives/ff-question/*.html'
 				],
 				dest: 'public/js/component-playground/templates.js',
 				options: {
@@ -50,6 +51,7 @@ module.exports = function(grunt) {
 					"public/directives/collapse/*.ts",
 					"public/directives/ff-content/*.ts",
 					"public/directives/ff-content-box/*.ts",
+					"public/directives/ff-question/*.ts",
 					"public/js/component-playground/playground.ts"
 				]),
 				dest: "public/js/component-playground/playground.js",

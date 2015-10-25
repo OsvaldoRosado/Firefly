@@ -13,6 +13,10 @@
   &.expanded {
     background-color: $callout-lightest;
     box-shadow: $highlight-shadow;
+    
+    &.isQuestion {
+      background-color: $callout-light;
+    }
   }
 
   // Top Content
@@ -60,12 +64,19 @@
 
   h3 {
     margin-top: 5px;
-    margin-bottom: 8px;
+    margin-bottom: 7px;
     font-size: 11pt;
     
     &::before, &::after {
       content: "\"";
     }
+  }
+  
+  h5 {
+    font-size: 10pt;
+    font-weight: lighter;
+    margin-top: -4px;
+    margin-bottom: 4px;
   }
 
   .bottomrow {
@@ -78,15 +89,34 @@
 
     * {
       padding: 3px 0;
-    }
-
-    p {
       margin: 0;
-      font-weight: bold;
       flex-grow: 1;
+    }
+    
+    p {
+      text-align: left;
+      
+      &.filename {
+        font-weight: bold;
+      }
+    }
+    
+    cite {
+      text-align: right;
+    }
+  }
+  
+  // Question replies
+  .replies ng-transclude {
+    > *:first-child {
+      margin-top: 15px;
+    }
+    > *:last-child {
+      margin-bottom: 35px;
     }
   }
 
+  // Actions Row
   .commands {
     background-color: $callout-lighter;
     padding: 10px 0 12px 0;
