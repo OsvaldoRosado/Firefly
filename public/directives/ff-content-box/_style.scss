@@ -2,7 +2,6 @@
 
 .ffContentBox {
   display: block;
-  overflow: auto;
   overflow: hidden;
 
   border: 1px solid $content-border;
@@ -20,6 +19,11 @@
   ff-content.full {
     max-width: 100%;
     border-bottom: 1px solid $content-border;
+    
+    iframe {
+      width: 100%;
+      height: 200px;
+    }
   }
 
   // Description Block
@@ -42,13 +46,22 @@
       width: 62%;
       margin-left: 6%;
     }
+    
+    &.nothumb {
+      display: block;
+      
+      .meta {
+        width: 94%;
+        margin: 0 3%;
+      }
+    }
   }
 
 
   h3 {
     margin-top: 5px;
     margin-bottom: 8px;
-    font-size: 13pt;
+    font-size: 11pt;
     
     &::before, &::after {
       content: "\"";
@@ -58,18 +71,19 @@
   .bottomrow {
     position: relative;
     font-size: 10pt;
-    height: 27px;
+    margin-bottom: 5px;
 
-    cite {
-      position: absolute;
-      right: 0;
+    display: flex;
+    flex-wrap: wrap;
+
+    * {
+      padding: 3px 0;
     }
 
     p {
       margin: 0;
-      position: absolute;
-      left: 0;
       font-weight: bold;
+      flex-grow: 1;
     }
   }
 
