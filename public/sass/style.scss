@@ -290,7 +290,7 @@ nav.viewer {
 				display: block;
 				text-decoration: none;
 				padding: 5px 0;
-				.active {
+				&.active {
 					h1, span {
 						color: $primary-yellow-light;
 					}
@@ -314,13 +314,15 @@ nav.viewer {
 	}
 }
 
-// Audience
+// Audience Views
 body.audience {
 	background: $background-light;
 	.mainContent {
+		// Ask Question Page
 		.pastQuestions {
 			margin-top: 40px;
 		}
+		// Submit Content Page
 		.submitContent {
 			ul {
 				li {
@@ -328,7 +330,7 @@ body.audience {
 					a {
 						display: inline-block;
 						padding: 1em 0;
-						border-bottom: 1px solid $content-text-dark; 
+						border-bottom: 1px solid $content-border; 
 						i.submitContentIcon {
 							float: left;
 							width: 20%;
@@ -351,6 +353,51 @@ body.audience {
 								color: $content-text-darker;
 								text-align: right;
 							}
+						}
+					}
+				}
+			}
+		}
+		// History Page
+		.history {
+			div.currentClass {
+				margin-bottom: 1em;
+				h2 {
+					color: $content-text-dark;
+					float: left;
+				}
+				a {
+					color: $primary-brand;
+					font-style: italic;
+					text-decoration: none;
+					float: right;
+				}
+			}
+			ul {
+				li {
+					margin-bottom: 1em;
+					a {
+						padding: 1em;
+						text-decoration: none;
+						border: 1px solid $content-border;
+						display: inline-block;
+						width: 100%;
+						div.historyTitle {
+							float: left;
+							width: 80%;
+							h2 {
+								color: $content-text-darker;
+							}
+							p {
+								color: $content-text-dark;
+							}
+						}
+						div.historyPulse {
+							float: right;
+							width: 20%
+						}
+						div.darkPulse {
+							margin: 1.5em;
 						}
 					}
 				}
