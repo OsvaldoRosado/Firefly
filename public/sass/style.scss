@@ -230,6 +230,18 @@ footer {
 	-webkit-animation-iteration-count: infinite;
 	transition-timing-function: ease-in-out;
 }
+.darkPulse {
+	display: block;
+	margin: 0 auto;
+	width: 10px;
+	height: 10px;
+	background-color: $content-text-darker;
+	border-radius: 5px;
+	-webkit-animation-name: darkPulse;
+	-webkit-animation-duration: 2s;
+	-webkit-animation-iteration-count: infinite;
+	transition-timing-function: ease-in-out;
+}
 
 @-webkit-keyframes Pulse {
     from {
@@ -243,6 +255,21 @@ footer {
     to {
         background-color: $primary-yellow-light;
         -webkit-box-shadow: 0 0 9px $primary-yellow-dark;
+    }
+}
+
+@-webkit-keyframes darkPulse {
+    from {
+        background-color: $content-text-dark;
+        -webkit-box-shadow: 0 0 9px $content-text-darker;
+    }
+    50% {
+        background-color: $content-text-dark;
+        -webkit-box-shadow: 0 0 18px $content-text-dark;
+    }
+    to {
+        background-color: $content-text-dark;
+        -webkit-box-shadow: 0 0 9px $content-text-darker;
     }
 }
 
@@ -284,6 +311,32 @@ nav.viewer {
 				}
 			}
 		}
+	}
+}
+
+// Audience
+body.audience {
+	background: $background-light;
+	form {
+		textarea {
+			width: 100%;
+			min-height: 100px;
+			resize: none;
+		}
+	}
+}
+div.header {
+	display: inline-block;
+	width: 100%;
+	box-shadow: 0 5px 5px $callout-light;
+	h2 {
+		color: $content-text-darker;
+		padding: 1em;
+		float: left;
+	}
+	div.darkPulse {
+		float: right;
+		margin: 1.25em 2em;
 	}
 }
 
