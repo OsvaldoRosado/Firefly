@@ -321,6 +321,41 @@ body.audience {
 		.pastQuestions {
 			margin-top: 40px;
 		}
+		.submitContent {
+			ul {
+				li {
+					margin: 0.5em 0;
+					a {
+						display: inline-block;
+						padding: 1em 0;
+						border-bottom: 1px solid $content-text-dark; 
+						i.submitContentIcon {
+							float: left;
+							width: 20%;
+							color: $content-text-dark;
+						}
+						div.submitContentItem {
+							float: right;
+							width: 80%;
+							div.submitContentItemText {
+								float: left;
+								width: 85%;
+								h2, p {
+									color: $content-text-darkest;
+								}
+							}
+							i.arrow {
+								width: 15%;
+								float: right;
+								font-size: 36px;
+								color: $content-text-darker;
+								text-align: right;
+							}
+						}
+					}
+				}
+			}
+		}
 		h4 {
 			color: $content-text-dark;
 			margin: 1em 0;
