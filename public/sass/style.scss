@@ -317,11 +317,21 @@ nav.viewer {
 // Audience
 body.audience {
 	background: $background-light;
-	form {
-		textarea {
-			width: 100%;
-			min-height: 100px;
-			resize: none;
+	.mainContent {
+		.pastQuestions {
+			margin-top: 40px;
+		}
+		h4 {
+			color: $content-text-dark;
+			margin: 1em 0;
+		}
+		form {
+			textarea {
+				font-size: 14px;
+				width: 100%;
+				min-height: 100px;
+				resize: none;
+			}
 		}
 	}
 }
