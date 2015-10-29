@@ -15,6 +15,7 @@ var Config = (function () {
 })();
 /// <reference path="../../../shared/data-types.ts" />
 /// <reference path="../typings/angular/angular.d.ts" />
+/// <reference path="../typings/firefly/firefly.d.ts" />
 /// <reference path="./config.ts" />
 var Shared;
 (function (Shared) {

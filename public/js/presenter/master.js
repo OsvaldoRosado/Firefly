@@ -15,6 +15,7 @@ var Config = (function () {
 })();
 /// <reference path="../../../shared/data-types.ts" />
 /// <reference path="../typings/angular/angular.d.ts" />
+/// <reference path="../typings/firefly/firefly.d.ts" />
 /// <reference path="./config.ts" />
 var Shared;
 (function (Shared) {
@@ -132,9 +133,9 @@ var PresenterApp;
                 new GetPresentationAPIRequest($http, sampleId)
                     .then(function (result) {
                     _this.currentSlide = 0;
-                    _this.slideCount = result.data.length;
+                    _this.slideCount = result.data.slideCount;
                     _this.presName = result.data.name;
-                    _this.slideUrls = result.data.slides;
+                    _this.slideUrls = result.data.slideUrls;
                 }, function () { return _this.error = "Your presentation was not found!"; });
             }
             SlideCtrl.prototype.presCommand = function (action, data) {
