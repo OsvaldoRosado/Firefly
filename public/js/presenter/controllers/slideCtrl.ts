@@ -1,7 +1,7 @@
 /// <reference path="../../shared/api.ts" />
 module PresenterApp.Controllers{
 	
-	class GetPresentationAPIRequest extends Shared.APIRequest<PresentationFromId> {
+	class GetPresentationAPIRequest extends Shared.APIRequest<FFPresentation> {
 		constructor($http: ng.IHttpService, presentationId: string) {
 			super($http, "/getPresentationFromId/" + presentationId, {});
 		}
@@ -21,7 +21,7 @@ module PresenterApp.Controllers{
 		slideUrls: string[];
 
 		currentOverlay: string;
-		currentQA: UserQuestion;
+		currentQA: FFQuestion;
 
 		error: string;
 
@@ -32,11 +32,12 @@ module PresenterApp.Controllers{
 
 			var sampleId = "59227f68-0818-4493-91df-c4b065a5011b-2";
 			new GetPresentationAPIRequest($http, sampleId)
-				.then((result: PresentationFromId) => {
+				.then((result: ng.IHttpPromiseCallbackArg<FFPresentation>) => {
+					var pres = result.data;
 					this.currentSlide = 0;
-					this.slideCount = result.data.length;
-					this.presName = result.data.name;
-					this.slideUrls = result.data.slides;
+					this.slideCount = pres.slideCount;
+					this.presName = pres.name;
+					this.slideUrls = pres.slideUrls;
 				}, () => this.error = "Your presentation was not found!");
 		}
 
@@ -81,7 +82,7 @@ module PresenterApp.Controllers{
 		}
 
 		// TODO: implement showReplies
-		toggleQASidebar(question: UserQuestion, showReplies: boolean){
+		toggleQASidebar(question: FFQuestion, showReplies: boolean){
 			if(!this.currentQA || this.currentQA.text !== question.text){
 				this.currentQA = question;
 				this.presCommand("showQASidebar", angular.toJson(question));

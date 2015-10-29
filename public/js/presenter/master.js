@@ -71,6 +71,222 @@ var Shared;
     })();
     Shared.APIRequest = APIRequest;
 })(Shared || (Shared = {}));
+var Shared;
+(function (Shared) {
+    var Directives;
+    (function (Directives) {
+        function collapse() {
+            return {
+                restrict: "E",
+                scope: {
+                    expanded: "=",
+                    duration: "@"
+                },
+                replace: false,
+                transclude: true,
+                template: "<ng-transclude></ng-transclude>",
+                link: function (scope, jq, attrs) {
+                    var element = jq[0];
+                    var transclude = element.querySelector("ng-transclude");
+                    transclude.style.display = "block";
+                    var getInnerHeight = function () {
+                        var lastChild = transclude.children[transclude.children.length - 1];
+                        var marginBottom = parseInt(window.getComputedStyle(lastChild).marginBottom);
+                        return transclude.getBoundingClientRect().height + marginBottom;
+                    };
+                    element.style.overflow = "hidden";
+                    element.style.display = "block";
+                    if (!scope.expanded) {
+                        element.style.height = "0px";
+                    }
+                    else {
+                        setTimeout(function () {
+                            element.style.height = getInnerHeight() + "px";
+                        }, 100);
+                    }
+                    scope.$watch("expanded", function (newValue, oldValue) {
+                        if (newValue == oldValue) {
+                            return;
+                        }
+                        element.setAttribute("is-expanded", newValue);
+                        var destinationHeight = "0px";
+                        if (newValue) {
+                            destinationHeight = (getInnerHeight() + "px") || "100%";
+                        }
+                        var duration = parseInt(scope.duration) || 200;
+                        element.style.transition = "height " + duration + "ms ease-out";
+                        setTimeout(function () {
+                            element.style.height = destinationHeight;
+                            setTimeout(function () {
+                                element.style.transition = "";
+                            }, 100 + duration);
+                        }, 100);
+                    });
+                }
+            };
+        }
+        Directives.collapse = collapse;
+    })(Directives = Shared.Directives || (Shared.Directives = {}));
+})(Shared || (Shared = {}));
+/// <reference path="../../../shared/data-types.ts" />
+/// <reference path="../../js/shared/api.ts" />
+/// <reference path="../../js/typings/angular/angular.d.ts" />
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var Shared;
+(function (Shared) {
+    var UpvoteAPIRequest = (function (_super) {
+        __extends(UpvoteAPIRequest, _super);
+        function UpvoteAPIRequest($http, contentId) {
+            _super.call(this, $http, "/UpvotePresContent", { id: contentId }, Shared.APIMethod.GET);
+        }
+        return UpvoteAPIRequest;
+    })(Shared.APIRequest);
+    Shared.UpvoteAPIRequest = UpvoteAPIRequest;
+})(Shared || (Shared = {}));
+/// <reference path="../../../shared/data-types.ts" />
+/// <reference path="../../js/typings/angular/angular.d.ts" />
+/// <reference path="./api.ts" />
+var Shared;
+(function (Shared) {
+    var Directives;
+    (function (Directives) {
+        function ffContentBox() {
+            return {
+                restrict: "E",
+                scope: true,
+                bindToController: {
+                    content: "=",
+                    showThumbnail: "=",
+                    expanded: "=",
+                    onToggle: "&"
+                },
+                controller: Shared.Controllers.FFContentBoxController,
+                controllerAs: "cc",
+                replace: true,
+                templateUrl: "public/directives/ff-content-box/template.html"
+            };
+        }
+        Directives.ffContentBox = ffContentBox;
+    })(Directives = Shared.Directives || (Shared.Directives = {}));
+})(Shared || (Shared = {}));
+var Shared;
+(function (Shared) {
+    var Controllers;
+    (function (Controllers) {
+        var FFContentBoxController = (function () {
+            function FFContentBoxController($scope, $element, $http) {
+                this.scope = $scope;
+                this.http = $http;
+                this.isQuestion = (this.content.type == FFContentType.Question);
+                if (this.showThumbnail !== undefined) {
+                    return;
+                }
+                var element = $element[0];
+                this.resize(element.offsetWidth);
+                $element.on("resize", function () {
+                    this.resize(element.offsetWidth);
+                }.bind(this));
+            }
+            FFContentBoxController.prototype.resize = function (width) {
+                this.showThumbnail = (this.content.type == FFContentType.Image ||
+                    this.content.type == FFContentType.Video) && width > 300;
+            };
+            FFContentBoxController.prototype.upvoteContent = function () {
+                var _this = this;
+                this.content.upvotes += 1;
+                new Shared.UpvoteAPIRequest(this.http, this.content.id).catch(function () {
+                    _this.content.upvotes -= 1;
+                });
+            };
+            FFContentBoxController.$inject = ["$scope", "$element", "$http"];
+            return FFContentBoxController;
+        })();
+        Controllers.FFContentBoxController = FFContentBoxController;
+    })(Controllers = Shared.Controllers || (Shared.Controllers = {}));
+})(Shared || (Shared = {}));
+/// <reference path="../../../shared/data-types.ts" />
+/// <reference path="../../js/typings/angular/angular.d.ts" />
+var Shared;
+(function (Shared) {
+    var Directives;
+    (function (Directives) {
+        function ffContent() {
+            return {
+                restrict: "E",
+                scope: true,
+                bindToController: {
+                    content: "=",
+                    thumbnail: "="
+                },
+                controller: Shared.Controllers.FFContentViewController,
+                controllerAs: "cview",
+                replace: false,
+                templateUrl: "public/directives/ff-content/template.html"
+            };
+        }
+        Directives.ffContent = ffContent;
+    })(Directives = Shared.Directives || (Shared.Directives = {}));
+})(Shared || (Shared = {}));
+var Shared;
+(function (Shared) {
+    var Controllers;
+    (function (Controllers) {
+        var FFContentViewController = (function () {
+            function FFContentViewController($scope) {
+                this.thumbnailCutoffWidth = 150;
+                this.updateRenderDetails();
+                $scope.$watch(function () { return this.content; }, this.updateRenderDetails.bind(this));
+            }
+            FFContentViewController.prototype.getThumbnail = function () {
+                return "http://img.youtube.com/vi/" + this.content.youtubeId + "/0.jpg";
+            };
+            FFContentViewController.prototype.getEmbedCode = function () {
+                return "http://www.youtube.com/embed/" + this.content.youtubeId;
+            };
+            FFContentViewController.prototype.updateRenderDetails = function () {
+                if (this.content == undefined) {
+                    return;
+                }
+                this.isImage = this.content.type == FFContentType.Image;
+                this.isVideo = this.content.type == FFContentType.Video;
+                if (this.content.youtubeId !== undefined) {
+                    this.renderYouTube(this.content);
+                }
+            };
+            FFContentViewController.prototype.renderYouTube = function (content) {
+                content.thumbnail = this.getThumbnail();
+                content.embed = this.getEmbedCode();
+            };
+            FFContentViewController.$inject = ["$scope"];
+            return FFContentViewController;
+        })();
+        Controllers.FFContentViewController = FFContentViewController;
+    })(Controllers = Shared.Controllers || (Shared.Controllers = {}));
+})(Shared || (Shared = {}));
+/// <reference path="../../../shared/data-types.ts" />
+/// <reference path="../../js/typings/angular/angular.d.ts" />
+var Shared;
+(function (Shared) {
+    var Directives;
+    (function (Directives) {
+        function ffQuestion() {
+            return {
+                restrict: "E",
+                scope: {
+                    content: "=",
+                    isReply: "="
+                },
+                replace: true,
+                templateUrl: "public/directives/ff-question/template.html"
+            };
+        }
+        Directives.ffQuestion = ffQuestion;
+    })(Directives = Shared.Directives || (Shared.Directives = {}));
+})(Shared || (Shared = {}));
 var PresenterApp;
 (function (PresenterApp) {
     var Controllers;
@@ -79,24 +295,73 @@ var PresenterApp;
             function ContentCtrl($scope, $http) {
                 this.scope = $scope;
                 this.http = $http;
+                var testUser1 = {
+                    id: 1,
+                    name: "Keaton Brandt"
+                };
                 this.content = [
                     {
-                        url: "http://placehold.it/300x300",
-                        caption: "Test caption",
-                        user: "Rick",
-                        score: 0
+                        id: 1,
+                        type: FFContentType.Image,
+                        submitter: testUser1,
+                        timestamp: new Date().getTime(),
+                        upvotes: 3,
+                        flagged: 0,
+                        filename: "view.png",
+                        link: "/images/dummy/view.jpg"
+                    },
+                    {
+                        id: 7,
+                        type: FFContentType.Image,
+                        submitter: testUser1,
+                        timestamp: new Date().getTime(),
+                        upvotes: 0,
+                        flagged: 0,
+                        filename: "montreal.png",
+                        text: "Great view from the top of Mont Royal",
+                        link: "/images/dummy/montreal.jpg"
+                    },
+                    {
+                        id: 3,
+                        type: FFContentType.Video,
+                        submitter: testUser1,
+                        timestamp: new Date().getTime(),
+                        upvotes: 0,
+                        flagged: 0,
+                        title: "Beach House - On The Sea",
+                        youtubeId: "0qz0IJXQ720",
+                        channelTitle: "Sub Pop"
                     }
                 ];
                 this.questions = [
                     {
-                        text: "How do I art?",
-                        user: "Mr. Meeseeks",
-                        score: 0,
-                        replies: [{
-                                text: "Look inside yourself",
-                                user: "Pensylvester",
-                                score: 0
-                            }]
+                        id: 4,
+                        type: FFContentType.Question,
+                        submitter: testUser1,
+                        timestamp: new Date().getTime(),
+                        upvotes: 0,
+                        flagged: 0,
+                        text: "Is there any reason at all to use Model-View-Controller\n\t\t\t\t\t\tinstead of Model-View-ViewModel or whatever other sensible\n\t\t\t\t\t\talternative?\n\t\t\t\t\t",
+                        replies: [
+                            {
+                                id: 5,
+                                type: FFContentType.QuestionResponse,
+                                submitter: testUser1,
+                                timestamp: new Date().getTime(),
+                                upvotes: 0,
+                                flagged: 0,
+                                text: "No. Why would the model directly update the view?\n\t\t\t\t\t\t\t\tThat makes no sense.\n\t\t\t\t\t\t\t"
+                            },
+                            {
+                                id: 6,
+                                type: FFContentType.QuestionResponse,
+                                submitter: testUser1,
+                                timestamp: new Date().getTime(),
+                                upvotes: 0,
+                                flagged: 0,
+                                text: "I mean, seriously, it doesn't reduce glue code it just makes sure every component has the same amount of glue."
+                            }
+                        ]
                     }
                 ];
             }
@@ -106,11 +371,6 @@ var PresenterApp;
         Controllers.ContentCtrl = ContentCtrl;
     })(Controllers = PresenterApp.Controllers || (PresenterApp.Controllers = {}));
 })(PresenterApp || (PresenterApp = {}));
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 /// <reference path="../../shared/api.ts" />
 var PresenterApp;
 (function (PresenterApp) {
@@ -131,10 +391,11 @@ var PresenterApp;
                 var sampleId = "59227f68-0818-4493-91df-c4b065a5011b-2";
                 new GetPresentationAPIRequest($http, sampleId)
                     .then(function (result) {
+                    var pres = result.data;
                     _this.currentSlide = 0;
-                    _this.slideCount = result.data.length;
-                    _this.presName = result.data.name;
-                    _this.slideUrls = result.data.slides;
+                    _this.slideCount = pres.slideCount;
+                    _this.presName = pres.name;
+                    _this.slideUrls = pres.slideUrls;
                 }, function () { return _this.error = "Your presentation was not found!"; });
             }
             SlideCtrl.prototype.presCommand = function (action, data) {
@@ -186,5 +447,13 @@ var PresenterApp;
 var PresenterApp;
 (function (PresenterApp) {
     angular.module("presenter", [])
-        .controller(PresenterApp.Controllers);
+        .controller(Shared.Controllers)
+        .controller(PresenterApp.Controllers)
+        .directive(Shared.Directives)
+        .filter("equals", function () {
+        return function (value, equals) { return value == equals; };
+    })
+        .config(["$sceProvider", function ($sceProvider) {
+            $sceProvider.enabled(false);
+        }]);
 })(PresenterApp || (PresenterApp = {}));

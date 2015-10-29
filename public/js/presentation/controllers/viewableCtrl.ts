@@ -1,10 +1,10 @@
-module PresentationApp.Controllers{
+module PresentationApp.Controllers {
 	export class ViewableCtrl{
 
 		slideUrl: string;
 		overlayUrl: string;
 		overlayActive: boolean;
-		question: UserQuestion;
+		question: FFQuestion;
 		qaActive: boolean;
 
 		constructor($scope: ng.IScope){

@@ -11,6 +11,11 @@
 $title-font-stack: 'Montserrat', sans-serif;
 $content-font-stack: 'Roboto', sans-serif;
 
+// Import components
+@import '../directives/ff-content/_style.scss';
+@import '../directives/ff-content-box/_style.scss';
+@import '../directives/ff-question/_style.scss';
+
 // ************************* //
 html {
 	position: relative;
@@ -290,6 +295,7 @@ nav.viewer {
 // Presenter Main Page
 body.presenter {
 	background: $background-dark;
+	height: 100%;
 
 	header {
 		background: $primary-brand;
@@ -314,39 +320,32 @@ body.presenter {
 		}
 	}
 
-	div.livePresentation{
-		margin: 10px;
-	}
+	div.mainConsole{
+		height: 100%;
 
-	div.contentBox {
-		background: $background-light;
-		padding: 10px;
-		margin: 10px;
-
-		h2{
-			color: $content-text-darkest;
-			margin-bottom: 10px;
+		div.livePresentation{
+			margin: 10px;
 		}
 
-		figure.submission{
-			margin: 5px;
-			background: $callout-light;
-			text-align: center;
+		div.contentBoxColumn{
+			height: 100%;
+			overflow-y: auto;
 
-			img{
-				margin: 5px;
-				max-width: 95%;
-			}
+			div.contentBox {
+				background: $background-light;
+				color: $content-text-darkest;
+				margin: 10px;
+				padding: 10px;
 
-			figcaption, div.meta{
-				margin: 5px;
-				text-align: left;
-			}
+				h2, h3, h5, p.filename{
+					color: $content-text-darkest;
+					margin-bottom: 10px;
+				}
 
-			div.meta{
-				font-size: 12px;
-				padding-bottom: 5px;
-				color: $content-text-dark;
+				.ffContentBox {
+					margin: 10px;
+					width: 95%;
+				}
 			}
 		}
 	}
