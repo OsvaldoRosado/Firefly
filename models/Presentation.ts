@@ -6,6 +6,7 @@ import Config = require("../config");
 import FormData = require('form-data');
 import http = require('http');
 import fs = require('fs');
+import Database = require('../database');
 
 class Presentation extends Base.BaseModel implements FFPresentation {
 	// Follow FFPresentation common public interface
