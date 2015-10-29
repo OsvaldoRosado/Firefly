@@ -53,8 +53,13 @@ class Database {
 		}
 	}
 	
-	public pushModel(model:BaseModel.BaseModel) {
+	public pushModel(model:BaseModel.BaseModel, cb:(success:Boolean)=>void) {
 		var collection = this.database.collection(model.getType());
+		collection.updateOne({id:model.id}, model.toJSON(), {upsert:true, w:1}, function(err, result) {
+			if (cb != null) {
+				cb(!err);
+			}
+		});
 	}
 }
 

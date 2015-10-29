@@ -11,7 +11,8 @@ export class BaseModel {
 		}
 	}
 	
-	private toJSON() {
+	/** Override JSON serialization to hide private properties */
+	public toJSON() {
 		var output = {}, key:string;
 		for (key in this) {
 			if (this.hasOwnProperty(key) && !(key.indexOf("_") === 0)) {
@@ -21,6 +22,7 @@ export class BaseModel {
 		return output;
 	}
 	
+	/** Function to allow BaseModel users to acquire a more specific data type name */
 	public getType():string {
 		return (<typeof BaseModel>this.constructor)._modelIdentifier;
 	}
@@ -32,6 +34,6 @@ export class BaseModel {
 	
 	/** Function to save model contents on database */
 	protected save(cb:(ok:boolean)=>void) {
-		Database.pushModel(this);
+		Database.pushModel(this, cb);
 	}
 }
