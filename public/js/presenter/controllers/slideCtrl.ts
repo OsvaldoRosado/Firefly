@@ -34,9 +34,9 @@ module PresenterApp.Controllers{
 			new GetPresentationAPIRequest($http, sampleId)
 				.then((result: PresentationFromId) => {
 					this.currentSlide = 0;
-					this.slideCount = result.data.length;
+					this.slideCount = result.data.slideCount;
 					this.presName = result.data.name;
-					this.slideUrls = result.data.slides;
+					this.slideUrls = result.data.slideUrls;
 				}, () => this.error = "Your presentation was not found!");
 		}
 

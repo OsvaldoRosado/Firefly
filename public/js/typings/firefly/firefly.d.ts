@@ -1,10 +1,7 @@
+/// <reference path="../../shared/api.ts" />
 interface PresentationFromId{
 	success: boolean;
-	data?: {
-		name: string,
-		slides: string[],
-		length: number
-	}
+	data?: FFPresentation;
 }
 
 interface UserContent{
