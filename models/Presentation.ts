@@ -10,10 +10,11 @@ import fs = require('fs');
 class Presentation extends Base.BaseModel implements FFPresentation {
 	// Follow FFPresentation common public interface
 	public id: string;
+	public name: string = "Unknown Presentation";
 	public submitter: FFUser;
 	public timestamp: number = Math.floor(new Date().getTime()/1000);
 	public slideCount: number = 0;
-	public slides: string[] = [];
+	public slideUrls: string[] = [];
 	
 	// Internal variables
 	private static _presentationBase = Config.FILE_SERVER + "/convert/";
@@ -75,7 +76,7 @@ class Presentation extends Base.BaseModel implements FFPresentation {
 		this.slideCount = parseInt(idComponents[5]);
 		var internalID = idComponents.join("-").substr(0,id.length-(idComponents[5].length+1));
 		for(var i=0; i<this.slideCount; i++){
-			this.slides.push(Presentation._presentationBase + internalID + "/img" + i + ".jpg");
+			this.slideUrls.push(Presentation._presentationBase + internalID + "/img" + i + ".jpg");
 		}
 	}
 }

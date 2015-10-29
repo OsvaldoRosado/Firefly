@@ -10,10 +10,11 @@ enum FFContentType {
 
 interface FFPresentation {
   id: string;
+  name: string;
   submitter: FFUser;
   timestamp: number;
   slideCount: number;
-  slides: string[];
+  slideUrls: string[];
 }
 
 interface FFUser {
