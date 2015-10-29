@@ -8,6 +8,14 @@ enum FFContentType {
   QuestionResponse
 }
 
+interface FFPresentation {
+	id: string;
+	submitter: FFUser;
+	timestamp: number;
+	slideCount: number;
+	slides: string[];
+}
+
 interface FFUser {
   id: number;
   name: string;
