@@ -18,7 +18,7 @@ module Shared {
 			
 			// Create the URL
 			if (endpoint[0] !== "/") {endpoint = "/" + endpoint;}
-			endpoint = Config.HOST + endpoint;
+			endpoint = Config.HOST + "/api" + endpoint;
 			
 			// This class mostly just defers to Angular, with some secret sauce added
 			if (method == APIMethod.GET) {

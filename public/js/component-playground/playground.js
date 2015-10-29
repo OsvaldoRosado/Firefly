@@ -30,7 +30,7 @@ var Shared;
             if (endpoint[0] !== "/") {
                 endpoint = "/" + endpoint;
             }
-            endpoint = Config.HOST + endpoint;
+            endpoint = Config.HOST + "/api" + endpoint;
             if (method == APIMethod.GET) {
                 if (data !== undefined && data !== {}) {
                     endpoint += this.queryFormat(data);
