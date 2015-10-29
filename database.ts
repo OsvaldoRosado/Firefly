@@ -4,6 +4,7 @@
 import MongoDB = require('mongodb');
 import Config = require('./config');
 import fs = require('fs');
+import BaseModel = require('./models/BaseModel');
 
 class Database {
 	private connectionString: string = "";
@@ -50,6 +51,10 @@ class Database {
 		}else{
 			this.readyWaiters.push(cb);
 		}
+	}
+	
+	public pushModel(model:BaseModel.BaseModel) {
+		var collection = this.database.collection(model.getType());
 	}
 }
 
