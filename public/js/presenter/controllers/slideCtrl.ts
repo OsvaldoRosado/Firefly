@@ -20,7 +20,7 @@ module PresenterApp.Controllers{
 		slideCount: number;
 		slideUrls: string[];
 
-		currentOverlay: string;
+		currentOverlay: FFGenericContent;
 		currentQA: FFQuestion;
 
 		error: string;
@@ -71,10 +71,13 @@ module PresenterApp.Controllers{
 			this.updateSlide();
 		}
 
-		toggleOverlay(url: string){
-			if (url !== this.currentOverlay) {
-				this.currentOverlay = url;
-				this.presCommand("showOverlay", url);
+		toggleOverlay(content: FFGenericContent){
+			if (content.id !== this.currentOverlay.id) {
+				this.currentOverlay = content;
+				if(content.type == FFContentType.Image){
+					var linkContent = <FFLinkContent> content;
+					this.presCommand("showOverlay", linkContent.link);
+				}
 			} else {
 				this.currentOverlay = undefined;
 				this.presCommand("hideOverlay", "");

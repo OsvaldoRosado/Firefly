@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" id="presenter">
 	<head>
 		<meta charset="utf-8">
 		<meta name="description" content="">
@@ -17,24 +17,24 @@
 			<span><h2 class="presName">{{ sc.presName }}</h2></span>
 			<span><h2 class="mainTitle u-pull-right">Firefly</h2></span>
 		</header>
-		<div class="container">
-			<button ng-click="sc.startPresentation()" ng-show="!sc.presRunning" class="button-primary">Start presentation!</button>
-		</div>
 		<div ng-controller="ContentCtrl as cnc" class="row mainConsole">
 				<div class="six columns">
 					<div class="livePresentation">
 						<img ng-src="{{ sc.slideUrls[sc.currentSlide] }}" class="u-max-full-width">
-						<button ng-show="sc.currentSlide > 0" ng-click="sc.prevSlide()" class="button-primary">Previous</button>
-						<button ng-show="sc.currentSlide < sc.slideCount-1" ng-click="sc.nextSlide()" class="button-primary">Next</button>
+						<button ng-click="sc.startPresentation()" ng-show="!sc.presRunning" class="button-primary">Start presentation!</button>
+						<button ng-show="sc.presRunning && sc.currentSlide > 0" ng-click="sc.prevSlide()" class="button-primary">Previous</button>
+						<button ng-show="sc.presRunning && sc.currentSlide < sc.slideCount-1" ng-click="sc.nextSlide()" class="button-primary">Next</button>
 					</div>
 				</div>
 				<div class="three columns container contentBoxColumn">
 					<div class="contentBox">
 						<h2>Content</h2>
 						<div ng-repeat="submission in cnc.content">
-							<ff-content-box display="0" content="submission" expanded="1"></ff-content-box>
+							<ff-content-box 
+								display="0" content="submission" expanded="1" show-thumbnail="0"
+								
+							></ff-content-box>
 						</div>
-						<ff-content-box display="0" content="cnc.content[0]" expanded="1" show-thumbnail="0"></ff-content-box>
 					</div>
 				</div>
 				<div class="three columns container contentBoxColumn">

@@ -420,10 +420,13 @@ var PresenterApp;
                 this.currentSlide++;
                 this.updateSlide();
             };
-            SlideCtrl.prototype.toggleOverlay = function (url) {
-                if (url !== this.currentOverlay) {
-                    this.currentOverlay = url;
-                    this.presCommand("showOverlay", url);
+            SlideCtrl.prototype.toggleOverlay = function (content) {
+                if (content.id !== this.currentOverlay.id) {
+                    this.currentOverlay = content;
+                    if (content.type == FFContentType.Image) {
+                        var linkContent = content;
+                        this.presCommand("showOverlay", linkContent.link);
+                    }
                 }
                 else {
                     this.currentOverlay = undefined;
