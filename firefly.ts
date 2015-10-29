@@ -14,13 +14,18 @@
 /// <reference path="typings/tsd.d.ts" />
 import express = require("express");
 import fs = require("fs");
+import multer = require("multer");
+
 import config = require("./config");
+import controllers = require("./controllers/Controllers");
 
-// Initialize Express and set our routes
+// Initialize Express
 var app = express();
+var upload:any = multer();
 
-import GetPresentationFromID = require('./controllers/GetPresentationFromID');
-app.get('/getPresentationFromID/:id', (req,res)=>new GetPresentationFromID().do(req,res));
+// Set our routes
+app.get('/api/getPresentationFromID/:id', controllers.GetPresentationFromID.AsHandler());
+app.post('/api/uploadPresentation', upload.single('presentation'), controllers.UploadPresentation.AsHandler());
 
 // If no matches, use the static files directory
 // We do a special rewrite for .html

@@ -1,5 +1,5 @@
 // Base Controller
-import {Request, Response} from "express"
+import {Request, Response,RequestHandler} from "express"
 
 export class BaseController {
 	protected process(req: Request, res: Response):DataContract {
@@ -8,6 +8,11 @@ export class BaseController {
 	
 	public do(req: Request, res: Response) {
 		res.send(JSON.stringify(this.process(req,res)));
+	}
+	
+	public static AsHandler():RequestHandler {
+		var controller = new this();
+		return (req,res)=>controller.do(req,res);
 	}
 }
 export interface DataContract {
