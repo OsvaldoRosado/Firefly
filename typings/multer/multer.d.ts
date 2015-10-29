@@ -41,10 +41,13 @@ declare module "multer" {
     import express = require('express');
 
     function multer(options?: multer.Options): express.RequestHandler;
-
+    
     module multer {
+        
+        function diskStorage({destination,filename});
 
         type Options = {
+            storage?: any;
             /** The destination directory for the uploaded files. */
             dest?: string;
             /** An object specifying the size limits of the following optional properties. This object is passed to busboy directly, and the details of properties can be found on https://github.com/mscdex/busboy#busboy-methods */
