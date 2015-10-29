@@ -4,3 +4,4 @@
 /// <reference path="serve-static/serve-static.d.ts" />
 /// <reference path="multer/multer.d.ts" />
 /// <reference path="form-data/form-data.d.ts" />
+/// <reference path="mongodb/mongodb.d.ts" />
