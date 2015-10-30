@@ -7,6 +7,8 @@ class Configuration {
 	public static FILE_SERVER = "https://fireflypresentations.blob.core.windows.net";
 	public static STATIC_DIR = "./public/";
 	public static PAGE_SUFFIX = ".html";
+	public static CONNECTION_STRING_FILE = "db_connection.txt";
+	public static CONNECTION_STRING_ENV = "MONGODB_CONNECTION_STRING";
 }
 
 export = Configuration;
