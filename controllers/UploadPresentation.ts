@@ -5,12 +5,12 @@ import Presentation = require("../models/Presentation");
 class UploadPresentation extends Base.BaseController {	
 	protected process(req: Request, res: Response, cb:(DataContract)=>void) {
 		var file:Express.Multer.File = (<any>req).file;
-		
+				
 		if(!file) {
 			return cb({success:false, data:"No file for upload"}); 
 		}
 		
-		Presentation.fromFile(file, (presentation)=>{
+		Presentation.fromFile(req.body.name, file, (presentation)=>{
 			if(presentation) {
 				return cb({success:true, data:presentation});
 			} else {

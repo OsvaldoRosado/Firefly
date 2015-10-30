@@ -11,10 +11,10 @@ class Presentation extends Base.BaseModel implements FFPresentation {
 	protected static _modelIdentifier = "Presentation";
 		
 	// Follow FFPresentation common public interface
-	public id: string;
-	public name: string = "Unknown Presentation";
+	public id: string = "Unknown";
+	public name: string = "Unknown";
 	public submitter: FFUser;
-	public timestamp: number = Math.floor(new Date().getTime()/1000);
+	public timestamp: number = 0;
 	public slideCount: number = 0;
 	public slideUrls: string[] = [];
 	
@@ -22,64 +22,63 @@ class Presentation extends Base.BaseModel implements FFPresentation {
 	private static _presentationBase = Config.FILE_SERVER + "/convert/";
 	private static _conversionURL = Config.PROCESSING_SERVER + "/convert";
 	
-	public static fromFile(file:Express.Multer.File, cb:(Presentation)=>void):void {	
+	public static fromFile(name: string, file:Express.Multer.File, cb:(Presentation)=>void):void {	
 		// Prepare the POST payload
 		var form = new FormData();
 		var path = file.destination+file.filename;
-		form.append('presentation', fs.createReadStream(path));
+		form.append("presentation", fs.createReadStream(path));
 		
 		// Send the payload
 		form.submit(Presentation._conversionURL, (err, res) => {
 			if (err) {
-				console.log(err);
 				cb(null);
 			} else {
-				var body = "";
-				res.on('data', function (data) {
-					body += data;
-				});
-				res.on('end', function () {
+				var data = "";
+				res.on("data", (chunk) => {data += chunk;});
+				res.on("end", () => {
 					// Delete the uploaded file. We don't need it.
 					// also end our server connection
 					fs.unlinkSync(path);
 					res.resume();
 					
-					// Parse the response
-					var data = JSON.parse(body);				
-					if (data.success) {
-						// Generate a Presentation instance
-						var pres = new Presentation(data.msg);
-						return cb(pres);
-					} else {
-						return cb(null);
-					}
+					this.fromConversionPayload(name, data, cb);
 				});
 			}
 		});
 	}
 	
-	// Construct a presentation from an ID
-	public constructor(id:string) {
-		super();
+	private static fromConversionPayload(name: string, body:string, cb:(Presentation)=>void):void{
+		// Parse the response
+		var payload = JSON.parse(body);				
+		if (!payload.success) {
+			return cb(null);	
+		}
+		// Construct a Presentation instance
+		var pres = new Presentation();
+		pres.name = name;
+		pres.timestamp = Math.floor(new Date().getTime()/1000);
 		
-		// Does id exist?
-		if (!id) {
-			return null;
+		// Parse payload ID
+		// ID should be in form GUID-NUMSLIDES
+		pres.id = payload.msg;
+		var idComponents = (<string>pres.id).split("-") 
+		if (idComponents.length != 6) { 
+			return null; 
+		}
+		pres.slideCount = parseInt(idComponents[5]);
+		var internalID = idComponents.join("-").substr(0,pres.id.length-(idComponents[5].length+1)); 
+		for(var i=0; i<pres.slideCount; i++){ 
+			pres.slideUrls.push(Presentation._presentationBase + internalID + "/img" + i + ".jpg"); 
 		}
 		
-		// Is id in valid format?
-		var idComponents = (<string>id).split("-")
-		if (idComponents.length != 6) {
-			return null;
-		}
-		
-		// Fill variables
-		this.id = id;
-		this.slideCount = parseInt(idComponents[5]);
-		var internalID = idComponents.join("-").substr(0,id.length-(idComponents[5].length+1));
-		for(var i=0; i<this.slideCount; i++){
-			this.slideUrls.push(Presentation._presentationBase + internalID + "/img" + i + ".jpg");
-		}
+		// Save the instance to the database
+		pres.save((success)=>{
+			if (success) {
+				cb(pres);
+			} else {
+				cb(null);
+			}
+		});
 	}
 }
 

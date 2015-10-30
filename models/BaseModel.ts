@@ -6,8 +6,7 @@ export class BaseModel {
 	
 	constructor() {
 		if (this.getType() == BaseModel._modelIdentifier) {
-			console.log("MODEL DID NOT PROVIDE MODELIDENTIFIER!");
-			return null;
+			throw new Error("Model subclass did not override _modelIdentifier or BaseModel is being used directly");
 		}
 	}
 	
@@ -28,8 +27,9 @@ export class BaseModel {
 	}
 	
 	/** Function to load model contents from database with an ID */
-	public static fromID(id:string, cb:(ok:boolean)=>void) {
-		
+	public static fromID<T extends BaseModel>(id:string, cb:(data:T)=>void) {
+		var model = new this();
+		Database.pullModel(id,model,cb);
 	}
 	
 	/** Function to save model contents on database */
