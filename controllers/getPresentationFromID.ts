@@ -3,7 +3,7 @@ import Base = require("./BaseController");
 import Presentation = require("../models/Presentation");
 
 class GetPresentationFromID extends Base.BaseController {
-	protected process(req: Request, res: Response, cb:(DataContract)=>void) {
+	protected process(req: Request, res: Response, cb:(data:Base.DataContract)=>void) {
 		var id = req.params.id;
 		
 		Presentation.fromID(id,(presentation)=>{
