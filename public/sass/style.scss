@@ -231,7 +231,7 @@ footer {
 	transition-timing-function: ease-in-out;
 }
 .darkPulse {
-	display: block;
+	display: inline-block;
 	margin: 0 auto;
 	width: 10px;
 	height: 10px;
@@ -366,6 +366,7 @@ body.audience {
 		.history {
 			div.currentClass {
 				margin-bottom: 1em;
+				display: block;
 				h2 {
 					color: $content-text-dark;
 					float: left;
@@ -381,14 +382,19 @@ body.audience {
 				li {
 					margin-bottom: 1em;
 					a {
-						padding: 1em;
+						div.historyItem {
+							display: inline-block;
+							padding: 1em;
+							&.live {
+								width: 80%;
+							}
+						}
 						text-decoration: none;
 						border: 1px solid $content-border;
 						display: inline-block;
 						width: 100%;
 						div.historyTitle {
 							float: left;
-							width: 80%;
 							h2 {
 								color: $content-text-darker;
 							}
@@ -397,11 +403,13 @@ body.audience {
 							}
 						}
 						div.historyPulse {
+							display: inline-block;
 							float: right;
-							width: 20%
+							position: absolute;
+							right: 1em;
+							padding: 0.5em;
 						}
 						div.darkPulse {
-							margin: 1.5em;
 						}
 					}
 				}
