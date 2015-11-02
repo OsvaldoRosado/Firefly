@@ -518,3 +518,27 @@ body.presentation {
 		bottom: 100px;
 	}
 }
+
+// Component CSS
+// merge later into final component directories?
+
+@import '../directives/ff-content-box/_style.scss';
+@import '../directives/ff-question/_style.scss';
+
+.ffContentBox {
+  width: 100%;
+}
+
+div.pastQuestions {
+	font-family: $content-font-stack;
+	h3, span, p {
+		color: $content-text-darkest;		
+	}
+	b {
+		font-style: bold;
+	}
+	cite {
+		font-style: italic;
+	}
+}
+
