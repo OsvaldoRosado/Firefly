@@ -1,5 +1,13 @@
+/// <reference path="../../../../shared/data-types.ts" />
+/// <reference path="../../typings/angular/angular.d.ts" />
+/// <reference path="../../typings/firefly/firefly.d.ts" />
+/// <reference path="../../shared/config.ts" />
 module PresenterApp.Controllers {
 
+	/**
+	 * Angular controller for showing student-submitted content and questions
+	 * to the Professor.
+	 */
 	export class ContentCtrl {
 
 		scope: ng.IScope;

@@ -61,6 +61,7 @@ module.exports = function(grunt) {
 				src: shared.concat([
 					"public/js/shared/*.ts",
 					"public/directives/**/*.ts",
+					"public/js/presenter/util/*.ts",
 					"public/js/presenter/controllers/*.ts",
 					"public/js/presenter/app.ts"
 				]),

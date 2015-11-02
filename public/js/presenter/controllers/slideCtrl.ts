@@ -1,20 +1,17 @@
 /// <reference path="../../shared/api.ts" />
-module PresenterApp.Controllers{
+/// <reference path="../util/localWindow.ts" />
+module PresenterApp.Controllers {
 	
-	class GetPresentationAPIRequest extends Shared.APIRequest<FFPresentation> {
-		constructor($http: ng.IHttpService, presentationId: string) {
-			super($http, "/getPresentationFromId/" + presentationId, {});
-		}
-	}
-	
+	/**
+	 * Angular controller for switching slides, placing overlays, and managing Q&A
+	 */
 	export class SlideCtrl{
 
 		scope: ng.IScope;
 		http: ng.IHttpService;
 
 		presRunning: boolean;
-		presWindow: Window;
-		presPreWindow: Window;
+		presWindows: PresenterApp.LocalWindowManager;
 
 		presName: string;
 		currentSlide: number;
@@ -32,7 +29,7 @@ module PresenterApp.Controllers{
 			this.presRunning = false;
 
 			var sampleId = "59227f68-0818-4493-91df-c4b065a5011b-2";
-			new GetPresentationAPIRequest($http, sampleId)
+			new Shared.GetPresentationAPIRequest($http, sampleId)
 				.then((result: ng.IHttpPromiseCallbackArg<FFPresentation>) => {
 					var pres = result.data;
 					this.currentSlide = 0;
@@ -42,29 +39,22 @@ module PresenterApp.Controllers{
 				}, () => this.error = "Your presentation was not found!");
 		}
 
-
-		presCommand(action: string, data: string) {
-			this.presWindow.postMessage(
-				angular.toJson({action: action,  data: data}),
-				Config.HOST
-			);
-			this.presPreWindow.postMessage(
-				angular.toJson({action: action,  data: data}),
-				Config.HOST
-			);
-		}
-
 		updateSlide(){
-			this.presCommand("changeSlide", this.slideUrls[this.currentSlide]);
+			this.presWindows.commandAll(
+				"changeSlide", this.slideUrls[this.currentSlide]
+			);
 		}
 
 		startPresentation(){
 			this.presRunning = true;
-			this.presWindow = window.open(
-				"presentation.html", this.presName, "width=802,height=450"
-			);
-			var presPreview = document.getElementById("presPreview");		
-			this.presPreWindow = presPreview.contentWindow;
+			var presPreview: HTMLIFrameElement = 
+				<HTMLIFrameElement>document.getElementById("presPreview");
+
+			this.presWindows = new PresenterApp.LocalWindowManager([
+				window.open("presentation.html", this.presName, "width=802,height=450"),
+				presPreview.contentWindow
+			]);
+
 			setTimeout(() => {
 				this.updateSlide();
 				// iframe height can't be set to show whole screen, must set
@@ -89,24 +79,22 @@ module PresenterApp.Controllers{
 				this.currentOverlay = content;
 				if(content.type == FFContentType.Image){
 					var linkContent = <FFLinkContent> content;
-					this.presCommand("showOverlay", linkContent.link);
+					this.presWindows.commandAll("showOverlay", linkContent.link);
 				}
 			} else {
 				this.currentOverlay = undefined;
-				this.presCommand("hideOverlay", "");
+				this.presWindows.commandAll("hideOverlay", "");
 			}
 		}
 
-		// TODO: implement showReplies
-		toggleQASidebar(question: FFQuestion, showReplies: boolean){
+		toggleQASidebar(question: FFQuestion){
 			if(!this.currentQA || this.currentQA.text !== question.text){
 				this.currentQA = question;
-				this.presCommand("showQASidebar", angular.toJson(question));
+				this.presWindows.commandAll("showQASidebar", angular.toJson(question));
 			} else {
 				this.currentQA = undefined;
-				this.presCommand("hideQASidebar", "");
+				this.presWindows.commandAll("hideQASidebar", "");
 			}
 		}
-
 	}
 }

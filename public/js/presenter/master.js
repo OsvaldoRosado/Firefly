@@ -17,6 +17,11 @@ var Config = (function () {
 /// <reference path="../typings/angular/angular.d.ts" />
 /// <reference path="../typings/firefly/firefly.d.ts" />
 /// <reference path="./config.ts" />
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var Shared;
 (function (Shared) {
     (function (APIMethod) {
@@ -71,6 +76,14 @@ var Shared;
         return APIRequest;
     })();
     Shared.APIRequest = APIRequest;
+    var GetPresentationAPIRequest = (function (_super) {
+        __extends(GetPresentationAPIRequest, _super);
+        function GetPresentationAPIRequest($http, presentationId) {
+            _super.call(this, $http, "/getPresentationFromId/" + presentationId, {});
+        }
+        return GetPresentationAPIRequest;
+    })(Shared.APIRequest);
+    Shared.GetPresentationAPIRequest = GetPresentationAPIRequest;
 })(Shared || (Shared = {}));
 /// <reference path="../../js/typings/angular/angular.d.ts" />
 var Shared;
@@ -133,11 +146,6 @@ var Shared;
 /// <reference path="../../../shared/data-types.ts" />
 /// <reference path="../../js/shared/api.ts" />
 /// <reference path="../../js/typings/angular/angular.d.ts" />
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 var Shared;
 (function (Shared) {
     var UpvoteAPIRequest = (function (_super) {
@@ -291,6 +299,39 @@ var Shared;
 })(Shared || (Shared = {}));
 var PresenterApp;
 (function (PresenterApp) {
+    var LocalWindow = (function () {
+        function LocalWindow(wnd) {
+            this.theWindow = wnd;
+        }
+        LocalWindow.prototype.postMessage = function (data) {
+            this.theWindow.postMessage(data, Config.HOST);
+        };
+        LocalWindow.prototype.command = function (action, data) {
+            this.postMessage(JSON.stringify({ action: action, data: data }));
+        };
+        return LocalWindow;
+    })();
+    PresenterApp.LocalWindow = LocalWindow;
+    var LocalWindowManager = (function () {
+        function LocalWindowManager(theWindows) {
+            this.windows = theWindows.map(function (wnd) { return new LocalWindow(wnd); });
+        }
+        LocalWindowManager.prototype.postAll = function (data) {
+            this.windows.forEach(function (wnd) { return wnd.postMessage(data); });
+        };
+        LocalWindowManager.prototype.commandAll = function (action, data) {
+            this.windows.forEach(function (wnd) { return wnd.command(action, data); });
+        };
+        return LocalWindowManager;
+    })();
+    PresenterApp.LocalWindowManager = LocalWindowManager;
+})(PresenterApp || (PresenterApp = {}));
+/// <reference path="../../../../shared/data-types.ts" />
+/// <reference path="../../typings/angular/angular.d.ts" />
+/// <reference path="../../typings/firefly/firefly.d.ts" />
+/// <reference path="../../shared/config.ts" />
+var PresenterApp;
+(function (PresenterApp) {
     var Controllers;
     (function (Controllers) {
         var ContentCtrl = (function () {
@@ -374,24 +415,18 @@ var PresenterApp;
     })(Controllers = PresenterApp.Controllers || (PresenterApp.Controllers = {}));
 })(PresenterApp || (PresenterApp = {}));
 /// <reference path="../../shared/api.ts" />
+/// <reference path="../util/localWindow.ts" />
 var PresenterApp;
 (function (PresenterApp) {
     var Controllers;
     (function (Controllers) {
-        var GetPresentationAPIRequest = (function (_super) {
-            __extends(GetPresentationAPIRequest, _super);
-            function GetPresentationAPIRequest($http, presentationId) {
-                _super.call(this, $http, "/getPresentationFromId/" + presentationId, {});
-            }
-            return GetPresentationAPIRequest;
-        })(Shared.APIRequest);
         var SlideCtrl = (function () {
             function SlideCtrl($scope, $http) {
                 var _this = this;
                 this.scope = $scope;
                 this.presRunning = false;
                 var sampleId = "59227f68-0818-4493-91df-c4b065a5011b-2";
-                new GetPresentationAPIRequest($http, sampleId)
+                new Shared.GetPresentationAPIRequest($http, sampleId)
                     .then(function (result) {
                     var pres = result.data;
                     _this.currentSlide = 0;
@@ -400,19 +435,17 @@ var PresenterApp;
                     _this.slideUrls = pres.slideUrls;
                 }, function () { return _this.error = "Your presentation was not found!"; });
             }
-            SlideCtrl.prototype.presCommand = function (action, data) {
-                this.presWindow.postMessage(angular.toJson({ action: action, data: data }), Config.HOST);
-                this.presPreWindow.postMessage(angular.toJson({ action: action, data: data }), Config.HOST);
-            };
             SlideCtrl.prototype.updateSlide = function () {
-                this.presCommand("changeSlide", this.slideUrls[this.currentSlide]);
+                this.presWindows.commandAll("changeSlide", this.slideUrls[this.currentSlide]);
             };
             SlideCtrl.prototype.startPresentation = function () {
                 var _this = this;
                 this.presRunning = true;
-                this.presWindow = window.open("presentation.html", this.presName, "width=802,height=450");
                 var presPreview = document.getElementById("presPreview");
-                this.presPreWindow = presPreview.contentWindow;
+                this.presWindows = new PresenterApp.LocalWindowManager([
+                    window.open("presentation.html", this.presName, "width=802,height=450"),
+                    presPreview.contentWindow
+                ]);
                 setTimeout(function () {
                     _this.updateSlide();
                     presPreview.style.height =
@@ -432,22 +465,22 @@ var PresenterApp;
                     this.currentOverlay = content;
                     if (content.type == FFContentType.Image) {
                         var linkContent = content;
-                        this.presCommand("showOverlay", linkContent.link);
+                        this.presWindows.commandAll("showOverlay", linkContent.link);
                     }
                 }
                 else {
                     this.currentOverlay = undefined;
-                    this.presCommand("hideOverlay", "");
+                    this.presWindows.commandAll("hideOverlay", "");
                 }
             };
-            SlideCtrl.prototype.toggleQASidebar = function (question, showReplies) {
+            SlideCtrl.prototype.toggleQASidebar = function (question) {
                 if (!this.currentQA || this.currentQA.text !== question.text) {
                     this.currentQA = question;
-                    this.presCommand("showQASidebar", angular.toJson(question));
+                    this.presWindows.commandAll("showQASidebar", angular.toJson(question));
                 }
                 else {
                     this.currentQA = undefined;
-                    this.presCommand("hideQASidebar", "");
+                    this.presWindows.commandAll("hideQASidebar", "");
                 }
             };
             SlideCtrl.$inject = ["$scope", "$http"];
