@@ -9,6 +9,9 @@ class Configuration {
 	public static PAGE_SUFFIX = ".html";
 	public static CONNECTION_STRING_FILE = "db_connection.txt";
 	public static CONNECTION_STRING_ENV = "MONGODB_CONNECTION_STRING";
+	public static CAS_AUTH_URL = "https://cas-auth.rpi.edu/cas";
+	public static CAS_AUTH_DOMAIN = "rpi.edu";
+	public static SESSION_SECRET = process.env.SESSION_SECRET || "localhost secret";
 }
 
 export = Configuration;
