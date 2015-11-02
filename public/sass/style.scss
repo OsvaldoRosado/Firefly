@@ -316,6 +316,9 @@ nav.viewer {
 
 // Audience Views
 body.audience {
+	&.submitPage {
+		background: $callout-light;
+	}
 	background: $background-light;
 	.mainContent {
 		// Ask Question Page
@@ -326,11 +329,12 @@ body.audience {
 		.submitContent {
 			ul {
 				li {
-					margin: 0.5em 0;
+					background: $background-light;
+					border-bottom: 1px solid $content-border; 
+					padding: 1em 2em;
 					a {
 						display: inline-block;
 						padding: 1em 0;
-						border-bottom: 1px solid $content-border; 
 						i.submitContentIcon {
 							float: left;
 							width: 20%;
@@ -418,6 +422,7 @@ body.audience {
 	}
 }
 div.header {
+	background: $background-light;
 	display: inline-block;
 	width: 100%;
 	box-shadow: 0 5px 5px $callout-light;
@@ -527,11 +532,11 @@ body.presentation {
 
 .ffContentBox {
   width: 100%;
+  margin-bottom: 1em;
 }
 
-div.pastQuestions {
-	font-family: $content-font-stack;
-	h3, span, p {
+div.pastSubmissions {
+	h1, h2, h3, h4, h5, span, p {
 		color: $content-text-darkest;		
 	}
 	b {
