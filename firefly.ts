@@ -42,7 +42,7 @@ Database.notifyOnReady((dbConnected)=>{
 	app.use(passport.session());
 	
 	// Configure Authentication
-	Authentication.configure(Config.CAS_AUTH_URL, Config.CAS_AUTH_DOMAIN);
+	Authentication.configure(Config.CAS_AUTH_URL, Config.CAS_AUTH_DOMAIN, Config.APP_ADDRESS);
 	
 	// Initialize file upload library, multer
 	var upload:any = multer({ storage: multer.diskStorage({

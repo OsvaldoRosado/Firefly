@@ -16,7 +16,7 @@ class User extends Base.BaseModel implements FFUser {
 		// Identifiers stay the same too, so no lookups needed.
 		// We save this in the DB for metrics purposes
 		
-		if(name == "" || serviceDomain == "") {
+		if(username == "" || serviceDomain == "") {
 			return cb(null);
 		}
 		

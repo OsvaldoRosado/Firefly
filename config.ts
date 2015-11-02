@@ -12,6 +12,7 @@ class Configuration {
 	public static CAS_AUTH_URL = "https://cas-auth.rpi.edu/cas";
 	public static CAS_AUTH_DOMAIN = "rpi.edu";
 	public static SESSION_SECRET = process.env.SESSION_SECRET || "localhost secret";
+	public static APP_ADDRESS = process.env.APP_ADDRESS || "http://localhost:"+Configuration.DEFAULT_PORT;
 }
 
 export = Configuration;
