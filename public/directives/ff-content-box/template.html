@@ -37,6 +37,11 @@
       <ff-question ng-repeat="reply in cc.content.replies" 
                    content="reply" is-reply="true">
       </ff-question>
+      <!-- Submit reply to reply -->
+      <form class="postReply">
+        <textarea placeholder="Post Reply"></textarea>
+        <input type="submit" value="Post">
+      </form>
     </collapse>
   </div>
   

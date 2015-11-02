@@ -560,3 +560,20 @@ div.pastSubmissions {
 	}
 }
 
+// Post Reply styles
+form.postReply {
+	textarea {
+	    width: 90% !important;
+	    margin-left: 10%;
+	    
+	    &::before, &::after {
+	      left: inherit;
+	      right: 25px;
+	    }
+	}
+	input {
+		float: right;
+		display: inline-block;
+	}
+}
+
