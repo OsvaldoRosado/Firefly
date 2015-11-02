@@ -339,6 +339,10 @@ body.audience {
 							float: left;
 							width: 20%;
 							color: $content-text-dark;
+							img {
+								width: 35px;
+								padding: 1em 0 0 0;
+							}
 						}
 						div.submitContentItem {
 							float: right;
@@ -382,6 +386,10 @@ body.audience {
 				li {
 					margin-bottom: 1em;
 					a {
+						text-decoration: none;
+						border: 1px solid $content-border;
+						display: inline-block;
+						width: 100%;
 						div.historyItem {
 							display: inline-block;
 							padding: 1em;
@@ -389,10 +397,6 @@ body.audience {
 								width: 80%;
 							}
 						}
-						text-decoration: none;
-						border: 1px solid $content-border;
-						display: inline-block;
-						width: 100%;
 						div.historyTitle {
 							float: left;
 							h2 {
@@ -408,8 +412,6 @@ body.audience {
 							position: absolute;
 							right: 1em;
 							padding: 0.5em;
-						}
-						div.darkPulse {
 						}
 					}
 				}
