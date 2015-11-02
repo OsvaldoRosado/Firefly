@@ -334,14 +334,15 @@ body.presenter {
 		}
 
 		div.contentBoxColumn{
-			max-height: 100%;
-			overflow-y: auto;
+			height: 100%;
 
 			div.contentBox {
 				background: $background-light;
 				color: $content-text-darkest;
-				margin: 10px;
-				padding: 10px;
+				margin: 10px 10px 0;
+				padding: 10px 10px 0;
+				max-height: 99%;
+				overflow-y: auto;
 
 				div.ffContentBox{
 					margin-bottom: 10px;
@@ -357,8 +358,8 @@ body.presenter {
 }
 
 // Presentation Main Page
-
 body.presentation {
+	background: $background-dark;
 
 	img.slide{
 		position: absolute;
@@ -375,5 +376,32 @@ body.presentation {
 		left: 0;
 		right: 0;
 		bottom: 100px;
+		max-width: 90%;
+		max-height: 90%;
+	}
+
+	aside {
+		margin: 0;
+		padding: 0;
+		width: 17.333333% !important;
+
+		div.contentBox {
+			color: $content-text-darkest;
+			padding: 10px 10px 0;
+			max-height: 99%;
+			overflow-y: auto;
+
+			div.ffContentBox, h1, h3, p {
+				margin-bottom: 10px;
+			}
+			
+			p, h3 {
+				color: $content-text-darkest;
+			}
+
+			h1 {
+				color: $callout-light;
+			}
+		}
 	}
 }

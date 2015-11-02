@@ -7,7 +7,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Firefly Presenter</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
-		<script src="https://raw.githubusercontent.com/kylewelsby/angular-post-message/master/dist/angular-post-message.js"></script>
 		<script src="js/presenter/master.js"></script>
 		<script src="js/presenter/templates.js"></script>
 		<link rel="stylesheet" href="css/style.css">
@@ -32,7 +31,7 @@
 						<div ng-repeat="submission in cnc.content">
 							<ff-content-box 
 								display="0" content="submission" expanded="1" show-thumbnail="0"
-								
+								on-toggle="sc.toggleOverlay(submission)"
 							></ff-content-box>
 						</div>
 					</div>
@@ -41,7 +40,7 @@
 					<div class="contentBox">
 						<h2>Questions</h2>
 						<div ng-repeat="question in cnc.questions">
-							<ff-content-box display="0" content="question" expanded="1"></ff-content-box>
+							<ff-content-box display="0" content="question" expanded="1" on-toggle="sc.toggleQASidebar(question)"></ff-content-box>
 						</div>
 					</div>
 				</div>

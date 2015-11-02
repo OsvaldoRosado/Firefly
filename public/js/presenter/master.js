@@ -421,7 +421,7 @@ var PresenterApp;
                 this.updateSlide();
             };
             SlideCtrl.prototype.toggleOverlay = function (content) {
-                if (content.id !== this.currentOverlay.id) {
+                if (!this.currentOverlay || content.id !== this.currentOverlay.id) {
                     this.currentOverlay = content;
                     if (content.type == FFContentType.Image) {
                         var linkContent = content;

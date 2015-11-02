@@ -33,11 +33,22 @@ module.exports = function(grunt) {
 				],
 				dest: 'public/js/presenter/templates.js',
 				options: ngtemplatesOpts
+			},
+			presentation: {
+				src: [
+					'public/directives/ff-content/*.html',
+					'public/directives/ff-content-box/*.html',
+					'public/directives/ff-question/*.html'
+				],
+				dest: 'public/js/presentation/templates.js',
+				options: ngtemplatesOpts
 			}
 		},
 		ts: {
 			presentation: {
 				src: shared.concat([
+					"public/js/shared/*.ts",
+					"public/directives/**/*.ts",
 					"public/js/presentation/controllers/*.ts",
 					"public/js/presentation/app.ts"
 				]),
