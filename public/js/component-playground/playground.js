@@ -17,6 +17,11 @@ var Config = (function () {
 /// <reference path="../typings/angular/angular.d.ts" />
 /// <reference path="../typings/firefly/firefly.d.ts" />
 /// <reference path="./config.ts" />
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var Shared;
 (function (Shared) {
     (function (APIMethod) {
@@ -71,6 +76,14 @@ var Shared;
         return APIRequest;
     })();
     Shared.APIRequest = APIRequest;
+    var GetPresentationAPIRequest = (function (_super) {
+        __extends(GetPresentationAPIRequest, _super);
+        function GetPresentationAPIRequest($http, presentationId) {
+            _super.call(this, $http, "/getPresentationFromId/" + presentationId, {});
+        }
+        return GetPresentationAPIRequest;
+    })(Shared.APIRequest);
+    Shared.GetPresentationAPIRequest = GetPresentationAPIRequest;
 })(Shared || (Shared = {}));
 /// <reference path="../../js/typings/angular/angular.d.ts" />
 var Shared;
@@ -192,11 +205,6 @@ var Shared;
 /// <reference path="../../../shared/data-types.ts" />
 /// <reference path="../../js/shared/api.ts" />
 /// <reference path="../../js/typings/angular/angular.d.ts" />
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 var Shared;
 (function (Shared) {
     var UpvoteAPIRequest = (function (_super) {

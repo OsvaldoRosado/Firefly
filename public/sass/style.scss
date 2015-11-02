@@ -11,6 +11,11 @@
 $title-font-stack: 'Montserrat', sans-serif;
 $content-font-stack: 'Roboto', sans-serif;
 
+// Import components
+@import '../directives/ff-content/_style.scss';
+@import '../directives/ff-content-box/_style.scss';
+@import '../directives/ff-question/_style.scss';
+
 // ************************* //
 html {
 	position: relative;
@@ -451,8 +456,15 @@ div.header {
 }
 
 // Presenter Main Page
+html#presenter{
+	height: 100%;
+	min-height: initial;
+}
+
 body.presenter {
 	background: $background-dark;
+	height: 100%;
+	margin: 0;
 
 	header {
 		background: $primary-brand;
@@ -477,47 +489,46 @@ body.presenter {
 		}
 	}
 
-	div.livePresentation{
-		margin: 10px;
-	}
+	div.mainConsole {
+		height: 93%;
 
-	div.contentBox {
-		background: $background-light;
-		padding: 10px;
-		margin: 10px;
+		div.livePresentation {
+			margin: 10px;
 
-		h2{
-			color: $content-text-darkest;
-			margin-bottom: 10px;
+			iframe#presPreview {
+				display: block;
+				margin-bottom: 10px;
+			}
 		}
 
-		figure.submission{
-			margin: 5px;
-			background: $callout-light;
-			text-align: center;
+		div.contentBoxColumn {
+			height: 100%;
 
-			img{
-				margin: 5px;
-				max-width: 95%;
-			}
+			div.contentBox {
+				background: $background-light;
+				color: $content-text-darkest;
+				margin: 10px 10px 0;
+				padding: 10px 10px 0;
+				max-height: 99%;
+				overflow-y: auto;
 
-			figcaption, div.meta{
-				margin: 5px;
-				text-align: left;
-			}
+				div.ffContentBox {
+					margin-bottom: 10px;
+				}
 
-			div.meta{
-				font-size: 12px;
-				padding-bottom: 5px;
-				color: $content-text-dark;
+				h2, h3, h5, p {
+					color: $content-text-darkest;
+					margin-bottom: 10px;
+				}
 			}
 		}
 	}
 }
 
 // Presentation Main Page
-
 body.presentation {
+	background: $background-dark;
+	margin-bottom: 0;
 
 	img.slide{
 		position: absolute;
@@ -528,12 +539,66 @@ body.presentation {
 		text-align: center;
 	}
 
-	img.overlay{
+	.overlay{
 		position: absolute;
 		margin: 0 auto;
 		left: 0;
 		right: 0;
+	}
+
+	img.overlay{
+		max-width: 90%;
+		max-height: 90%;
 		bottom: 100px;
+	}
+
+	iframe.overlay{
+		width: 100%;
+		height: 100%;
+	}
+
+	aside {
+		margin: 0;
+		padding: 0;
+		width: 17.333333% !important;
+
+		div.contentBox {
+			color: $content-text-darkest;
+			padding: 10px 10px 0;
+			max-height: 99%;
+
+			div.ffContentBox, h1, h3, p {
+				margin-bottom: 10px;
+			}
+			
+			p, h3 {
+				color: $content-text-darkest;
+			}
+
+			h1 {
+				color: $callout-light;
+			}
+
+			@media(max-width: 800px) {
+				overflow: hidden;
+
+				div.ffContentBox, h1, h3, p {
+					margin-bottom: 1px;
+				}
+
+				h1 {
+					font-size: 8px;
+				}
+
+				h3 {
+					font-size: 6px;
+				}
+
+				p, cite {
+					font-size: 4px;
+				}
+			}
+		}
 	}
 }
 

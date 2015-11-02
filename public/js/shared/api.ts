@@ -58,4 +58,10 @@ module Shared {
 		}
 		catch(f: (error: Object) => void) {this.onfail = f; return this;}
 	}
+
+	export class GetPresentationAPIRequest extends Shared.APIRequest<FFPresentation> {
+		constructor($http: ng.IHttpService, presentationId: string) {
+			super($http, "/getPresentationFromId/" + presentationId, {});
+		}
+	}
 }
