@@ -14,6 +14,7 @@ module PresenterApp.Controllers{
 
 		presRunning: boolean;
 		presWindow: Window;
+		presPreWindow: Window;
 
 		presName: string;
 		currentSlide: number;
@@ -47,6 +48,10 @@ module PresenterApp.Controllers{
 				angular.toJson({action: action,  data: data}),
 				Config.HOST
 			);
+			this.presPreWindow.postMessage(
+				angular.toJson({action: action,  data: data}),
+				Config.HOST
+			);
 		}
 
 		updateSlide(){
@@ -58,7 +63,15 @@ module PresenterApp.Controllers{
 			this.presWindow = window.open(
 				"presentation.html", this.presName, "width=802,height=450"
 			);
-			setTimeout(() => this.updateSlide(), 1000);
+			var presPreview = document.getElementById("presPreview");		
+			this.presPreWindow = presPreview.contentWindow;
+			setTimeout(() => {
+				this.updateSlide();
+				// iframe height can't be set to show whole screen, must set
+				// manually instead
+				presPreview.style.height = 
+					Math.round(presPreview.offsetWidth * 9 / 16) + "px";
+			}, 1000);
 		}
 
 		prevSlide() {

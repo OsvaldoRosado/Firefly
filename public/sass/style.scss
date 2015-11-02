@@ -326,14 +326,19 @@ body.presenter {
 		}
 	}
 
-	div.mainConsole{
+	div.mainConsole {
 		height: 93%;
 
-		div.livePresentation{
+		div.livePresentation {
 			margin: 10px;
+
+			iframe#presPreview {
+				display: block;
+				margin-bottom: 10px;
+			}
 		}
 
-		div.contentBoxColumn{
+		div.contentBoxColumn {
 			height: 100%;
 
 			div.contentBox {
@@ -344,11 +349,11 @@ body.presenter {
 				max-height: 99%;
 				overflow-y: auto;
 
-				div.ffContentBox{
+				div.ffContentBox {
 					margin-bottom: 10px;
 				}
 
-				h2, h3, h5, p{
+				h2, h3, h5, p {
 					color: $content-text-darkest;
 					margin-bottom: 10px;
 				}

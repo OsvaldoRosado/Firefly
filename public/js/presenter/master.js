@@ -402,6 +402,7 @@ var PresenterApp;
             }
             SlideCtrl.prototype.presCommand = function (action, data) {
                 this.presWindow.postMessage(angular.toJson({ action: action, data: data }), Config.HOST);
+                this.presPreWindow.postMessage(angular.toJson({ action: action, data: data }), Config.HOST);
             };
             SlideCtrl.prototype.updateSlide = function () {
                 this.presCommand("changeSlide", this.slideUrls[this.currentSlide]);
@@ -410,7 +411,13 @@ var PresenterApp;
                 var _this = this;
                 this.presRunning = true;
                 this.presWindow = window.open("presentation.html", this.presName, "width=802,height=450");
-                setTimeout(function () { return _this.updateSlide(); }, 1000);
+                var presPreview = document.getElementById("presPreview");
+                this.presPreWindow = presPreview.contentWindow;
+                setTimeout(function () {
+                    _this.updateSlide();
+                    presPreview.style.height =
+                        Math.round(presPreview.offsetWidth * 9 / 16) + "px";
+                }, 1000);
             };
             SlideCtrl.prototype.prevSlide = function () {
                 this.currentSlide--;
