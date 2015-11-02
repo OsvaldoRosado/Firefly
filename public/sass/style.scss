@@ -375,14 +375,22 @@ body.presentation {
 		text-align: center;
 	}
 
-	img.overlay{
+	.overlay{
 		position: absolute;
 		margin: 0 auto;
 		left: 0;
 		right: 0;
-		bottom: 100px;
+	}
+
+	img.overlay{
 		max-width: 90%;
 		max-height: 90%;
+		bottom: 100px;
+	}
+
+	iframe.overlay{
+		width: 100%;
+		height: 100%;
 	}
 
 	aside {

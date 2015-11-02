@@ -81,6 +81,10 @@ module PresenterApp.Controllers {
 					var linkContent = <FFLinkContent> content;
 					this.presWindows.commandAll("showOverlay", linkContent.link);
 				}
+				else if(content.type == FFContentType.Video){
+					var vidContent = <FFYoutubeContent> content;
+					this.presWindows.commandAll("showOverlayVideo", vidContent.embed);
+				}
 			} else {
 				this.currentOverlay = undefined;
 				this.presWindows.commandAll("hideOverlay", "");

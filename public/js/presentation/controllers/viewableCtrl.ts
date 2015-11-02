@@ -16,6 +16,7 @@ module PresentationApp.Controllers {
 		slideUrl: string;
 		overlayUrl: string;
 		overlayActive: boolean;
+		overlayIsVideo: boolean;
 		question: FFQuestion;
 		qaActive: boolean;
 
@@ -35,12 +36,21 @@ module PresentationApp.Controllers {
 					case "showOverlay":
 						this.overlayUrl = order.data;
 						this.qaActive = false;
+						this.overlayIsVideo = false;
 						this.overlayActive = true;
+						break;
+
+					case "showOverlayVideo":
+						this.overlayUrl = order.data;
+						this.qaActive = false;
+						this.overlayActive = true;
+						this.overlayIsVideo = true;
 						break;
 					
 					case "hideOverlay":
 						this.overlayUrl = undefined;
 						this.overlayActive = false;
+						this.overlayIsVideo = false;
 						break;
 
 					case "showQASidebar":

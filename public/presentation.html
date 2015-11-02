@@ -15,7 +15,8 @@
 		<div class="row">
 			<img ng-src="{{ vc.slideUrl }}" class="slide" ng-class="{'u-full-width': !vc.qaActive, 'ten columns': vc.qaActive}"/>
 			<div class="overlayContainer">
-				<img ng-src="{{ vc.overlayUrl }}" ng-show="vc.overlayActive" class="overlay"/>
+				<img ng-if="!vc.overlayIsVideo" ng-src="{{ vc.overlayUrl }}" ng-show="vc.overlayActive" class="overlay"/>
+				<iframe ng-if="vc.overlayIsVideo" src="{{ vc.overlayUrl }}" ng-show="vc.overlayActive" class="overlay" frameborder="0"></iframe>
 			</div>
 			<aside ng-if="vc.qaActive" class="u-pull-right two columns">
 				<div class="contentBox">

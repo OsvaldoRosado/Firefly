@@ -467,6 +467,10 @@ var PresenterApp;
                         var linkContent = content;
                         this.presWindows.commandAll("showOverlay", linkContent.link);
                     }
+                    else if (content.type == FFContentType.Video) {
+                        var vidContent = content;
+                        this.presWindows.commandAll("showOverlayVideo", vidContent.embed);
+                    }
                 }
                 else {
                     this.currentOverlay = undefined;

@@ -321,11 +321,19 @@ var PresentationApp;
                         case "showOverlay":
                             _this.overlayUrl = order.data;
                             _this.qaActive = false;
+                            _this.overlayIsVideo = false;
                             _this.overlayActive = true;
+                            break;
+                        case "showOverlayVideo":
+                            _this.overlayUrl = order.data;
+                            _this.qaActive = false;
+                            _this.overlayActive = true;
+                            _this.overlayIsVideo = true;
                             break;
                         case "hideOverlay":
                             _this.overlayUrl = undefined;
                             _this.overlayActive = false;
+                            _this.overlayIsVideo = false;
                             break;
                         case "showQASidebar":
                             _this.question = JSON.parse(order.data);
