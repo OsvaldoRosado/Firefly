@@ -56,7 +56,7 @@ Database.notifyOnReady((dbConnected)=>{
 	})});	
 	
 	// Set our routes
-	app.get('/api/login', passport.authenticate('cas'), Controllers.Login.asHandler());
+	app.get('/api/login/:redirect', passport.authenticate('cas'), Controllers.Login.asHandler());
 	app.get('/api/getPresentationFromID/:id', Controllers.GetPresentationFromID.asHandler());
 	app.post('/api/uploadPresentation', upload.single('presentation'), Controllers.UploadPresentation.asHandler());
 	
