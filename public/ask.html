@@ -18,40 +18,30 @@
 		<div class="darkPulse"></div>
 	</div>
 	<div class="mainContent container">
-		<div class="currentSlideViewer row">
-			<span>||| Get Current Slide |||</span>
-		</div>
+		<form action="">
+			<textarea placeholder="Ask a question"></textarea>
+			<input type="submit" value="Ask" class="u-full-width">
+		</form>
 
 		<div class="pastSubmissions row">
-			<h4>User Submissions</h4>
+			<h4>Recently Asked</h4>
 
-			    <ff-content-box 
-					display="0" content="app.imageContent"
-					expanded="app.expandedIndex | equals:0" on-toggle="app.expandItem($scope,0)"
-				></ff-content-box>
-				
-				<ff-content-box 
-					display="0" content="app.imageContent2" show-thumbnail="false"
-					expanded="app.expandedIndex | equals:1" on-toggle="app.expandItem($scope,1)"
-				></ff-content-box>
-				
-				<ff-content-box 
-					display="0" content="app.videoContent"
-					expanded="app.expandedIndex | equals:2" on-toggle="app.expandItem($scope,2)"
-				></ff-content-box>
-
+			<ff-content-box 
+				display="0" content="app.questionContent"
+				expanded="app.expandedIndex | equals:3" on-toggle="app.expandItem($scope,3)"
+			></ff-content-box>
 		</div>
 	</div>
 	<nav class="viewer">
 		<ul>
 			<li>
-				<a href="viewer.html" class="active">
+				<a href="viewer.html">
 					<span>[||]</span>
 					<h1>Live</h1>
 				</a>
 			</li>
 			<li>
-				<a href="ask.html">
+				<a href="ask.html" class="active">
 					<span>[||]</span>
 					<h1>Q &amp; A</h1>
 				</a>
