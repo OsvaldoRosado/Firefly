@@ -15,6 +15,7 @@ var Config = (function () {
 })();
 /// <reference path="../../../shared/data-types.ts" />
 /// <reference path="../typings/angular/angular.d.ts" />
+/// <reference path="../typings/firefly/firefly.d.ts" />
 /// <reference path="./config.ts" />
 var Shared;
 (function (Shared) {
@@ -29,7 +30,7 @@ var Shared;
             if (endpoint[0] !== "/") {
                 endpoint = "/" + endpoint;
             }
-            endpoint = Config.HOST + endpoint;
+            endpoint = Config.HOST + "/api" + endpoint;
             if (method == APIMethod.GET) {
                 if (data !== undefined && data !== {}) {
                     endpoint += this.queryFormat(data);
@@ -71,6 +72,7 @@ var Shared;
     })();
     Shared.APIRequest = APIRequest;
 })(Shared || (Shared = {}));
+/// <reference path="../../js/typings/angular/angular.d.ts" />
 var Shared;
 (function (Shared) {
     var Directives;
@@ -108,7 +110,7 @@ var Shared;
                         if (newValue == oldValue) {
                             return;
                         }
-                        element.setAttribute("is-expanded", newValue);
+                        element.setAttribute("is-expanded", newValue.toString());
                         var destinationHeight = "0px";
                         if (newValue) {
                             destinationHeight = (getInnerHeight() + "px") || "100%";

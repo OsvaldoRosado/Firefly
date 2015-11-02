@@ -14,13 +14,28 @@
 /// <reference path="typings/tsd.d.ts" />
 import express = require("express");
 import fs = require("fs");
+import multer = require("multer");
+
 import config = require("./config");
+import controllers = require("./controllers/Controllers");
 
-// Initialize Express and set our routes
+// Initialize Express and file upload library
 var app = express();
+var upload:any = multer({ storage: multer.diskStorage({
+	destination: 'tmp/uploads/',
+	filename: function (req, file, cb) {
+		// Give all uploads a unique filename with their proper extension
+		var extensionArray = file.originalname.split(".");
+		var extension = extensionArray[extensionArray.length-1];
+		cb(null, Date.now()+Math.floor(Math.random()*10000)+"."+extension);
+	}
+})});
 
-import GetPresentationFromID = require('./controllers/GetPresentationFromID');
-app.get('/getPresentationFromID/:id', (req,res)=>new GetPresentationFromID().do(req,res));
+
+
+// Set our routes
+app.get('/api/getPresentationFromID/:id', controllers.GetPresentationFromID.asHandler());
+app.post('/api/uploadPresentation', upload.single('presentation'), controllers.UploadPresentation.asHandler());
 
 // If no matches, use the static files directory
 // We do a special rewrite for .html
