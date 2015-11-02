@@ -18,7 +18,7 @@ interface FFPresentation {
 }
 
 interface FFUser {
-  id: number;
+  id: string;
   name: string;
   isPresenter?: boolean;
 }
