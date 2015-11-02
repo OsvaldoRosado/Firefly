@@ -365,6 +365,7 @@ body.presenter {
 // Presentation Main Page
 body.presentation {
 	background: $background-dark;
+	margin-bottom: 0;
 
 	img.slide{
 		position: absolute;
@@ -402,7 +403,6 @@ body.presentation {
 			color: $content-text-darkest;
 			padding: 10px 10px 0;
 			max-height: 99%;
-			overflow-y: auto;
 
 			div.ffContentBox, h1, h3, p {
 				margin-bottom: 10px;
@@ -414,6 +414,26 @@ body.presentation {
 
 			h1 {
 				color: $callout-light;
+			}
+
+			@media(max-width: 800px) {
+				overflow: hidden;
+
+				div.ffContentBox, h1, h3, p {
+					margin-bottom: 1px;
+				}
+
+				h1 {
+					font-size: 8px;
+				}
+
+				h3 {
+					font-size: 6px;
+				}
+
+				p, cite {
+					font-size: 4px;
+				}
 			}
 		}
 	}
