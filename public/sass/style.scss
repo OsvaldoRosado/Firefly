@@ -303,6 +303,9 @@ nav.viewer {
 				span {
 					color: $content-text-light;
 					font-size: 12px;
+					img {
+						width: 60px;
+					}
 				}
 				h1 {
 					font-family: $title-font-stack;
