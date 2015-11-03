@@ -31,7 +31,7 @@ class GeneratePresentationInstance extends Base.BaseController {
 					return cb({success:false, data:"Could not make instance"});
 				}
 			});
-		})
+		});
 	}
 }
 export = GeneratePresentationInstance;

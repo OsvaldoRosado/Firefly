@@ -12,7 +12,7 @@ class PresentationInstance extends Base.BaseModel implements FFPresentationInsta
 	public id: string = null;
 	public presentationId: string = null;
 	public currentSlide: number = 0;
-	public currentContent: FFGenericContent = null;
+	public currentContentId: string = null;
 	
 	public static fromPresentation(pres:Presentation,cb:(PresentationInstance)=>void) {
 		var instance = new PresentationInstance();
@@ -33,32 +33,14 @@ class PresentationInstance extends Base.BaseModel implements FFPresentationInsta
 		});
 	}
 	
-	public updateCurrentSlide(slide:number, cb:(success:boolean)=>void) {
+	public updateCurrentSlideAndContent(slide:number, contentId:string, cb:(success:boolean)=>void) {
 		// Validate slide number
 		Presentation.fromID(this.presentationId, (presentation:Presentation)=>{
 			if (!presentation || slide < 0 || slide >= presentation.slideCount) {
 				return cb(false);
 			} else {
 				this.currentSlide = slide;
-				this.currentContent = null;
-				this.save((success)=>{
-					if (success) {
-						return cb(true);
-					} else {
-						return cb(false);
-					}
-				});
-			}
-		});
-	}
-	
-	public updateCurrentContent(content:FFGenericContent, cb:(success:boolean)=>void) {
-		// Validate slide number
-		Presentation.fromID(this.presentationId, (presentation:Presentation)=>{
-			if (!presentation) {
-				return cb(false);
-			} else {
-				this.currentContent = content;
+				this.currentContentId = contentId;
 				this.save((success)=>{
 					if (success) {
 						return cb(true);
