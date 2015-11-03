@@ -16,7 +16,7 @@ class Database {
 		// Get the connection string
 		// If we're on the server, its an environment variable
 		if (process.env[Config.CONNECTION_STRING_ENV]){ 
-			this.connectionString = process.env[Config.CONNECTION_STRING_ENV];
+			this.connectionString = process.env[Config.CONNECTION_STRING_ENV].replace("^","");
 		} else {
 			// We're going to need this in a local file then
 			this.connectionString = fs.readFileSync(Config.CONNECTION_STRING_FILE, "utf8");
