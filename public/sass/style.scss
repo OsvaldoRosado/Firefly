@@ -629,3 +629,89 @@ div.pastSubmissions {
 	}
 }
 
+
+// Upload Page
+div.uploadPresentation {
+	border-left: 2px solid $primary-yellow-dark;
+	color: #FFFFFF;
+	div.presentationUploader {
+		padding: 1em 0 0 1em;
+		h1 {
+			font-size: 16px;
+			font-style: italic;
+			margin-bottom: 1em;
+		}
+		input {
+			border-color: #FFFFFF;
+			margin-bottom: 1em;
+			color: #FFFFFF;
+		}
+		input[type="text"] {
+			width: 100%;
+			background-color: $primary-brand;
+			font-size: 14px;
+			line-height: 14px;
+		}
+		*::-webkit-input-placeholder {
+			color: #FFFFFF;
+			font-size: 14px;
+			line-height: 14px;
+		}
+		progress {
+			display: none;
+			background-color: $primary-yellow-light;
+			width: 100%;
+			&::-webkit-progress-bar {
+				background-color: $primary-yellow-light;
+			}
+			&::-webkit-progress-value {
+				background-color: $secondary-green;
+			}
+		}
+	}
+	ul.uploadOptions {
+		padding: 1em 0;
+		li {
+			margin-bottom: 1em;
+			&:last-child {
+				margin-bottom: 0;
+			}
+			a {
+				width: 100%;
+				display: inline-block;
+				color: #FFFFFF;
+				text-decoration: none;
+				border-top: 1px solid $secondary-green;
+				padding: 1em 0 0 1em;
+				font-style: italic;
+				&:hover {
+					color: $primary-yellow-light;
+				}
+			}
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
