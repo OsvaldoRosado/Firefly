@@ -4,10 +4,7 @@ import Presentation = require("../models/Presentation");
 import PresentationInstance = require("../models/PresentationInstance");
 import User = require("../models/User");
 
-class GetCurrentState extends Base.BaseController {
-	// Secure this endpoint
-	protected requireLogin = true;
-	
+class GetCurrentState extends Base.BaseController {	
 	protected process(req: Request, res: Response, cb:(data:Base.DataContract)=>void) {
 		var instanceId = req.params.instanceid;
 		
