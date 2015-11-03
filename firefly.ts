@@ -61,7 +61,7 @@ Database.notifyOnReady((dbConnected)=>{
 	app.get("/api/getPresentationFromID/:id", Controllers.GetPresentationFromID.asHandler());
 	app.post("/api/uploadPresentation", upload.single("presentation"), Controllers.UploadPresentation.asHandler());
 	app.get("/api/getCurrentUserInfo", Controllers.GetCurrentUserInfo.asHandler());
-	app.get("/api/generatePresentationInstance/:presid", Controllers.GetCurrentUserInfo.asHandler());
+	app.get("/api/generatePresentationInstance/:presid", Controllers.GeneratePresentationInstance.asHandler());
 	app.get("/api/postCurrentState/:instanceid/:curslide/:curcontentid?", Controllers.PostCurrentState.asHandler());
 	app.get("/api/getCurrentState/:instanceid", Controllers.GetCurrentState.asHandler());
 	
