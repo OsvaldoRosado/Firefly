@@ -17,6 +17,13 @@ interface FFPresentation {
   slideUrls: string[];
 }
 
+interface FFPresentationInstance {
+  id: string;
+  presentationId: string;
+  currentSlide: number;
+  currentContentId: string;
+}
+
 interface FFUser {
   id: string;
   name: string;
@@ -24,7 +31,7 @@ interface FFUser {
 }
 
 interface FFGenericContent {
-  id: number;
+  id: string;
   type: FFContentType;
   submitter: FFUser;
   timestamp: number;

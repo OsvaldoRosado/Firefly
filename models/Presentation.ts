@@ -74,6 +74,11 @@ class Presentation extends Base.BaseModel implements FFPresentation {
 			pres.slideUrls.push(Presentation._presentationBase + internalID + "/img" + i + ".jpg"); 
 		}
 		
+		// Sanity check
+		if (pres.slideCount <= 0) {
+			return cb(null);
+		}
+		
 		// Save the instance to the database
 		pres.save((success)=>{
 			if (success) {
