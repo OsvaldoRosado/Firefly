@@ -22,6 +22,8 @@ class Database {
 			this.connectionString = fs.readFileSync(Config.CONNECTION_STRING_FILE, "utf8");
 		}
 		
+		console.log(this.connectionString);
+		
 		// Verify connection string exists
 		if (this.connectionString == "") {
 			console.log("DATABASE ERROR!: No connection string file or environment variable!");
