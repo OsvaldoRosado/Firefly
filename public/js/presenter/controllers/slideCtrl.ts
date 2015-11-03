@@ -1,5 +1,6 @@
 /// <reference path="../../shared/api.ts" />
 /// <reference path="../util/localWindow.ts" />
+/// <reference path="../../../../shared/data-types.ts" />
 module PresenterApp.Controllers {
 	
 	/**
@@ -13,8 +14,8 @@ module PresenterApp.Controllers {
 		presRunning: boolean;
 		presWindows: PresenterApp.LocalWindowManager;
 
-		currentSlide: number;
 		presentation: FFPresentation;
+		presInstance: FFPresentationInstance;
 
 		currentOverlay: FFGenericContent;
 		currentQA: FFQuestion;
@@ -24,19 +25,28 @@ module PresenterApp.Controllers {
 		static $inject = ["$scope", "$http"];
 		constructor($scope: ng.IScope, $http: ng.IHttpService) {
 			this.scope = $scope;
+			this.http = $http;
 			this.presRunning = false;
 
 			var id = window.location.hash.substr(1);
 			new Shared.GetPresentationAPIRequest($http, id)
 				.then((result: ng.IHttpPromiseCallbackArg<FFPresentation>) => {
 					this.presentation = result.data;
-					this.currentSlide = 0;
+
+					new Shared.GeneratePresentationInstanceAPIRequest($http, id)
+						.then((result: ng.IHttpPromiseCallback<FFPresentationInstance>) => {
+							this.presInstance = result.data;
+						});
+
 				}, () => this.error = "Your presentation was not found!");
 		}
 
 		updateSlide(){
 			this.presWindows.commandAll(
-				"changeSlide", this.presentation.slideUrls[this.currentSlide]
+				"changeSlide", this.presentation.slideUrls[this.presInstance.currentSlide]
+			);
+			new Shared.PostPresentationStateAPIRequest(
+				this.http, this.presInstance.id, this.presInstance.currentSlide
 			);
 		}
 
@@ -61,12 +71,12 @@ module PresenterApp.Controllers {
 		}
 
 		prevSlide() {
-			this.currentSlide--;
+			this.presInstance.currentSlide--;
 			this.updateSlide();
 		}
 
 		nextSlide(){
-			this.currentSlide++;
+			this.presInstance.currentSlide++;
 			this.updateSlide();
 		}
 

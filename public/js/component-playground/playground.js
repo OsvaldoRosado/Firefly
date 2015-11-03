@@ -84,6 +84,34 @@ var Shared;
         return GetPresentationAPIRequest;
     })(Shared.APIRequest);
     Shared.GetPresentationAPIRequest = GetPresentationAPIRequest;
+    var GeneratePresentationInstanceAPIRequest = (function (_super) {
+        __extends(GeneratePresentationInstanceAPIRequest, _super);
+        function GeneratePresentationInstanceAPIRequest($http, presentationId) {
+            _super.call(this, $http, "/generatePresentationInstance/" + presentationId, {});
+        }
+        return GeneratePresentationInstanceAPIRequest;
+    })(Shared.APIRequest);
+    Shared.GeneratePresentationInstanceAPIRequest = GeneratePresentationInstanceAPIRequest;
+    var PostPresentationStateAPIRequest = (function (_super) {
+        __extends(PostPresentationStateAPIRequest, _super);
+        function PostPresentationStateAPIRequest($http, instanceId, curslide, curContentId) {
+            var url = "/postCurrentState/" + instanceId + "/" + curslide;
+            if (curContentId != undefined) {
+                url += "/" + curContentId;
+            }
+            _super.call(this, $http, url, {});
+        }
+        return PostPresentationStateAPIRequest;
+    })(Shared.APIRequest);
+    Shared.PostPresentationStateAPIRequest = PostPresentationStateAPIRequest;
+    var GetPresentationStateAPIRequest = (function (_super) {
+        __extends(GetPresentationStateAPIRequest, _super);
+        function GetPresentationStateAPIRequest($http, instanceId) {
+            _super.call(this, $http, "/getCurrentState/" + instanceId, {});
+        }
+        return GetPresentationStateAPIRequest;
+    })(Shared.APIRequest);
+    Shared.GetPresentationStateAPIRequest = GetPresentationStateAPIRequest;
 })(Shared || (Shared = {}));
 /// <reference path="../../js/typings/angular/angular.d.ts" />
 var Shared;

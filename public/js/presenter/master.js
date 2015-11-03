@@ -84,6 +84,34 @@ var Shared;
         return GetPresentationAPIRequest;
     })(Shared.APIRequest);
     Shared.GetPresentationAPIRequest = GetPresentationAPIRequest;
+    var GeneratePresentationInstanceAPIRequest = (function (_super) {
+        __extends(GeneratePresentationInstanceAPIRequest, _super);
+        function GeneratePresentationInstanceAPIRequest($http, presentationId) {
+            _super.call(this, $http, "/generatePresentationInstance/" + presentationId, {});
+        }
+        return GeneratePresentationInstanceAPIRequest;
+    })(Shared.APIRequest);
+    Shared.GeneratePresentationInstanceAPIRequest = GeneratePresentationInstanceAPIRequest;
+    var PostPresentationStateAPIRequest = (function (_super) {
+        __extends(PostPresentationStateAPIRequest, _super);
+        function PostPresentationStateAPIRequest($http, instanceId, curslide, curContentId) {
+            var url = "/postCurrentState/" + instanceId + "/" + curslide;
+            if (curContentId != undefined) {
+                url += "/" + curContentId;
+            }
+            _super.call(this, $http, url, {});
+        }
+        return PostPresentationStateAPIRequest;
+    })(Shared.APIRequest);
+    Shared.PostPresentationStateAPIRequest = PostPresentationStateAPIRequest;
+    var GetPresentationStateAPIRequest = (function (_super) {
+        __extends(GetPresentationStateAPIRequest, _super);
+        function GetPresentationStateAPIRequest($http, instanceId) {
+            _super.call(this, $http, "/getCurrentState/" + instanceId, {});
+        }
+        return GetPresentationStateAPIRequest;
+    })(Shared.APIRequest);
+    Shared.GetPresentationStateAPIRequest = GetPresentationStateAPIRequest;
 })(Shared || (Shared = {}));
 /// <reference path="../../js/typings/angular/angular.d.ts" />
 var Shared;
@@ -422,6 +450,7 @@ var PresenterApp;
 })(PresenterApp || (PresenterApp = {}));
 /// <reference path="../../shared/api.ts" />
 /// <reference path="../util/localWindow.ts" />
+/// <reference path="../../../../shared/data-types.ts" />
 var PresenterApp;
 (function (PresenterApp) {
     var Controllers;
@@ -430,16 +459,21 @@ var PresenterApp;
             function SlideCtrl($scope, $http) {
                 var _this = this;
                 this.scope = $scope;
+                this.http = $http;
                 this.presRunning = false;
                 var id = window.location.hash.substr(1);
                 new Shared.GetPresentationAPIRequest($http, id)
                     .then(function (result) {
                     _this.presentation = result.data;
-                    _this.currentSlide = 0;
+                    new Shared.GeneratePresentationInstanceAPIRequest($http, id)
+                        .then(function (result) {
+                        _this.presInstance = result.data;
+                    });
                 }, function () { return _this.error = "Your presentation was not found!"; });
             }
             SlideCtrl.prototype.updateSlide = function () {
-                this.presWindows.commandAll("changeSlide", this.presentation.slideUrls[this.currentSlide]);
+                this.presWindows.commandAll("changeSlide", this.presentation.slideUrls[this.presInstance.currentSlide]);
+                new Shared.PostPresentationStateAPIRequest(this.http, this.presInstance.id, this.presInstance.currentSlide);
             };
             SlideCtrl.prototype.startPresentation = function () {
                 var _this = this;
@@ -456,11 +490,11 @@ var PresenterApp;
                 }, 1000);
             };
             SlideCtrl.prototype.prevSlide = function () {
-                this.currentSlide--;
+                this.presInstance.currentSlide--;
                 this.updateSlide();
             };
             SlideCtrl.prototype.nextSlide = function () {
-                this.currentSlide++;
+                this.presInstance.currentSlide++;
                 this.updateSlide();
             };
             SlideCtrl.prototype.toggleOverlay = function (content) {

@@ -21,8 +21,8 @@
 					<div class="livePresentation">
 						<iframe ng-show="sc.presRunning" src="presentation.html" class="u-full-width" id="presPreview"></iframe>
 						<button ng-click="sc.startPresentation()" ng-show="!sc.presRunning" class="button-primary">Start presentation!</button>
-						<button ng-show="sc.presRunning && sc.currentSlide > 0" ng-click="sc.prevSlide()" class="button-primary">Previous</button>
-						<button ng-show="sc.presRunning && sc.currentSlide < sc.presentation.slideCount-1" ng-click="sc.nextSlide()" class="button-primary">Next</button>
+						<button ng-show="sc.presRunning && sc.presInstance.currentSlide > 0" ng-click="sc.prevSlide()" class="button-primary">Previous</button>
+						<button ng-show="sc.presRunning && sc.presInstance.currentSlide < sc.presentation.slideCount-1" ng-click="sc.nextSlide()" class="button-primary">Next</button>
 						<button ng-show="sc.presRunning" ng-click="sc.endPresentation()" class="button">End Presentation</button>
 					</div>
 				</div>
