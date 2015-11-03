@@ -26,8 +26,8 @@ module PresenterApp.Controllers {
 			this.scope = $scope;
 			this.presRunning = false;
 
-			var sampleId = "59227f68-0818-4493-91df-c4b065a5011b-2";
-			new Shared.GetPresentationAPIRequest($http, sampleId)
+			var id = window.location.hash.substr(1);
+			new Shared.GetPresentationAPIRequest($http, id)
 				.then((result: ng.IHttpPromiseCallbackArg<FFPresentation>) => {
 					this.presentation = result.data;
 					this.currentSlide = 0;

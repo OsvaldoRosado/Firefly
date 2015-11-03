@@ -431,8 +431,8 @@ var PresenterApp;
                 var _this = this;
                 this.scope = $scope;
                 this.presRunning = false;
-                var sampleId = "59227f68-0818-4493-91df-c4b065a5011b-2";
-                new Shared.GetPresentationAPIRequest($http, sampleId)
+                var id = window.location.hash.substr(1);
+                new Shared.GetPresentationAPIRequest($http, id)
                     .then(function (result) {
                     _this.presentation = result.data;
                     _this.currentSlide = 0;
