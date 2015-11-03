@@ -13,7 +13,7 @@
 	</head>
 	<body ng-app="presenter" ng-controller="SlideCtrl as sc" class="presenter">
 		<header>
-			<span><h2 class="presName">{{ sc.presName }}</h2></span>
+			<span><h2 class="presName">{{ sc.presentation.name }}</h2></span>
 			<span><h2 class="mainTitle u-pull-right">Firefly</h2></span>
 		</header>
 		<div ng-controller="ContentCtrl as cnc" class="row mainConsole">
@@ -21,8 +21,9 @@
 					<div class="livePresentation">
 						<iframe ng-show="sc.presRunning" src="presentation.html" class="u-full-width" id="presPreview"></iframe>
 						<button ng-click="sc.startPresentation()" ng-show="!sc.presRunning" class="button-primary">Start presentation!</button>
-						<button ng-show="sc.presRunning && sc.currentSlide > 0" ng-click="sc.prevSlide()" class="button-primary">Previous</button>
-						<button ng-show="sc.presRunning && sc.currentSlide < sc.slideCount-1" ng-click="sc.nextSlide()" class="button-primary">Next</button>
+						<button ng-show="sc.presRunning && sc.presInstance.currentSlide > 0" ng-click="sc.prevSlide()" class="button-primary">Previous</button>
+						<button ng-show="sc.presRunning && sc.presInstance.currentSlide < sc.presentation.slideCount-1" ng-click="sc.nextSlide()" class="button-primary">Next</button>
+						<button ng-show="sc.presRunning" ng-click="sc.endPresentation()" class="button">End Presentation</button>
 					</div>
 				</div>
 				<div class="three columns container contentBoxColumn">

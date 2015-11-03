@@ -530,8 +530,12 @@ body.presentation {
 	background: $background-dark;
 	margin-bottom: 0;
 
-	img.slide{
+	.slide{
+		height: 100%;
 		position: absolute;
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-position: center;
 	}
 
 	.overlayContainer{

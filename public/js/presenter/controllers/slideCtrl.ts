@@ -1,5 +1,6 @@
 /// <reference path="../../shared/api.ts" />
 /// <reference path="../util/localWindow.ts" />
+/// <reference path="../../../../shared/data-types.ts" />
 module PresenterApp.Controllers {
 	
 	/**
@@ -13,10 +14,8 @@ module PresenterApp.Controllers {
 		presRunning: boolean;
 		presWindows: PresenterApp.LocalWindowManager;
 
-		presName: string;
-		currentSlide: number;
-		slideCount: number;
-		slideUrls: string[];
+		presentation: FFPresentation;
+		presInstance: FFPresentationInstance;
 
 		currentOverlay: FFGenericContent;
 		currentQA: FFQuestion;
@@ -26,22 +25,28 @@ module PresenterApp.Controllers {
 		static $inject = ["$scope", "$http"];
 		constructor($scope: ng.IScope, $http: ng.IHttpService) {
 			this.scope = $scope;
+			this.http = $http;
 			this.presRunning = false;
 
-			var sampleId = "59227f68-0818-4493-91df-c4b065a5011b-2";
-			new Shared.GetPresentationAPIRequest($http, sampleId)
+			var id = window.location.hash.substr(1);
+			new Shared.GetPresentationAPIRequest($http, id)
 				.then((result: ng.IHttpPromiseCallbackArg<FFPresentation>) => {
-					var pres = result.data;
-					this.currentSlide = 0;
-					this.slideCount = pres.slideCount;
-					this.presName = pres.name;
-					this.slideUrls = pres.slideUrls;
+					this.presentation = result.data;
+
+					new Shared.GeneratePresentationInstanceAPIRequest($http, id)
+						.then((result: ng.IHttpPromiseCallback<FFPresentationInstance>) => {
+							this.presInstance = result.data;
+						});
+
 				}, () => this.error = "Your presentation was not found!");
 		}
 
 		updateSlide(){
 			this.presWindows.commandAll(
-				"changeSlide", this.slideUrls[this.currentSlide]
+				"changeSlide", this.presentation.slideUrls[this.presInstance.currentSlide]
+			);
+			new Shared.PostPresentationStateAPIRequest(
+				this.http, this.presInstance.id, this.presInstance.currentSlide
 			);
 		}
 
@@ -51,7 +56,8 @@ module PresenterApp.Controllers {
 				<HTMLIFrameElement>document.getElementById("presPreview");
 
 			this.presWindows = new PresenterApp.LocalWindowManager([
-				window.open("presentation.html", this.presName, "width=802,height=450"),
+				window.open("presentation.html", this.presentation.name, 
+					"width=802,height=450"),
 				presPreview.contentWindow
 			]);
 
@@ -65,12 +71,12 @@ module PresenterApp.Controllers {
 		}
 
 		prevSlide() {
-			this.currentSlide--;
+			this.presInstance.currentSlide--;
 			this.updateSlide();
 		}
 
 		nextSlide(){
-			this.currentSlide++;
+			this.presInstance.currentSlide++;
 			this.updateSlide();
 		}
 
@@ -99,6 +105,11 @@ module PresenterApp.Controllers {
 				this.currentQA = undefined;
 				this.presWindows.commandAll("hideQASidebar", "");
 			}
+		}
+
+		endPresentation(){
+			this.presRunning = false;
+			this.presWindows.closeAll();
 		}
 	}
 }

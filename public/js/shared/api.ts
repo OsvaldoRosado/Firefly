@@ -64,4 +64,26 @@ module Shared {
 			super($http, "/getPresentationFromId/" + presentationId, {});
 		}
 	}
+
+	export class GeneratePresentationInstanceAPIRequest extends Shared.APIRequest<FFPresentationInstance> {
+		constructor($http: ng.IHttpService, presentationId: string) {
+			super($http, "/generatePresentationInstance/" + presentationId, {});
+		}
+	}
+
+	export class PostPresentationStateAPIRequest extends Shared.APIRequest<Boolean> {
+		constructor($http: ng.IHttpService, instanceId: string, curslide: number, curContentId?: string) {
+			var url = "/postCurrentState/" + instanceId + "/" + curslide;
+			if(curContentId != undefined){
+				url += "/" + curContentId;
+			}
+			super($http, url, {});
+		}
+	}
+
+	export class GetPresentationStateAPIRequest extends Shared.APIRequest<FFPresentationInstance> {
+		constructor($http: ng.IHttpService, instanceId: string) {
+			super($http, "/getCurrentState/" + instanceId, {});
+		}
+	}
 }

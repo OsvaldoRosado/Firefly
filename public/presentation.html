@@ -13,7 +13,7 @@
 	</head>
 	<body ng-app="presentation" ng-controller="ViewableCtrl as vc" class="presentation">
 		<div class="row">
-			<img ng-src="{{ vc.slideUrl }}" class="slide" ng-class="{'u-full-width': !vc.qaActive, 'ten columns': vc.qaActive}"/>
+			<div style="background-image: url('{{ vc.slideUrl }}');" class="slide" ng-class="{'u-full-width': !vc.qaActive, 'ten columns': vc.qaActive}"/></div>
 			<div class="overlayContainer">
 				<img ng-if="!vc.overlayIsVideo" ng-src="{{ vc.overlayUrl }}" ng-show="vc.overlayActive" class="overlay"/>
 				<iframe ng-if="vc.overlayIsVideo" src="{{ vc.overlayUrl }}" ng-show="vc.overlayActive" class="overlay" frameborder="0"></iframe>

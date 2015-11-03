@@ -23,6 +23,10 @@ module PresenterApp{
 				JSON.stringify({ action: action, data: data })
 			);
 		}
+
+		close(){
+			this.theWindow.close();
+		}
 	}
 
 	/**
@@ -43,6 +47,10 @@ module PresenterApp{
 
 		commandAll(action: string, data: string){
 			this.windows.forEach((wnd) => wnd.command(action, data));
+		}
+
+		closeAll() {
+			this.windows.forEach((wnd) => wnd.close());
 		}
 	}
 }

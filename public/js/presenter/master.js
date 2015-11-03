@@ -84,6 +84,34 @@ var Shared;
         return GetPresentationAPIRequest;
     })(Shared.APIRequest);
     Shared.GetPresentationAPIRequest = GetPresentationAPIRequest;
+    var GeneratePresentationInstanceAPIRequest = (function (_super) {
+        __extends(GeneratePresentationInstanceAPIRequest, _super);
+        function GeneratePresentationInstanceAPIRequest($http, presentationId) {
+            _super.call(this, $http, "/generatePresentationInstance/" + presentationId, {});
+        }
+        return GeneratePresentationInstanceAPIRequest;
+    })(Shared.APIRequest);
+    Shared.GeneratePresentationInstanceAPIRequest = GeneratePresentationInstanceAPIRequest;
+    var PostPresentationStateAPIRequest = (function (_super) {
+        __extends(PostPresentationStateAPIRequest, _super);
+        function PostPresentationStateAPIRequest($http, instanceId, curslide, curContentId) {
+            var url = "/postCurrentState/" + instanceId + "/" + curslide;
+            if (curContentId != undefined) {
+                url += "/" + curContentId;
+            }
+            _super.call(this, $http, url, {});
+        }
+        return PostPresentationStateAPIRequest;
+    })(Shared.APIRequest);
+    Shared.PostPresentationStateAPIRequest = PostPresentationStateAPIRequest;
+    var GetPresentationStateAPIRequest = (function (_super) {
+        __extends(GetPresentationStateAPIRequest, _super);
+        function GetPresentationStateAPIRequest($http, instanceId) {
+            _super.call(this, $http, "/getCurrentState/" + instanceId, {});
+        }
+        return GetPresentationStateAPIRequest;
+    })(Shared.APIRequest);
+    Shared.GetPresentationStateAPIRequest = GetPresentationStateAPIRequest;
 })(Shared || (Shared = {}));
 /// <reference path="../../js/typings/angular/angular.d.ts" />
 var Shared;
@@ -309,6 +337,9 @@ var PresenterApp;
         LocalWindow.prototype.command = function (action, data) {
             this.postMessage(JSON.stringify({ action: action, data: data }));
         };
+        LocalWindow.prototype.close = function () {
+            this.theWindow.close();
+        };
         return LocalWindow;
     })();
     PresenterApp.LocalWindow = LocalWindow;
@@ -321,6 +352,9 @@ var PresenterApp;
         };
         LocalWindowManager.prototype.commandAll = function (action, data) {
             this.windows.forEach(function (wnd) { return wnd.command(action, data); });
+        };
+        LocalWindowManager.prototype.closeAll = function () {
+            this.windows.forEach(function (wnd) { return wnd.close(); });
         };
         return LocalWindowManager;
     })();
@@ -416,6 +450,7 @@ var PresenterApp;
 })(PresenterApp || (PresenterApp = {}));
 /// <reference path="../../shared/api.ts" />
 /// <reference path="../util/localWindow.ts" />
+/// <reference path="../../../../shared/data-types.ts" />
 var PresenterApp;
 (function (PresenterApp) {
     var Controllers;
@@ -424,26 +459,28 @@ var PresenterApp;
             function SlideCtrl($scope, $http) {
                 var _this = this;
                 this.scope = $scope;
+                this.http = $http;
                 this.presRunning = false;
-                var sampleId = "59227f68-0818-4493-91df-c4b065a5011b-2";
-                new Shared.GetPresentationAPIRequest($http, sampleId)
+                var id = window.location.hash.substr(1);
+                new Shared.GetPresentationAPIRequest($http, id)
                     .then(function (result) {
-                    var pres = result.data;
-                    _this.currentSlide = 0;
-                    _this.slideCount = pres.slideCount;
-                    _this.presName = pres.name;
-                    _this.slideUrls = pres.slideUrls;
+                    _this.presentation = result.data;
+                    new Shared.GeneratePresentationInstanceAPIRequest($http, id)
+                        .then(function (result) {
+                        _this.presInstance = result.data;
+                    });
                 }, function () { return _this.error = "Your presentation was not found!"; });
             }
             SlideCtrl.prototype.updateSlide = function () {
-                this.presWindows.commandAll("changeSlide", this.slideUrls[this.currentSlide]);
+                this.presWindows.commandAll("changeSlide", this.presentation.slideUrls[this.presInstance.currentSlide]);
+                new Shared.PostPresentationStateAPIRequest(this.http, this.presInstance.id, this.presInstance.currentSlide);
             };
             SlideCtrl.prototype.startPresentation = function () {
                 var _this = this;
                 this.presRunning = true;
                 var presPreview = document.getElementById("presPreview");
                 this.presWindows = new PresenterApp.LocalWindowManager([
-                    window.open("presentation.html", this.presName, "width=802,height=450"),
+                    window.open("presentation.html", this.presentation.name, "width=802,height=450"),
                     presPreview.contentWindow
                 ]);
                 setTimeout(function () {
@@ -453,11 +490,11 @@ var PresenterApp;
                 }, 1000);
             };
             SlideCtrl.prototype.prevSlide = function () {
-                this.currentSlide--;
+                this.presInstance.currentSlide--;
                 this.updateSlide();
             };
             SlideCtrl.prototype.nextSlide = function () {
-                this.currentSlide++;
+                this.presInstance.currentSlide++;
                 this.updateSlide();
             };
             SlideCtrl.prototype.toggleOverlay = function (content) {
@@ -486,6 +523,10 @@ var PresenterApp;
                     this.currentQA = undefined;
                     this.presWindows.commandAll("hideQASidebar", "");
                 }
+            };
+            SlideCtrl.prototype.endPresentation = function () {
+                this.presRunning = false;
+                this.presWindows.closeAll();
             };
             SlideCtrl.$inject = ["$scope", "$http"];
             return SlideCtrl;
