@@ -5,3 +5,4 @@
 /// <reference path="multer/multer.d.ts" />
 /// <reference path="form-data/form-data.d.ts" />
 /// <reference path="mongodb/mongodb.d.ts" />
+/// <reference path="passport/passport.d.ts" />

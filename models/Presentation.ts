@@ -6,6 +6,7 @@ import Config = require("../config");
 import FormData = require('form-data');
 import http = require('http');
 import fs = require('fs');
+import User = require("./User");
 
 class Presentation extends Base.BaseModel implements FFPresentation {
 	protected static _modelIdentifier = "Presentation";
@@ -22,7 +23,7 @@ class Presentation extends Base.BaseModel implements FFPresentation {
 	private static _presentationBase = Config.FILE_SERVER + "/convert/";
 	private static _conversionURL = Config.PROCESSING_SERVER + "/convert";
 	
-	public static fromFile(name: string, file:Express.Multer.File, cb:(Presentation)=>void):void {	
+	public static fromFile(name: string, user:User, file:Express.Multer.File, cb:(Presentation)=>void):void {	
 		// Prepare the POST payload
 		var form = new FormData();
 		var path = file.destination+file.filename;
@@ -41,21 +42,23 @@ class Presentation extends Base.BaseModel implements FFPresentation {
 					fs.unlinkSync(path);
 					res.resume();
 					
-					this.fromConversionPayload(name, data, cb);
+					this.fromConversionPayload(name, user, data, cb);
 				});
 			}
 		});
 	}
 	
-	private static fromConversionPayload(name: string, body:string, cb:(Presentation)=>void):void{
+	private static fromConversionPayload(name: string, user:User, body:string, cb:(Presentation)=>void):void{
 		// Parse the response
 		var payload = JSON.parse(body);				
 		if (!payload.success) {
 			return cb(null);	
 		}
+		
 		// Construct a Presentation instance
 		var pres = new Presentation();
 		pres.name = name;
+		pres.submitter = user;
 		pres.timestamp = Math.floor(new Date().getTime()/1000);
 		
 		// Parse payload ID
@@ -63,12 +66,17 @@ class Presentation extends Base.BaseModel implements FFPresentation {
 		pres.id = payload.msg;
 		var idComponents = (<string>pres.id).split("-") 
 		if (idComponents.length != 6) { 
-			return null; 
+			return cb(null); 
 		}
 		pres.slideCount = parseInt(idComponents[5]);
 		var internalID = idComponents.join("-").substr(0,pres.id.length-(idComponents[5].length+1)); 
 		for(var i=0; i<pres.slideCount; i++){ 
 			pres.slideUrls.push(Presentation._presentationBase + internalID + "/img" + i + ".jpg"); 
+		}
+		
+		// Sanity check
+		if (pres.slideCount <= 0) {
+			return cb(null);
 		}
 		
 		// Save the instance to the database
