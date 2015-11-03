@@ -47,7 +47,7 @@ module PresenterApp.Controllers {
 			);
 			new Shared.PostPresentationStateAPIRequest(
 				this.http, this.presInstance.id, this.presInstance.currentSlide
-			);
+			).then(() => {});
 		}
 
 		startPresentation(){

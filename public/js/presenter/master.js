@@ -473,7 +473,7 @@ var PresenterApp;
             }
             SlideCtrl.prototype.updateSlide = function () {
                 this.presWindows.commandAll("changeSlide", this.presentation.slideUrls[this.presInstance.currentSlide]);
-                new Shared.PostPresentationStateAPIRequest(this.http, this.presInstance.id, this.presInstance.currentSlide);
+                new Shared.PostPresentationStateAPIRequest(this.http, this.presInstance.id, this.presInstance.currentSlide).then(function () { });
             };
             SlideCtrl.prototype.startPresentation = function () {
                 var _this = this;
