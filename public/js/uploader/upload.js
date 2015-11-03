@@ -18,7 +18,7 @@ $(function() {
 			},
 			success: function(data, status,jqXHR) {
 				if (!data.success) {
-					console.log("ERROR: Not Logged In!");
+					console.log("ERROR: " + data);
 				} else {
 					console.log("SUCCESS", data, status);
 				}
