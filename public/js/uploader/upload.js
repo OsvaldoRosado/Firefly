@@ -17,10 +17,10 @@ $(function() {
 				$('progress').show();
 			},
 			success: function(data, status,jqXHR) {
-				if (!data.success) {
-					console.log("ERROR: " + data);
-				} else {
-					console.log("SUCCESS", data, status);
+				console.log("STATUS: " + data, status);
+				if (data.success == true) {
+					var presentationURL = "http://localhost:8080/presenter#" + data.id;
+					window.location.replace(presentationURL);
 				}
 			},
 			error: function(jqXHR, status, error) {
