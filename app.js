@@ -11,6 +11,8 @@
 ========== Server Initialization ===============
 */
 
+console.log("Compiling Firefly Server...");
+
 // IISNode doesn't have a functional process.stdin
 // Replace it so things dont complain
 if(process.env.IISNODE_VERSION){ 

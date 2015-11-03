@@ -1,5 +1,18 @@
 var shared = ["public/js/typings/**/*.ts", "public/js/shared/*.ts"];
 
+var ngtemplatesOpts = {
+	htmlmin: {
+	  collapseBooleanAttributes:      true,
+	  collapseWhitespace:             true,
+	  removeAttributeQuotes:          true,
+	  removeComments:                 true,
+	  removeEmptyAttributes:          true,
+	  removeRedundantAttributes:      true,
+	  removeScriptTypeAttributes:     true,
+	  removeStyleLinkTypeAttributes:  true
+	}
+}
+
 module.exports = function(grunt) {
 	grunt.initConfig({
 		ngtemplates: {
@@ -10,23 +23,32 @@ module.exports = function(grunt) {
 					'public/directives/ff-question/*.html'
 				],
 				dest: 'public/js/component-playground/templates.js',
-				options: {
-					htmlmin: {
-					  collapseBooleanAttributes:      true,
-					  collapseWhitespace:             true,
-					  removeAttributeQuotes:          true,
-					  removeComments:                 true,
-					  removeEmptyAttributes:          true,
-					  removeRedundantAttributes:      true,
-					  removeScriptTypeAttributes:     true,
-					  removeStyleLinkTypeAttributes:  true
-					}
-				}
+				options: ngtemplatesOpts
+			},
+			presenter: {
+				src: [
+					'public/directives/ff-content/*.html',
+					'public/directives/ff-content-box/*.html',
+					'public/directives/ff-question/*.html'
+				],
+				dest: 'public/js/presenter/templates.js',
+				options: ngtemplatesOpts
+			},
+			presentation: {
+				src: [
+					'public/directives/ff-content/*.html',
+					'public/directives/ff-content-box/*.html',
+					'public/directives/ff-question/*.html'
+				],
+				dest: 'public/js/presentation/templates.js',
+				options: ngtemplatesOpts
 			}
 		},
 		ts: {
 			presentation: {
 				src: shared.concat([
+					"public/js/shared/*.ts",
+					"public/directives/**/*.ts",
 					"public/js/presentation/controllers/*.ts",
 					"public/js/presentation/app.ts"
 				]),
@@ -37,6 +59,9 @@ module.exports = function(grunt) {
 			},
 			presenter: {
 				src: shared.concat([
+					"public/js/shared/*.ts",
+					"public/directives/**/*.ts",
+					"public/js/presenter/util/*.ts",
 					"public/js/presenter/controllers/*.ts",
 					"public/js/presenter/app.ts"
 				]),

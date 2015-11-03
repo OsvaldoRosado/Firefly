@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Firefly</title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/style.css">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
+	<script src="./js/component-playground/playground.js"></script>
+	<script src="./js/component-playground/templates.js"></script>
+</head>
+<body class="audience" ng-app="playground" ng-controller="AppController as app">
+	<div class="header">
+		<h2>Beginnings of Cubism</h2>
+		<div class="darkPulse"></div>
+	</div>
+	<div class="mainContent container">
+		<form action="">
+			<textarea placeholder="Ask a question"></textarea>
+			<input type="submit" value="Ask" class="u-full-width">
+		</form>
+
+		<div class="pastSubmissions row">
+			<h4>Recently Asked</h4>
+
+			<ff-content-box 
+				display="0" content="app.questionContent"
+				expanded="app.expandedIndex | equals:3" on-toggle="app.expandItem($scope,3)"
+			></ff-content-box>
+		</div>
+	</div>
+	<nav class="viewer">
+		<ul>
+			<li>
+				<a href="viewer.html">
+					<span>[||]</span>
+					<h1>Live</h1>
+				</a>
+			</li>
+			<li>
+				<a href="ask.html" class="active">
+					<span>[||]</span>
+					<h1>Q &amp; A</h1>
+				</a>
+			</li>
+			<li>
+				<a href="submit.html">
+					<span>[||]</span>
+					<h1>Submit</h1>
+				</a>
+			</li>
+			<li>
+				<a href="history.html">
+					<span>[||]</span>
+					<h1>History</h1>
+				</a>
+			</li>
+		</ul>
+	</nav>
+</body>
+</html>

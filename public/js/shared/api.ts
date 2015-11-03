@@ -1,5 +1,6 @@
 /// <reference path="../../../shared/data-types.ts" />
 /// <reference path="../typings/angular/angular.d.ts" />
+/// <reference path="../typings/firefly/firefly.d.ts" />
 /// <reference path="./config.ts" />
 
 module Shared {
@@ -17,7 +18,7 @@ module Shared {
 			
 			// Create the URL
 			if (endpoint[0] !== "/") {endpoint = "/" + endpoint;}
-			endpoint = Config.HOST + endpoint;
+			endpoint = Config.HOST + "/api" + endpoint;
 			
 			// This class mostly just defers to Angular, with some secret sauce added
 			if (method == APIMethod.GET) {
@@ -56,5 +57,33 @@ module Shared {
 			return this;
 		}
 		catch(f: (error: Object) => void) {this.onfail = f; return this;}
+	}
+
+	export class GetPresentationAPIRequest extends Shared.APIRequest<FFPresentation> {
+		constructor($http: ng.IHttpService, presentationId: string) {
+			super($http, "/getPresentationFromId/" + presentationId, {});
+		}
+	}
+
+	export class GeneratePresentationInstanceAPIRequest extends Shared.APIRequest<FFPresentationInstance> {
+		constructor($http: ng.IHttpService, presentationId: string) {
+			super($http, "/generatePresentationInstance/" + presentationId, {});
+		}
+	}
+
+	export class PostPresentationStateAPIRequest extends Shared.APIRequest<Boolean> {
+		constructor($http: ng.IHttpService, instanceId: string, curslide: number, curContentId?: string) {
+			var url = "/postCurrentState/" + instanceId + "/" + curslide;
+			if(curContentId != undefined){
+				url += "/" + curContentId;
+			}
+			super($http, url, {});
+		}
+	}
+
+	export class GetPresentationStateAPIRequest extends Shared.APIRequest<FFPresentationInstance> {
+		constructor($http: ng.IHttpService, instanceId: string) {
+			super($http, "/getCurrentState/" + instanceId, {});
+		}
 	}
 }

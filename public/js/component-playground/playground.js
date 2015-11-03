@@ -15,7 +15,13 @@ var Config = (function () {
 })();
 /// <reference path="../../../shared/data-types.ts" />
 /// <reference path="../typings/angular/angular.d.ts" />
+/// <reference path="../typings/firefly/firefly.d.ts" />
 /// <reference path="./config.ts" />
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var Shared;
 (function (Shared) {
     (function (APIMethod) {
@@ -29,7 +35,7 @@ var Shared;
             if (endpoint[0] !== "/") {
                 endpoint = "/" + endpoint;
             }
-            endpoint = Config.HOST + endpoint;
+            endpoint = Config.HOST + "/api" + endpoint;
             if (method == APIMethod.GET) {
                 if (data !== undefined && data !== {}) {
                     endpoint += this.queryFormat(data);
@@ -70,7 +76,44 @@ var Shared;
         return APIRequest;
     })();
     Shared.APIRequest = APIRequest;
+    var GetPresentationAPIRequest = (function (_super) {
+        __extends(GetPresentationAPIRequest, _super);
+        function GetPresentationAPIRequest($http, presentationId) {
+            _super.call(this, $http, "/getPresentationFromId/" + presentationId, {});
+        }
+        return GetPresentationAPIRequest;
+    })(Shared.APIRequest);
+    Shared.GetPresentationAPIRequest = GetPresentationAPIRequest;
+    var GeneratePresentationInstanceAPIRequest = (function (_super) {
+        __extends(GeneratePresentationInstanceAPIRequest, _super);
+        function GeneratePresentationInstanceAPIRequest($http, presentationId) {
+            _super.call(this, $http, "/generatePresentationInstance/" + presentationId, {});
+        }
+        return GeneratePresentationInstanceAPIRequest;
+    })(Shared.APIRequest);
+    Shared.GeneratePresentationInstanceAPIRequest = GeneratePresentationInstanceAPIRequest;
+    var PostPresentationStateAPIRequest = (function (_super) {
+        __extends(PostPresentationStateAPIRequest, _super);
+        function PostPresentationStateAPIRequest($http, instanceId, curslide, curContentId) {
+            var url = "/postCurrentState/" + instanceId + "/" + curslide;
+            if (curContentId != undefined) {
+                url += "/" + curContentId;
+            }
+            _super.call(this, $http, url, {});
+        }
+        return PostPresentationStateAPIRequest;
+    })(Shared.APIRequest);
+    Shared.PostPresentationStateAPIRequest = PostPresentationStateAPIRequest;
+    var GetPresentationStateAPIRequest = (function (_super) {
+        __extends(GetPresentationStateAPIRequest, _super);
+        function GetPresentationStateAPIRequest($http, instanceId) {
+            _super.call(this, $http, "/getCurrentState/" + instanceId, {});
+        }
+        return GetPresentationStateAPIRequest;
+    })(Shared.APIRequest);
+    Shared.GetPresentationStateAPIRequest = GetPresentationStateAPIRequest;
 })(Shared || (Shared = {}));
+/// <reference path="../../js/typings/angular/angular.d.ts" />
 var Shared;
 (function (Shared) {
     var Directives;
@@ -108,7 +151,7 @@ var Shared;
                         if (newValue == oldValue) {
                             return;
                         }
-                        element.setAttribute("is-expanded", newValue);
+                        element.setAttribute("is-expanded", newValue.toString());
                         var destinationHeight = "0px";
                         if (newValue) {
                             destinationHeight = (getInnerHeight() + "px") || "100%";
@@ -202,11 +245,6 @@ var Shared;
 /// <reference path="../../../shared/data-types.ts" />
 /// <reference path="../../js/shared/api.ts" />
 /// <reference path="../../js/typings/angular/angular.d.ts" />
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 var Shared;
 (function (Shared) {
     var UpvoteAPIRequest = (function (_super) {

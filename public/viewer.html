@@ -7,34 +7,64 @@
 	<meta name="author" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-	<div class="mainContent container">
 
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
+	<script src="./js/component-playground/playground.js"></script>
+	<script src="./js/component-playground/templates.js"></script>
+</head>
+<body class="audience" ng-app="playground" ng-controller="AppController as app">
+	<div class="header">
+		<h2>Beginnings of Cubism</h2>
+		<div class="darkPulse"></div>
+	</div>
+	<div class="mainContent container">
+		<div class="currentSlideViewer row">
+			<span>||| Get Current Slide |||</span>
+		</div>
+
+		<div class="pastSubmissions row">
+			<h4>User Submissions</h4>
+
+			    <ff-content-box 
+					display="0" content="app.imageContent"
+					expanded="app.expandedIndex | equals:0" on-toggle="app.expandItem($scope,0)"
+				></ff-content-box>
+				
+				<ff-content-box 
+					display="0" content="app.imageContent2" show-thumbnail="false"
+					expanded="app.expandedIndex | equals:1" on-toggle="app.expandItem($scope,1)"
+				></ff-content-box>
+				
+				<ff-content-box 
+					display="0" content="app.videoContent"
+					expanded="app.expandedIndex | equals:2" on-toggle="app.expandItem($scope,2)"
+				></ff-content-box>
+
+		</div>
 	</div>
 	<nav class="viewer">
 		<ul>
 			<li>
-				<a href="#" class="active">
-					<span>i</span>
+				<a href="viewer.html" class="active">
+					<span>[||]</span>
 					<h1>Live</h1>
 				</a>
 			</li>
 			<li>
-				<a href="#">
-					<span>i</span>
+				<a href="ask.html">
+					<span>[||]</span>
 					<h1>Q &amp; A</h1>
 				</a>
 			</li>
 			<li>
-				<a href="#">
-					<span>i</span>
+				<a href="submit.html">
+					<span>[||]</span>
 					<h1>Submit</h1>
 				</a>
 			</li>
 			<li>
-				<a href="#">
-					<span>i</span>
+				<a href="history.html">
+					<span>[||]</span>
 					<h1>History</h1>
 				</a>
 			</li>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" id="presenter">
 	<head>
 		<meta charset="utf-8">
 		<meta name="description" content="">
@@ -7,51 +7,41 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Firefly Presenter</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
-		<script src="https://raw.githubusercontent.com/kylewelsby/angular-post-message/master/dist/angular-post-message.js"></script>
 		<script src="js/presenter/master.js"></script>
+		<script src="js/presenter/templates.js"></script>
 		<link rel="stylesheet" href="css/style.css">
 	</head>
 	<body ng-app="presenter" ng-controller="SlideCtrl as sc" class="presenter">
 		<header>
-			<span><h2 class="presName">{{ sc.presName }}</h2></span>
+			<span><h2 class="presName">{{ sc.presentation.name }}</h2></span>
 			<span><h2 class="mainTitle u-pull-right">Firefly</h2></span>
 		</header>
-		<div class="container">
-			<button ng-click="sc.startPresentation()" ng-show="!sc.presRunning" class="button-primary">Start presentation!</button>
-		</div>
-		<div ng-show="sc.presRunning" ng-controller="ContentCtrl as cc" class="row">
+		<div ng-controller="ContentCtrl as cnc" class="row mainConsole">
 				<div class="six columns">
 					<div class="livePresentation">
-						<img ng-src="{{ sc.slideUrls[sc.currentSlide] }}" class="u-max-full-width">
-						<button ng-show="sc.currentSlide > 0" ng-click="sc.prevSlide()" class="button-primary">Previous</button>
-						<button ng-show="sc.currentSlide < sc.slideCount-1" ng-click="sc.nextSlide()" class="button-primary">Next</button>
+						<iframe ng-show="sc.presRunning" src="presentation.html" class="u-full-width" id="presPreview"></iframe>
+						<button ng-click="sc.startPresentation()" ng-show="!sc.presRunning" class="button-primary">Start presentation!</button>
+						<button ng-show="sc.presRunning && sc.presInstance.currentSlide > 0" ng-click="sc.prevSlide()" class="button-primary">Previous</button>
+						<button ng-show="sc.presRunning && sc.presInstance.currentSlide < sc.presentation.slideCount-1" ng-click="sc.nextSlide()" class="button-primary">Next</button>
+						<button ng-show="sc.presRunning" ng-click="sc.endPresentation()" class="button">End Presentation</button>
 					</div>
 				</div>
-				<div class="three columns container">
+				<div class="three columns container contentBoxColumn">
 					<div class="contentBox">
 						<h2>Content</h2>
-						<div ng-repeat="submission in cc.content">
-							<figure class="submission" ng-click="sc.toggleOverlay(submission.url)">
-								<img ng-src="{{ submission.url }}" class="u-max-full-width"/>
-								<figcaption ng-show="submission.caption">{{ submission.caption }}</figcaption>
-								<div class="meta">
-									<span>{{ submission.score }} Votes</span>
-									<span class="u-pull-right">{{ submission.user }}</span>
-								</div>
-							</figure>
+						<div ng-repeat="submission in cnc.content">
+							<ff-content-box 
+								display="0" content="submission" expanded="1" show-thumbnail="0"
+								on-toggle="sc.toggleOverlay(submission)"
+							></ff-content-box>
 						</div>
 					</div>
 				</div>
-				<div class="three columns container">
+				<div class="three columns container contentBoxColumn">
 					<div class="contentBox">
 						<h2>Questions</h2>
-						<div ng-repeat="question in cc.questions" class="question-thread">
-							<div class="question" ng-click="sc.toggleQASidebar(question)">
-								{{ question.text }}
-							</div>
-							<div class="reply" ng-repeat="reply in question.replies">
-								{{ reply.text }}
-							</div>
+						<div ng-repeat="question in cnc.questions">
+							<ff-content-box display="0" content="question" expanded="1" on-toggle="sc.toggleQASidebar(question)"></ff-content-box>
 						</div>
 					</div>
 				</div>

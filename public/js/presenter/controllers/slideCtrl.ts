@@ -1,95 +1,115 @@
 /// <reference path="../../shared/api.ts" />
-module PresenterApp.Controllers{
+/// <reference path="../util/localWindow.ts" />
+/// <reference path="../../../../shared/data-types.ts" />
+module PresenterApp.Controllers {
 	
-	class GetPresentationAPIRequest extends Shared.APIRequest<PresentationFromId> {
-		constructor($http: ng.IHttpService, presentationId: string) {
-			super($http, "/getPresentationFromId/" + presentationId, {});
-		}
-	}
-	
+	/**
+	 * Angular controller for switching slides, placing overlays, and managing Q&A
+	 */
 	export class SlideCtrl{
 
 		scope: ng.IScope;
 		http: ng.IHttpService;
 
 		presRunning: boolean;
-		presWindow: Window;
+		presWindows: PresenterApp.LocalWindowManager;
 
-		presName: string;
-		currentSlide: number;
-		slideCount: number;
-		slideUrls: string[];
+		presentation: FFPresentation;
+		presInstance: FFPresentationInstance;
 
-		currentOverlay: string;
-		currentQA: UserQuestion;
+		currentOverlay: FFGenericContent;
+		currentQA: FFQuestion;
 
 		error: string;
 
 		static $inject = ["$scope", "$http"];
 		constructor($scope: ng.IScope, $http: ng.IHttpService) {
 			this.scope = $scope;
+			this.http = $http;
 			this.presRunning = false;
 
-			var sampleId = "59227f68-0818-4493-91df-c4b065a5011b-2";
-			new GetPresentationAPIRequest($http, sampleId)
-				.then((result: PresentationFromId) => {
-					this.currentSlide = 0;
-					this.slideCount = result.data.length;
-					this.presName = result.data.name;
-					this.slideUrls = result.data.slides;
+			var id = window.location.hash.substr(1);
+			new Shared.GetPresentationAPIRequest($http, id)
+				.then((result: ng.IHttpPromiseCallbackArg<FFPresentation>) => {
+					this.presentation = result.data;
+
+					new Shared.GeneratePresentationInstanceAPIRequest($http, id)
+						.then((result: ng.IHttpPromiseCallback<FFPresentationInstance>) => {
+							this.presInstance = result.data;
+						});
+
 				}, () => this.error = "Your presentation was not found!");
 		}
 
-
-		presCommand(action: string, data: string) {
-			this.presWindow.postMessage(
-				angular.toJson({action: action,  data: data}),
-				Config.HOST
-			);
-		}
-
 		updateSlide(){
-			this.presCommand("changeSlide", this.slideUrls[this.currentSlide]);
+			this.presWindows.commandAll(
+				"changeSlide", this.presentation.slideUrls[this.presInstance.currentSlide]
+			);
+			new Shared.PostPresentationStateAPIRequest(
+				this.http, this.presInstance.id, this.presInstance.currentSlide
+			).then(() => {});
 		}
 
 		startPresentation(){
 			this.presRunning = true;
-			this.presWindow = window.open(
-				"presentation.html", this.presName, "width=802,height=450"
-			);
-			setTimeout(() => this.updateSlide(), 1000);
+			var presPreview: HTMLIFrameElement = 
+				<HTMLIFrameElement>document.getElementById("presPreview");
+
+			this.presWindows = new PresenterApp.LocalWindowManager([
+				window.open("presentation.html", this.presentation.name, 
+					"width=802,height=450"),
+				presPreview.contentWindow
+			]);
+
+			setTimeout(() => {
+				this.updateSlide();
+				// iframe height can't be set to show whole screen, must set
+				// manually instead
+				presPreview.style.height = 
+					Math.round(presPreview.offsetWidth * 9 / 16) + "px";
+			}, 1000);
 		}
 
 		prevSlide() {
-			this.currentSlide--;
+			this.presInstance.currentSlide--;
 			this.updateSlide();
 		}
 
 		nextSlide(){
-			this.currentSlide++;
+			this.presInstance.currentSlide++;
 			this.updateSlide();
 		}
 
-		toggleOverlay(url: string){
-			if (url !== this.currentOverlay) {
-				this.currentOverlay = url;
-				this.presCommand("showOverlay", url);
+		toggleOverlay(content: FFGenericContent){
+			if (!this.currentOverlay || content.id !== this.currentOverlay.id) {
+				this.currentOverlay = content;
+				if(content.type == FFContentType.Image){
+					var linkContent = <FFLinkContent> content;
+					this.presWindows.commandAll("showOverlay", linkContent.link);
+				}
+				else if(content.type == FFContentType.Video){
+					var vidContent = <FFYoutubeContent> content;
+					this.presWindows.commandAll("showOverlayVideo", vidContent.embed);
+				}
 			} else {
 				this.currentOverlay = undefined;
-				this.presCommand("hideOverlay", "");
+				this.presWindows.commandAll("hideOverlay", "");
 			}
 		}
 
-		// TODO: implement showReplies
-		toggleQASidebar(question: UserQuestion, showReplies: boolean){
+		toggleQASidebar(question: FFQuestion){
 			if(!this.currentQA || this.currentQA.text !== question.text){
 				this.currentQA = question;
-				this.presCommand("showQASidebar", angular.toJson(question));
+				this.presWindows.commandAll("showQASidebar", angular.toJson(question));
 			} else {
 				this.currentQA = undefined;
-				this.presCommand("hideQASidebar", "");
+				this.presWindows.commandAll("hideQASidebar", "");
 			}
 		}
 
+		endPresentation(){
+			this.presRunning = false;
+			this.presWindows.closeAll();
+		}
 	}
 }

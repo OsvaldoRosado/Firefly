@@ -11,6 +11,11 @@
 $title-font-stack: 'Montserrat', sans-serif;
 $content-font-stack: 'Roboto', sans-serif;
 
+// Import components
+@import '../directives/ff-content/_style.scss';
+@import '../directives/ff-content-box/_style.scss';
+@import '../directives/ff-question/_style.scss';
+
 // ************************* //
 html {
 	position: relative;
@@ -230,6 +235,18 @@ footer {
 	-webkit-animation-iteration-count: infinite;
 	transition-timing-function: ease-in-out;
 }
+.darkPulse {
+	display: inline-block;
+	margin: 0 auto;
+	width: 10px;
+	height: 10px;
+	background-color: $content-text-darker;
+	border-radius: 5px;
+	-webkit-animation-name: darkPulse;
+	-webkit-animation-duration: 2s;
+	-webkit-animation-iteration-count: infinite;
+	transition-timing-function: ease-in-out;
+}
 
 @-webkit-keyframes Pulse {
     from {
@@ -243,6 +260,21 @@ footer {
     to {
         background-color: $primary-yellow-light;
         -webkit-box-shadow: 0 0 9px $primary-yellow-dark;
+    }
+}
+
+@-webkit-keyframes darkPulse {
+    from {
+        background-color: $content-text-dark;
+        -webkit-box-shadow: 0 0 9px $content-text-darker;
+    }
+    50% {
+        background-color: $content-text-dark;
+        -webkit-box-shadow: 0 0 18px $content-text-dark;
+    }
+    to {
+        background-color: $content-text-dark;
+        -webkit-box-shadow: 0 0 9px $content-text-darker;
     }
 }
 
@@ -263,7 +295,7 @@ nav.viewer {
 				display: block;
 				text-decoration: none;
 				padding: 5px 0;
-				.active {
+				&.active {
 					h1, span {
 						color: $primary-yellow-light;
 					}
@@ -276,6 +308,9 @@ nav.viewer {
 				span {
 					color: $content-text-light;
 					font-size: 12px;
+					img {
+						width: 60px;
+					}
 				}
 				h1 {
 					font-family: $title-font-stack;
@@ -287,9 +322,149 @@ nav.viewer {
 	}
 }
 
+// Audience Views
+body.audience {
+	&.submitPage {
+		background: $callout-light;
+	}
+	background: $background-light;
+	.mainContent {
+		// Ask Question Page
+		.pastQuestions {
+			margin-top: 40px;
+		}
+		// Submit Content Page
+		.submitContent {
+			ul {
+				li {
+					background: $background-light;
+					border-bottom: 1px solid $content-border; 
+					padding: 1em 2em;
+					a {
+						display: inline-block;
+						padding: 1em 0;
+						i.submitContentIcon {
+							float: left;
+							width: 20%;
+							color: $content-text-dark;
+							img {
+								width: 35px;
+								padding: 1em 0 0 0;
+							}
+						}
+						div.submitContentItem {
+							float: right;
+							width: 80%;
+							div.submitContentItemText {
+								float: left;
+								width: 85%;
+								h2, p {
+									color: $content-text-darkest;
+								}
+							}
+							i.arrow {
+								width: 15%;
+								float: right;
+								font-size: 36px;
+								color: $content-text-darker;
+								text-align: right;
+							}
+						}
+					}
+				}
+			}
+		}
+		// History Page
+		.history {
+			div.currentClass {
+				margin-bottom: 1em;
+				display: block;
+				h2 {
+					color: $content-text-dark;
+					float: left;
+				}
+				a {
+					color: $primary-brand;
+					font-style: italic;
+					text-decoration: none;
+					float: right;
+				}
+			}
+			ul {
+				li {
+					margin-bottom: 1em;
+					a {
+						text-decoration: none;
+						border: 1px solid $content-border;
+						display: inline-block;
+						width: 100%;
+						div.historyItem {
+							display: inline-block;
+							padding: 1em;
+							&.live {
+								width: 80%;
+							}
+						}
+						div.historyTitle {
+							float: left;
+							h2 {
+								color: $content-text-darker;
+							}
+							p {
+								color: $content-text-dark;
+							}
+						}
+						div.historyPulse {
+							display: inline-block;
+							float: right;
+							position: absolute;
+							right: 1em;
+							padding: 0.5em;
+						}
+					}
+				}
+			}
+		}
+		h4 {
+			color: $content-text-dark;
+			margin: 1em 0;
+		}
+		form {
+			textarea {
+				font-size: 14px;
+				width: 100%;
+				min-height: 100px;
+				resize: none;
+			}
+		}
+	}
+}
+div.header {
+	background: $background-light;
+	display: inline-block;
+	width: 100%;
+	box-shadow: 0 5px 5px $callout-light;
+	h2 {
+		color: $content-text-darker;
+		padding: 1em;
+		float: left;
+	}
+	div.darkPulse {
+		float: right;
+		margin: 1.25em 2em;
+	}
+}
+
 // Presenter Main Page
+html#presenter{
+	height: 100%;
+	min-height: initial;
+}
+
 body.presenter {
 	background: $background-dark;
+	height: 100%;
+	margin: 0;
 
 	header {
 		background: $primary-brand;
@@ -314,50 +489,53 @@ body.presenter {
 		}
 	}
 
-	div.livePresentation{
-		margin: 10px;
-	}
+	div.mainConsole {
+		height: 93%;
 
-	div.contentBox {
-		background: $background-light;
-		padding: 10px;
-		margin: 10px;
+		div.livePresentation {
+			margin: 10px;
 
-		h2{
-			color: $content-text-darkest;
-			margin-bottom: 10px;
+			iframe#presPreview {
+				display: block;
+				margin-bottom: 10px;
+			}
 		}
 
-		figure.submission{
-			margin: 5px;
-			background: $callout-light;
-			text-align: center;
+		div.contentBoxColumn {
+			height: 100%;
 
-			img{
-				margin: 5px;
-				max-width: 95%;
-			}
+			div.contentBox {
+				background: $background-light;
+				color: $content-text-darkest;
+				margin: 10px 10px 0;
+				padding: 10px 10px 0;
+				max-height: 99%;
+				overflow-y: auto;
 
-			figcaption, div.meta{
-				margin: 5px;
-				text-align: left;
-			}
+				div.ffContentBox {
+					margin-bottom: 10px;
+				}
 
-			div.meta{
-				font-size: 12px;
-				padding-bottom: 5px;
-				color: $content-text-dark;
+				h2, h3, h5, p {
+					color: $content-text-darkest;
+					margin-bottom: 10px;
+				}
 			}
 		}
 	}
 }
 
 // Presentation Main Page
-
 body.presentation {
+	background: $background-dark;
+	margin-bottom: 0;
 
-	img.slide{
+	.slide{
+		height: 100%;
 		position: absolute;
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-position: center;
 	}
 
 	.overlayContainer{
@@ -365,11 +543,175 @@ body.presentation {
 		text-align: center;
 	}
 
-	img.overlay{
+	.overlay{
 		position: absolute;
 		margin: 0 auto;
 		left: 0;
 		right: 0;
+	}
+
+	img.overlay{
+		max-width: 90%;
+		max-height: 90%;
 		bottom: 100px;
 	}
+
+	iframe.overlay{
+		width: 100%;
+		height: 100%;
+	}
+
+	aside {
+		margin: 0;
+		padding: 0;
+		width: 17.333333% !important;
+
+		div.contentBox {
+			color: $content-text-darkest;
+			padding: 10px 10px 0;
+			max-height: 99%;
+
+			div.ffContentBox, h1, h3, p {
+				margin-bottom: 10px;
+			}
+			
+			p, h3 {
+				color: $content-text-darkest;
+			}
+
+			h1 {
+				color: $callout-light;
+			}
+
+			@media(max-width: 800px) {
+				overflow: hidden;
+
+				div.ffContentBox, h1, h3, p {
+					margin-bottom: 1px;
+				}
+
+				h1 {
+					font-size: 8px;
+				}
+
+				h3 {
+					font-size: 6px;
+				}
+
+				p, cite {
+					font-size: 4px;
+				}
+			}
+		}
+	}
 }
+
+// Component CSS
+// merge later into final component directories?
+
+@import '../directives/ff-content-box/_style.scss';
+@import '../directives/ff-question/_style.scss';
+
+.ffContentBox {
+  width: 100%;
+  margin-bottom: 1em;
+}
+
+div.pastSubmissions {
+	h1, h2, h3, h4, h5, span, p {
+		color: $content-text-darkest;		
+	}
+	b {
+		font-style: bold;
+	}
+	cite {
+		font-style: italic;
+	}
+}
+
+
+// Upload Page
+div.uploadPresentation {
+	border-left: 2px solid $primary-yellow-dark;
+	color: #FFFFFF;
+	div.presentationUploader {
+		padding: 1em 0 0 1em;
+		h1 {
+			font-size: 16px;
+			font-style: italic;
+			margin-bottom: 1em;
+		}
+		input {
+			border-color: #FFFFFF;
+			margin-bottom: 1em;
+			color: #FFFFFF;
+		}
+		input[type="text"] {
+			width: 100%;
+			background-color: $primary-brand;
+			font-size: 14px;
+			line-height: 14px;
+		}
+		*::-webkit-input-placeholder {
+			color: #FFFFFF;
+			font-size: 14px;
+			line-height: 14px;
+		}
+		progress {
+			display: none;
+			background-color: $primary-yellow-light;
+			width: 100%;
+			&::-webkit-progress-bar {
+				background-color: $primary-yellow-light;
+			}
+			&::-webkit-progress-value {
+				background-color: $secondary-green;
+			}
+		}
+	}
+	ul.uploadOptions {
+		padding: 1em 0;
+		li {
+			margin-bottom: 1em;
+			&:last-child {
+				margin-bottom: 0;
+			}
+			a {
+				width: 100%;
+				display: inline-block;
+				color: #FFFFFF;
+				text-decoration: none;
+				border-top: 1px solid $secondary-green;
+				padding: 1em 0 0 1em;
+				font-style: italic;
+				&:hover {
+					color: $primary-yellow-light;
+				}
+			}
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

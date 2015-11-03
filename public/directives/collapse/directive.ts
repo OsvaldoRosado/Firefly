@@ -1,3 +1,4 @@
+/// <reference path="../../js/typings/angular/angular.d.ts" />
 module Shared {
 
   export interface CollapsedScope extends ng.IScope {
@@ -56,7 +57,7 @@ module Shared.Directives {
         // Wait for the collapsedness value to change
         scope.$watch("expanded", function(newValue: boolean, oldValue: boolean) {
           if (newValue == oldValue) {return;} // This should never happen
-          element.setAttribute("is-expanded", newValue);
+          element.setAttribute("is-expanded", newValue.toString());
 
           // How big do we want this directive to be?
           var destinationHeight : string = "0px";
