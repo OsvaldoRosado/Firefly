@@ -309,6 +309,9 @@ var PresenterApp;
         LocalWindow.prototype.command = function (action, data) {
             this.postMessage(JSON.stringify({ action: action, data: data }));
         };
+        LocalWindow.prototype.close = function () {
+            this.theWindow.close();
+        };
         return LocalWindow;
     })();
     PresenterApp.LocalWindow = LocalWindow;
@@ -321,6 +324,9 @@ var PresenterApp;
         };
         LocalWindowManager.prototype.commandAll = function (action, data) {
             this.windows.forEach(function (wnd) { return wnd.command(action, data); });
+        };
+        LocalWindowManager.prototype.closeAll = function () {
+            this.windows.forEach(function (wnd) { return wnd.close(); });
         };
         return LocalWindowManager;
     })();
@@ -428,22 +434,19 @@ var PresenterApp;
                 var sampleId = "59227f68-0818-4493-91df-c4b065a5011b-2";
                 new Shared.GetPresentationAPIRequest($http, sampleId)
                     .then(function (result) {
-                    var pres = result.data;
+                    _this.presentation = result.data;
                     _this.currentSlide = 0;
-                    _this.slideCount = pres.slideCount;
-                    _this.presName = pres.name;
-                    _this.slideUrls = pres.slideUrls;
                 }, function () { return _this.error = "Your presentation was not found!"; });
             }
             SlideCtrl.prototype.updateSlide = function () {
-                this.presWindows.commandAll("changeSlide", this.slideUrls[this.currentSlide]);
+                this.presWindows.commandAll("changeSlide", this.presentation.slideUrls[this.currentSlide]);
             };
             SlideCtrl.prototype.startPresentation = function () {
                 var _this = this;
                 this.presRunning = true;
                 var presPreview = document.getElementById("presPreview");
                 this.presWindows = new PresenterApp.LocalWindowManager([
-                    window.open("presentation.html", this.presName, "width=802,height=450"),
+                    window.open("presentation.html", this.presentation.name, "width=802,height=450"),
                     presPreview.contentWindow
                 ]);
                 setTimeout(function () {
@@ -486,6 +489,10 @@ var PresenterApp;
                     this.currentQA = undefined;
                     this.presWindows.commandAll("hideQASidebar", "");
                 }
+            };
+            SlideCtrl.prototype.endPresentation = function () {
+                this.presRunning = false;
+                this.presWindows.closeAll();
             };
             SlideCtrl.$inject = ["$scope", "$http"];
             return SlideCtrl;

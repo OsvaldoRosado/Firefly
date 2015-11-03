@@ -13,10 +13,8 @@ module PresenterApp.Controllers {
 		presRunning: boolean;
 		presWindows: PresenterApp.LocalWindowManager;
 
-		presName: string;
 		currentSlide: number;
-		slideCount: number;
-		slideUrls: string[];
+		presentation: FFPresentation;
 
 		currentOverlay: FFGenericContent;
 		currentQA: FFQuestion;
@@ -31,17 +29,14 @@ module PresenterApp.Controllers {
 			var sampleId = "59227f68-0818-4493-91df-c4b065a5011b-2";
 			new Shared.GetPresentationAPIRequest($http, sampleId)
 				.then((result: ng.IHttpPromiseCallbackArg<FFPresentation>) => {
-					var pres = result.data;
+					this.presentation = result.data;
 					this.currentSlide = 0;
-					this.slideCount = pres.slideCount;
-					this.presName = pres.name;
-					this.slideUrls = pres.slideUrls;
 				}, () => this.error = "Your presentation was not found!");
 		}
 
 		updateSlide(){
 			this.presWindows.commandAll(
-				"changeSlide", this.slideUrls[this.currentSlide]
+				"changeSlide", this.presentation.slideUrls[this.currentSlide]
 			);
 		}
 
@@ -51,7 +46,8 @@ module PresenterApp.Controllers {
 				<HTMLIFrameElement>document.getElementById("presPreview");
 
 			this.presWindows = new PresenterApp.LocalWindowManager([
-				window.open("presentation.html", this.presName, "width=802,height=450"),
+				window.open("presentation.html", this.presentation.name, 
+					"width=802,height=450"),
 				presPreview.contentWindow
 			]);
 
@@ -99,6 +95,11 @@ module PresenterApp.Controllers {
 				this.currentQA = undefined;
 				this.presWindows.commandAll("hideQASidebar", "");
 			}
+		}
+
+		endPresentation(){
+			this.presRunning = false;
+			this.presWindows.closeAll();
 		}
 	}
 }
