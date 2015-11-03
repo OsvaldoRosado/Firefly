@@ -653,6 +653,17 @@ div.uploadPresentation {
 			font-size: 14px;
 			line-height: 14px;
 		}
+		progress {
+			display: none;
+			background-color: $primary-yellow-light;
+			width: 100%;
+			&::-webkit-progress-bar {
+				background-color: $primary-yellow-light;
+			}
+			&::-webkit-progress-value {
+				background-color: $secondary-green;
+			}
+		}
 	}
 	ul.uploadOptions {
 		padding: 1em 0;
