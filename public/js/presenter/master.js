@@ -112,6 +112,14 @@ var Shared;
         return GetPresentationStateAPIRequest;
     })(Shared.APIRequest);
     Shared.GetPresentationStateAPIRequest = GetPresentationStateAPIRequest;
+    var GenerateShortInstanceURLAPIRequest = (function (_super) {
+        __extends(GenerateShortInstanceURLAPIRequest, _super);
+        function GenerateShortInstanceURLAPIRequest($http, instanceId) {
+            _super.call(this, $http, "/GenerateShortInstanceURL/" + instanceId, {});
+        }
+        return GenerateShortInstanceURLAPIRequest;
+    })(Shared.APIRequest);
+    Shared.GenerateShortInstanceURLAPIRequest = GenerateShortInstanceURLAPIRequest;
 })(Shared || (Shared = {}));
 /// <reference path="../../js/typings/angular/angular.d.ts" />
 var Shared;
@@ -485,6 +493,9 @@ var PresenterApp;
                 ]);
                 setTimeout(function () {
                     _this.updateSlide();
+                    new Shared.GenerateShortInstanceURLAPIRequest(_this.http, _this.presInstance.id).then(function (result) {
+                        return _this.presWindows.commandAll("showAccessLink", result.data);
+                    });
                     presPreview.style.height =
                         Math.round(presPreview.offsetWidth * 9 / 16) + "px";
                 }, 1000);

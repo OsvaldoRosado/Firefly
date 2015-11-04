@@ -63,6 +63,13 @@ module PresenterApp.Controllers {
 
 			setTimeout(() => {
 				this.updateSlide();
+
+				new Shared.GenerateShortInstanceURLAPIRequest(
+					this.http, this.presInstance.id
+				).then((result: ng.IHttpPromiseCallback<string>) =>
+					this.presWindows.commandAll("showAccessLink", result.data
+				));
+				
 				// iframe height can't be set to show whole screen, must set
 				// manually instead
 				presPreview.style.height = 

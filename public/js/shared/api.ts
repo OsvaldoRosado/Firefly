@@ -86,4 +86,10 @@ module Shared {
 			super($http, "/getCurrentState/" + instanceId, {});
 		}
 	}
+
+	export class GenerateShortInstanceURLAPIRequest extends Shared.APIRequest<string> {
+		constructor($http: ng.IHttpService, instanceId: string) {
+			super($http, "/GenerateShortInstanceURL/" + instanceId, {});
+		}
+	}
 }

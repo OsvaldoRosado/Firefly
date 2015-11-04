@@ -112,6 +112,14 @@ var Shared;
         return GetPresentationStateAPIRequest;
     })(Shared.APIRequest);
     Shared.GetPresentationStateAPIRequest = GetPresentationStateAPIRequest;
+    var GenerateShortInstanceURLAPIRequest = (function (_super) {
+        __extends(GenerateShortInstanceURLAPIRequest, _super);
+        function GenerateShortInstanceURLAPIRequest($http, instanceId) {
+            _super.call(this, $http, "/GenerateShortInstanceURL/" + instanceId, {});
+        }
+        return GenerateShortInstanceURLAPIRequest;
+    })(Shared.APIRequest);
+    Shared.GenerateShortInstanceURLAPIRequest = GenerateShortInstanceURLAPIRequest;
 })(Shared || (Shared = {}));
 /// <reference path="../../js/typings/angular/angular.d.ts" />
 var Shared;
