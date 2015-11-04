@@ -64,6 +64,7 @@ Database.notifyOnReady((dbConnected)=>{
 	app.get("/api/generatePresentationInstance/:presid", Controllers.GeneratePresentationInstance.asHandler());
 	app.get("/api/postCurrentState/:instanceid/:curslide/:curcontentid?", Controllers.PostCurrentState.asHandler());
 	app.get("/api/getCurrentState/:instanceid", Controllers.GetCurrentState.asHandler());
+	app.get("/api/generateShortInstanceURL/:instance", Controllers.GenerateShortInstanceURL.asHandler());
 	
 	// If no matches, use the static files directory
 	// We do a special rewrite for .html
