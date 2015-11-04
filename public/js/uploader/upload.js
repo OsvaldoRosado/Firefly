@@ -4,7 +4,7 @@ $(function() {
 		var formData = new FormData($('form#uploadForm')[0]);
 
 		$.ajax({
-			url: 'http://localhost:8080/api/UploadPresentation',
+			url: '/api/UploadPresentation',
 			type: 'POST',
 			xhr: function() {
 				var presXhr = $.ajaxSettings.xhr();
@@ -19,7 +19,7 @@ $(function() {
 			success: function(data, status,jqXHR) {
 				console.log("STATUS: " + data, status);
 				if (data.success == true) {
-					var presentationURL = "http://localhost:8080/presenter#" + data.id;
+					var presentationURL = "/presenter#" + data.id;
 					window.location.replace(presentationURL);
 				}
 			},
