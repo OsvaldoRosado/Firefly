@@ -15,23 +15,20 @@
 		<h1 class="mainTitle">Firefly</h1>
 		<hr>
 		<div class="splashOverview">
-			<h2>Welcome back, Ima</h2>
+			<h2>Welcome back, <span class="username"></span></h2>
 			
 			<div class="uploadPresentation">
-				<div class="presentationUploader">
-					<h1>Art History 1010</h1>
-					<form enctype="multipart/form-data" id="uploadForm">
-					    <input type="text" name="name" placeholder="Lecture Name">
-					    <input type="file" name="presentation">
-					    <input type="submit" value="Upload" name="submit">
-					</form>
-					<progress></progress>
-				</div>
-				<ul class="uploadOptions">
-					<li><a href="#">Add for Later</a></li>
-					<li><a href="#">Start Presentation</a></li>
-					<li><a href="#">Cancel</a></li>
-				</ul>
+				<form enctype="multipart/form-data" id="uploadForm">
+					<div class="presentationUploader">
+						<input type="text" name="name" placeholder="Presentation Name">
+						<input type="file" name="presentation">
+						<progress></progress>
+					</div>
+					<ul class="uploadOptions">
+						<li><input type="submit" value="Upload and Start Presentation" name="submit" class="nobox"></li>
+						<li><a href="/">Cancel</a></li>
+					</ul>
+				</form>
 			</div>
 		</div>
 	</div>

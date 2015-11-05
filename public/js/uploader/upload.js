@@ -17,14 +17,17 @@ $(function() {
 				$('progress').show();
 			},
 			success: function(data, status,jqXHR) {
+				data = JSON.parse(data);
 				console.log("STATUS: " + data, status);
 				if (data.success == true) {
-					var presentationURL = "/presenter#" + data.id;
+					var presentationURL = "/presenter#" + data.data.id;
 					window.location.replace(presentationURL);
+				} else {
+					alert("Failed to upload.");
 				}
 			},
 			error: function(jqXHR, status, error) {
-				console.log("ERROR", status, error);
+				alert("ERROR", status, error);
 			},
 			data: formData,
 			cache: false,
