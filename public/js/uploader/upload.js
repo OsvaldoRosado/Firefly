@@ -1,6 +1,6 @@
 $(function() {
 	
-	$.get("/api/getCurrentUserInfo",function(data) {
+	$.get("/api/getCurrentUserInfo?rand="+(new Date().getTime()),function(data) {
 		data = JSON.parse(data);
 		if(!data.success){
 			window.location.replace("/");
