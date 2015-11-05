@@ -95,11 +95,15 @@ var Shared;
     var PostPresentationStateAPIRequest = (function (_super) {
         __extends(PostPresentationStateAPIRequest, _super);
         function PostPresentationStateAPIRequest($http, instanceId, curslide, curContentId) {
-            var url = "/postCurrentState/" + instanceId + "/" + curslide;
+            var reqbody = {
+                instanceid: instanceId,
+                curslide: curslide,
+                curcontentid: undefined
+            };
             if (curContentId != undefined) {
-                url += "/" + curContentId;
+                reqbody.curcontentid = curContentId;
             }
-            _super.call(this, $http, url, {});
+            _super.call(this, $http, "/postCurrentState", reqbody, APIMethod.POST);
         }
         return PostPresentationStateAPIRequest;
     })(Shared.APIRequest);
@@ -388,23 +392,21 @@ var PresentationApp;
                     switch (order.action) {
                         case "changeSlide":
                             _this.slideUrl = order.data;
+                            _this.overlayActive = _this.qaActive = false;
                             break;
                         case "showOverlay":
                             _this.overlayUrl = order.data;
-                            _this.qaActive = false;
-                            _this.overlayIsVideo = false;
+                            _this.qaActive = _this.overlayIsVideo = false;
                             _this.overlayActive = true;
                             break;
                         case "showOverlayVideo":
                             _this.overlayUrl = order.data;
                             _this.qaActive = false;
-                            _this.overlayActive = true;
-                            _this.overlayIsVideo = true;
+                            _this.overlayActive = _this.overlayIsVideo = true;
                             break;
                         case "hideOverlay":
                             _this.overlayUrl = undefined;
-                            _this.overlayActive = false;
-                            _this.overlayIsVideo = false;
+                            _this.overlayActive = _this.overlayIsVideo = false;
                             break;
                         case "showQASidebar":
                             _this.question = JSON.parse(order.data);

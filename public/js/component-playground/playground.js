@@ -95,11 +95,15 @@ var Shared;
     var PostPresentationStateAPIRequest = (function (_super) {
         __extends(PostPresentationStateAPIRequest, _super);
         function PostPresentationStateAPIRequest($http, instanceId, curslide, curContentId) {
-            var url = "/postCurrentState/" + instanceId + "/" + curslide;
+            var reqbody = {
+                instanceid: instanceId,
+                curslide: curslide,
+                curcontentid: undefined
+            };
             if (curContentId != undefined) {
-                url += "/" + curContentId;
+                reqbody.curcontentid = curContentId;
             }
-            _super.call(this, $http, url, {});
+            _super.call(this, $http, "/postCurrentState", reqbody, APIMethod.POST);
         }
         return PostPresentationStateAPIRequest;
     })(Shared.APIRequest);
@@ -376,11 +380,11 @@ var Playground;
         function AppController($scope) {
             this.expandedIndex = 1;
             this.testUser1 = {
-                id: 1,
+                id: "1",
                 name: "Keaton Brandt"
             };
             this.imageContent = {
-                id: 1,
+                id: "1",
                 type: FFContentType.Image,
                 submitter: this.testUser1,
                 timestamp: new Date().getTime(),
@@ -390,7 +394,7 @@ var Playground;
                 link: "/images/dummy/view.jpg"
             };
             this.imageContent2 = {
-                id: 2,
+                id: "2",
                 type: FFContentType.Image,
                 submitter: this.testUser1,
                 timestamp: new Date().getTime(),
@@ -401,7 +405,7 @@ var Playground;
                 link: "/images/dummy/montreal.jpg"
             };
             this.videoContent = {
-                id: 3,
+                id: "3",
                 type: FFContentType.Video,
                 submitter: this.testUser1,
                 timestamp: new Date().getTime(),
@@ -412,7 +416,7 @@ var Playground;
                 channelTitle: "Sub Pop"
             };
             this.questionContent = {
-                id: 4,
+                id: "4",
                 type: FFContentType.Question,
                 submitter: this.testUser1,
                 timestamp: new Date().getTime(),
@@ -421,7 +425,7 @@ var Playground;
                 text: "Is there any reason at all to use Model-View-Controller\n\t\t\t\t\tinstead of Model-View-ViewModel or whatever other sensible\n\t\t\t\t\talternative?\n\t\t\t\t",
                 replies: [
                     {
-                        id: 5,
+                        id: "5",
                         type: FFContentType.QuestionResponse,
                         submitter: this.testUser1,
                         timestamp: new Date().getTime(),
@@ -430,7 +434,7 @@ var Playground;
                         text: "No. Why would the model directly update the view?\n\t\t\t\t\t\t\tThat makes no sense.\n\t\t\t\t\t\t"
                     },
                     {
-                        id: 6,
+                        id: "6",
                         type: FFContentType.QuestionResponse,
                         submitter: this.testUser1,
                         timestamp: new Date().getTime(),

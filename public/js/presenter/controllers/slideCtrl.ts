@@ -41,10 +41,20 @@ module PresenterApp.Controllers {
 				}, () => this.error = "Your presentation was not found!");
 		}
 
-		updateSlide(){
+		changeInstanceContent(action, data){
+			this.presWindows.commandAll(action, data);
+			var blob = JSON.stringify({ action: action, data: data });
+			blob = blob.replace(/\//g, "%2f");
+			new Shared.PostPresentationStateAPIRequest(
+				this.http, this.presInstance.id, this.presInstance.currentSlide, blob
+			).then(() => {});
+		}
+
+		updateSlide() {
 			this.presWindows.commandAll(
 				"changeSlide", this.presentation.slideUrls[this.presInstance.currentSlide]
 			);
+			this.currentOverlay = this.currentQA = undefined;
 			new Shared.PostPresentationStateAPIRequest(
 				this.http, this.presInstance.id, this.presInstance.currentSlide
 			).then(() => {});
@@ -92,25 +102,25 @@ module PresenterApp.Controllers {
 				this.currentOverlay = content;
 				if(content.type == FFContentType.Image){
 					var linkContent = <FFLinkContent> content;
-					this.presWindows.commandAll("showOverlay", linkContent.link);
+					this.changeInstanceContent("showOverlay", linkContent.link);
 				}
 				else if(content.type == FFContentType.Video){
 					var vidContent = <FFYoutubeContent> content;
-					this.presWindows.commandAll("showOverlayVideo", vidContent.embed);
+					this.changeInstanceContent("showOverlayVideo", vidContent.embed);
 				}
 			} else {
 				this.currentOverlay = undefined;
-				this.presWindows.commandAll("hideOverlay", "");
+				this.changeInstanceContent("hideOverlay", "");
 			}
 		}
 
 		toggleQASidebar(question: FFQuestion){
 			if(!this.currentQA || this.currentQA.text !== question.text){
 				this.currentQA = question;
-				this.presWindows.commandAll("showQASidebar", angular.toJson(question));
+				this.changeInstanceContent("showQASidebar", angular.toJson(question));
 			} else {
 				this.currentQA = undefined;
-				this.presWindows.commandAll("hideQASidebar", "");
+				this.changeInstanceContent("hideQASidebar", "");
 			}
 		}
 

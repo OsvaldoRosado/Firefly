@@ -73,11 +73,15 @@ module Shared {
 
 	export class PostPresentationStateAPIRequest extends Shared.APIRequest<Boolean> {
 		constructor($http: ng.IHttpService, instanceId: string, curslide: number, curContentId?: string) {
-			var url = "/postCurrentState/" + instanceId + "/" + curslide;
+			var reqbody = {
+				instanceid: instanceId,
+				curslide: curslide,
+				curcontentid: undefined
+			};
 			if(curContentId != undefined){
-				url += "/" + curContentId;
+				reqbody.curcontentid = curContentId;
 			}
-			super($http, url, {});
+			super($http, "/postCurrentState", reqbody, APIMethod.POST);
 		}
 	}
 
