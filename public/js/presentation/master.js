@@ -121,6 +121,41 @@ var Shared;
     })(Shared.APIRequest);
     Shared.GenerateShortInstanceURLAPIRequest = GenerateShortInstanceURLAPIRequest;
 })(Shared || (Shared = {}));
+var Shared;
+(function (Shared) {
+    var LocalWindow = (function () {
+        function LocalWindow(wnd) {
+            this.theWindow = wnd;
+        }
+        LocalWindow.prototype.postMessage = function (data) {
+            this.theWindow.postMessage(data, Config.HOST);
+        };
+        LocalWindow.prototype.command = function (action, data) {
+            this.postMessage(JSON.stringify({ action: action, data: data }));
+        };
+        LocalWindow.prototype.close = function () {
+            this.theWindow.close();
+        };
+        return LocalWindow;
+    })();
+    Shared.LocalWindow = LocalWindow;
+    var LocalWindowManager = (function () {
+        function LocalWindowManager(theWindows) {
+            this.windows = theWindows.map(function (wnd) { return new LocalWindow(wnd); });
+        }
+        LocalWindowManager.prototype.postAll = function (data) {
+            this.windows.forEach(function (wnd) { return wnd.postMessage(data); });
+        };
+        LocalWindowManager.prototype.commandAll = function (action, data) {
+            this.windows.forEach(function (wnd) { return wnd.command(action, data); });
+        };
+        LocalWindowManager.prototype.closeAll = function () {
+            this.windows.forEach(function (wnd) { return wnd.close(); });
+        };
+        return LocalWindowManager;
+    })();
+    Shared.LocalWindowManager = LocalWindowManager;
+})(Shared || (Shared = {}));
 /// <reference path="../../js/typings/angular/angular.d.ts" />
 var Shared;
 (function (Shared) {

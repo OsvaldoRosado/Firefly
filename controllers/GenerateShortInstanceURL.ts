@@ -8,7 +8,7 @@ class GenerateShortInstanceURL extends Base.BaseController {
 		var instance = req.params.instance;
 		var shortenerServiceHost = "is.gd";
 		var shortenerServiceEndpoint = "/create.php?format=simple&url=";
-		var shortenBase = Config.MAIN_DOMAIN+"/viewer2?id=";
+		var shortenBase = Config.MAIN_DOMAIN+"/viewer2#";
 		
 		// Make request to shortenerService
 		var request = http.request({host:shortenerServiceHost,path:shortenerServiceEndpoint+encodeURIComponent(shortenBase+instance)}, (response) => {

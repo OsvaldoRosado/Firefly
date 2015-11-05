@@ -32,6 +32,7 @@ class PostCurrentState extends Base.BaseController {
 				}
 				
 				// Update the instance
+				currentSlide = parseInt(currentSlide);
 				instance.updateCurrentSlideAndContent(currentSlide,currentContentId, (success)=>{
 					return cb({success:success, data:null});
 				});

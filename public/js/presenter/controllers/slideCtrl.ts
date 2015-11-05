@@ -1,5 +1,5 @@
 /// <reference path="../../shared/api.ts" />
-/// <reference path="../util/localWindow.ts" />
+/// <reference path="../../shared/localWindow.ts" />
 /// <reference path="../../../../shared/data-types.ts" />
 module PresenterApp.Controllers {
 	
@@ -12,7 +12,7 @@ module PresenterApp.Controllers {
 		http: ng.IHttpService;
 
 		presRunning: boolean;
-		presWindows: PresenterApp.LocalWindowManager;
+		presWindows: Shared.LocalWindowManager;
 
 		presentation: FFPresentation;
 		presInstance: FFPresentationInstance;
@@ -34,7 +34,7 @@ module PresenterApp.Controllers {
 					this.presentation = result.data;
 
 					new Shared.GeneratePresentationInstanceAPIRequest($http, id)
-						.then((result: ng.IHttpPromiseCallback<FFPresentationInstance>) => {
+						.then((result: ng.IHttpPromiseCallbackArg<FFPresentationInstance>) => {
 							this.presInstance = result.data;
 						});
 
@@ -55,7 +55,7 @@ module PresenterApp.Controllers {
 			var presPreview: HTMLIFrameElement = 
 				<HTMLIFrameElement>document.getElementById("presPreview");
 
-			this.presWindows = new PresenterApp.LocalWindowManager([
+			this.presWindows = new Shared.LocalWindowManager([
 				window.open("presentation.html", this.presentation.name, 
 					"width=802,height=450"),
 				presPreview.contentWindow
@@ -66,7 +66,7 @@ module PresenterApp.Controllers {
 
 				new Shared.GenerateShortInstanceURLAPIRequest(
 					this.http, this.presInstance.id
-				).then((result: ng.IHttpPromiseCallback<string>) =>
+				).then((result: ng.IHttpPromiseCallbackArg<string>) =>
 					this.presWindows.commandAll("showAccessLink", result.data
 				));
 				
