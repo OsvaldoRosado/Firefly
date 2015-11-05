@@ -41,12 +41,16 @@ module PresenterApp.Controllers {
 				}, () => this.error = "Your presentation was not found!");
 		}
 
-		changeInstanceContent(action, data){
-			this.presWindows.commandAll(action, data);
+		postPresentationState(action, data){
 			var blob = JSON.stringify({ action: action, data: data });
 			new Shared.PostPresentationStateAPIRequest(
 				this.http, this.presInstance.id, this.presInstance.currentSlide, blob
 			).then(() => {});
+		}
+
+		changeInstanceContent(action, data){
+			this.presWindows.commandAll(action, data);
+			this.postPresentationState(action, data);
 		}
 
 		updateSlide() {
@@ -105,7 +109,9 @@ module PresenterApp.Controllers {
 				}
 				else if(content.type == FFContentType.Video){
 					var vidContent = <FFYoutubeContent> content;
-					this.changeInstanceContent("showOverlayVideo", vidContent.embed);
+					this.presWindows.commandOne(0, "showOverlayVideo", vidContent.embed + "?autoplay=1");
+					this.presWindows.commandOne(1, "showOverlayVideo", vidContent.embed);
+					this.postPresentationState("showOverlayVideo", vidContent.embed);
 				}
 			} else {
 				this.currentOverlay = undefined;

@@ -49,6 +49,10 @@ module Shared{
 			this.windows.forEach((wnd) => wnd.command(action, data));
 		}
 
+		commandOne(id: number, action: string, data: string){
+			this.windows[id].command(action, data);
+		}
+
 		closeAll() {
 			this.windows.forEach((wnd) => wnd.close());
 		}

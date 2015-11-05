@@ -153,6 +153,9 @@ var Shared;
         LocalWindowManager.prototype.commandAll = function (action, data) {
             this.windows.forEach(function (wnd) { return wnd.command(action, data); });
         };
+        LocalWindowManager.prototype.commandOne = function (id, action, data) {
+            this.windows[id].command(action, data);
+        };
         LocalWindowManager.prototype.closeAll = function () {
             this.windows.forEach(function (wnd) { return wnd.close(); });
         };
@@ -508,10 +511,13 @@ var PresenterApp;
                     });
                 }, function () { return _this.error = "Your presentation was not found!"; });
             }
-            SlideCtrl.prototype.changeInstanceContent = function (action, data) {
-                this.presWindows.commandAll(action, data);
+            SlideCtrl.prototype.postPresentationState = function (action, data) {
                 var blob = JSON.stringify({ action: action, data: data });
                 new Shared.PostPresentationStateAPIRequest(this.http, this.presInstance.id, this.presInstance.currentSlide, blob).then(function () { });
+            };
+            SlideCtrl.prototype.changeInstanceContent = function (action, data) {
+                this.presWindows.commandAll(action, data);
+                this.postPresentationState(action, data);
             };
             SlideCtrl.prototype.updateSlide = function () {
                 this.presWindows.commandAll("changeSlide", this.presentation.slideUrls[this.presInstance.currentSlide]);
@@ -552,7 +558,9 @@ var PresenterApp;
                     }
                     else if (content.type == FFContentType.Video) {
                         var vidContent = content;
-                        this.changeInstanceContent("showOverlayVideo", vidContent.embed);
+                        this.presWindows.commandOne(0, "showOverlayVideo", vidContent.embed + "?autoplay=1");
+                        this.presWindows.commandOne(1, "showOverlayVideo", vidContent.embed);
+                        this.postPresentationState("showOverlayVideo", vidContent.embed);
                     }
                 }
                 else {
