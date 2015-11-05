@@ -153,6 +153,9 @@ var Shared;
         LocalWindowManager.prototype.commandAll = function (action, data) {
             this.windows.forEach(function (wnd) { return wnd.command(action, data); });
         };
+        LocalWindowManager.prototype.commandOne = function (id, action, data) {
+            this.windows[id].command(action, data);
+        };
         LocalWindowManager.prototype.closeAll = function () {
             this.windows.forEach(function (wnd) { return wnd.close(); });
         };

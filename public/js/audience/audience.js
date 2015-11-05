@@ -153,6 +153,9 @@ var Shared;
         LocalWindowManager.prototype.commandAll = function (action, data) {
             this.windows.forEach(function (wnd) { return wnd.command(action, data); });
         };
+        LocalWindowManager.prototype.commandOne = function (id, action, data) {
+            this.windows[id].command(action, data);
+        };
         LocalWindowManager.prototype.closeAll = function () {
             this.windows.forEach(function (wnd) { return wnd.close(); });
         };
@@ -403,7 +406,7 @@ var AudienceApp;
             var _this = this;
             this.windowManager.commandAll("changeSlide", this.presentation.slideUrls[this.presentationInstance.currentSlide]);
             if (this.presentationInstance.currentContentId && this.presentationInstance.currentContentId != "") {
-                this.windowManager.postAll(this.presentationInstance.currentContentId.replace("%2f", "/"));
+                this.windowManager.postAll(this.presentationInstance.currentContentId);
             }
             window.setTimeout(function () {
                 new Shared.GetPresentationStateAPIRequest(_this.http, _this.presentationInstance.id).then(function (data, headers) {
