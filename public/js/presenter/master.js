@@ -511,7 +511,6 @@ var PresenterApp;
             SlideCtrl.prototype.changeInstanceContent = function (action, data) {
                 this.presWindows.commandAll(action, data);
                 var blob = JSON.stringify({ action: action, data: data });
-                blob = blob.replace(/\//g, "%2f");
                 new Shared.PostPresentationStateAPIRequest(this.http, this.presInstance.id, this.presInstance.currentSlide, blob).then(function () { });
             };
             SlideCtrl.prototype.updateSlide = function () {

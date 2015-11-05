@@ -46,7 +46,7 @@ module AudienceApp {
 				"changeSlide", this.presentation.slideUrls[this.presentationInstance.currentSlide]
 			);
 			if(this.presentationInstance.currentContentId && this.presentationInstance.currentContentId != "") {
-				this.windowManager.postAll(this.presentationInstance.currentContentId.replace("%2f","/"));
+				this.windowManager.postAll(this.presentationInstance.currentContentId);
 			}
 			window.setTimeout(()=>{
 				new Shared.GetPresentationStateAPIRequest(this.http,this.presentationInstance.id).then((data:any, headers)=>{
