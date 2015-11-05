@@ -31,6 +31,10 @@ module PresenterApp.Controllers {
 				id: "1",
 				name: "Keaton Brandt"
 			};
+			var testUser2 = {
+				id: "2",
+				name: "Liam Jones"
+			};
 
 			this.content = [
 				<FFGenericContent> {
@@ -40,30 +44,31 @@ module PresenterApp.Controllers {
 					timestamp: new Date().getTime(),
 					upvotes: 3,
 					flagged: 0,
-					filename: "view.png",
-					link: "/images/dummy/view.jpg"
+					filename: "crcCards.png",
+					text: "This CRC card application looks useful.",
+					link: "/images/dummy/crcCards.jpg"
 				},
 				<FFGenericContent> {
 					id: "7",
 					type: FFContentType.Image,
-					submitter: testUser1,
+					submitter: testUser2,
 					timestamp: new Date().getTime(),
 					upvotes: 0,
 					flagged: 0,
-					filename: "montreal.png",
-					text: "Great view from the top of Mont Royal",
-					link: "/images/dummy/montreal.jpg"
+					filename: "complicatedClassDiagram.png",
+					text: "This class diagram seems like an example of one that's too complicated.",
+					link: "/images/dummy/complicatedClassDiagram.png"
 				},
 				<FFGenericContent> {
 					id: "3",
 					type: FFContentType.Video,
-					submitter: testUser1,
+					submitter: testUser2,
 					timestamp: new Date().getTime(),
 					upvotes: 0,
 					flagged: 0,
-					title: "Beach House - On The Sea",
-					youtubeId: "0qz0IJXQ720",
-					channelTitle: "Sub Pop"
+					title: "UML 2.0 Tutorial",
+					youtubeId: "OkC7HKtiZC0",
+					channelTitle: "Derek Banas"
 				}
 			];
 
@@ -74,32 +79,47 @@ module PresenterApp.Controllers {
 					type: FFContentType.Question,
 					submitter: testUser1,
 					timestamp: new Date().getTime(),
-					upvotes: 0,
+					upvotes: 3,
 					flagged: 0,
-					text: `Is there any reason at all to use Model-View-Controller
-						instead of Model-View-ViewModel or whatever other sensible
-						alternative?
-					`,
+					text: "What would be a good number of collaborators to have?",
 					replies: [
 						{
 							id: "5",
 							type: FFContentType.QuestionResponse,
-							submitter: testUser1,
+							submitter: testUser2,
 							timestamp: new Date().getTime(),
 							upvotes: 0,
 							flagged: 0,
-							text: `No. Why would the model directly update the view?
-								That makes no sense.
-							`
+							text: "I think it might depend on how complicated your overall class structure is."
 						},
 						{
 							id: "6",
 							type: FFContentType.QuestionResponse,
-							submitter: testUser1,
+							submitter: testUser2,
 							timestamp: new Date().getTime(),
 							upvotes: 0,
 							flagged: 0,
-							text: "I mean, seriously, it doesn't reduce glue code it just makes sure every component has the same amount of glue."
+							text: "It should fit on the card!"
+						}
+					]
+				},
+				{
+					id: "8",
+					type: FFContentType.Question,
+					submitter: testUser1,
+					timestamp: new Date().getTime(),
+					upvotes: 1,
+					flagged: 0,
+					text: "Is it okay if I can't fit the responsibilities of my class on one side of the card?",
+					replies: [
+						{
+							id: "9",
+							type: FFContentType.QuestionResponse,
+							submitter: testUser2,
+							timestamp: new Date().getTime(),
+							upvotes: 0,
+							flagged: 0,
+							text: "That probably means your class is doing too much! It should only have a single responsibility."
 						}
 					]
 				}

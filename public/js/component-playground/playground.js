@@ -95,9 +95,10 @@ var Shared;
     var PostPresentationStateAPIRequest = (function (_super) {
         __extends(PostPresentationStateAPIRequest, _super);
         function PostPresentationStateAPIRequest($http, instanceId, curslide, curContentId) {
-            reqbody = {
+            var reqbody = {
                 instanceid: instanceId,
-                curslide: curslide
+                curslide: curslide,
+                curcontentid: undefined
             };
             if (curContentId != undefined) {
                 reqbody.curcontentid = curContentId;
