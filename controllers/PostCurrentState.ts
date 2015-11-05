@@ -9,9 +9,9 @@ class PostCurrentState extends Base.BaseController {
 	protected requireLogin = true;
 	
 	protected process(req: Request, res: Response, cb:(data:Base.DataContract)=>void) {
-		var instanceId = req.params.instanceid;
-		var currentSlide = req.params.curslide;
-		var currentContentId = req.params.curcontentid;
+		var instanceId = req.body.instanceid;
+		var currentSlide = req.body.curslide;
+		var currentContentId = req.body.curcontentid;
 		
 		// Try to lookup presentation instance
 		PresentationInstance.fromID(instanceId, (instance:PresentationInstance)=>{

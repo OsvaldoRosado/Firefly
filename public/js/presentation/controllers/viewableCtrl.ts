@@ -35,26 +35,24 @@ module PresentationApp.Controllers {
 
 					case "changeSlide":
 						this.slideUrl = order.data;
+						this.overlayActive = this.qaActive = false;
 						break;
 
 					case "showOverlay":
 						this.overlayUrl = order.data;
-						this.qaActive = false;
-						this.overlayIsVideo = false;
+						this.qaActive = this.overlayIsVideo = false;
 						this.overlayActive = true;
 						break;
 
 					case "showOverlayVideo":
 						this.overlayUrl = order.data;
 						this.qaActive = false;
-						this.overlayActive = true;
-						this.overlayIsVideo = true;
+						this.overlayActive = this.overlayIsVideo = true;
 						break;
 					
 					case "hideOverlay":
 						this.overlayUrl = undefined;
-						this.overlayActive = false;
-						this.overlayIsVideo = false;
+						this.overlayActive = this.overlayIsVideo = false;
 						break;
 
 					case "showQASidebar":

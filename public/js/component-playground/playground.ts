@@ -22,12 +22,12 @@ module Playground {
 			this.expandedIndex = 1;
 
 			this.testUser1 = {
-				id: 1,
+				id: "1",
 				name: "Keaton Brandt"
 			};
 
 			this.imageContent = {
-				id: 1,
+				id: "1",
 				type: FFContentType.Image,
 				submitter: this.testUser1,
 				timestamp: new Date().getTime(),
@@ -38,7 +38,7 @@ module Playground {
 			};
 			
 			this.imageContent2 = {
-				id: 2,
+				id: "2",
 				type: FFContentType.Image,
 				submitter: this.testUser1,
 				timestamp: new Date().getTime(),
@@ -50,7 +50,7 @@ module Playground {
 			}
 			
 			this.videoContent = {
-				id: 3,
+				id: "3",
 				type: FFContentType.Video,
 				submitter: this.testUser1,
 				timestamp: new Date().getTime(),
@@ -62,7 +62,7 @@ module Playground {
 			}
 			
 			this.questionContent = {
-				id: 4,
+				id: "4",
 				type: FFContentType.Question,
 				submitter: this.testUser1,
 				timestamp: new Date().getTime(),
@@ -74,7 +74,7 @@ module Playground {
 				`,
 				replies: [
 					{
-						id: 5,
+						id: "5",
 						type: FFContentType.QuestionResponse,
 						submitter: this.testUser1,
 						timestamp: new Date().getTime(),
@@ -85,7 +85,7 @@ module Playground {
 						`
 					},
 					{
-						id: 6,
+						id: "6",
 						type: FFContentType.QuestionResponse,
 						submitter: this.testUser1,
 						timestamp: new Date().getTime(),

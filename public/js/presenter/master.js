@@ -95,11 +95,14 @@ var Shared;
     var PostPresentationStateAPIRequest = (function (_super) {
         __extends(PostPresentationStateAPIRequest, _super);
         function PostPresentationStateAPIRequest($http, instanceId, curslide, curContentId) {
-            var url = "/postCurrentState/" + instanceId + "/" + curslide;
+            reqbody = {
+                instanceid: instanceId,
+                curslide: curslide
+            };
             if (curContentId != undefined) {
-                url += "/" + curContentId;
+                reqbody.curcontentid = curContentId;
             }
-            _super.call(this, $http, url, {});
+            _super.call(this, $http, "/postCurrentState", reqbody, APIMethod.POST);
         }
         return PostPresentationStateAPIRequest;
     })(Shared.APIRequest);
@@ -381,12 +384,12 @@ var PresenterApp;
                 this.scope = $scope;
                 this.http = $http;
                 var testUser1 = {
-                    id: 1,
+                    id: "1",
                     name: "Keaton Brandt"
                 };
                 this.content = [
                     {
-                        id: 1,
+                        id: "1",
                         type: FFContentType.Image,
                         submitter: testUser1,
                         timestamp: new Date().getTime(),
@@ -396,7 +399,7 @@ var PresenterApp;
                         link: "/images/dummy/view.jpg"
                     },
                     {
-                        id: 7,
+                        id: "7",
                         type: FFContentType.Image,
                         submitter: testUser1,
                         timestamp: new Date().getTime(),
@@ -407,7 +410,7 @@ var PresenterApp;
                         link: "/images/dummy/montreal.jpg"
                     },
                     {
-                        id: 3,
+                        id: "3",
                         type: FFContentType.Video,
                         submitter: testUser1,
                         timestamp: new Date().getTime(),
@@ -420,7 +423,7 @@ var PresenterApp;
                 ];
                 this.questions = [
                     {
-                        id: 4,
+                        id: "4",
                         type: FFContentType.Question,
                         submitter: testUser1,
                         timestamp: new Date().getTime(),
@@ -429,7 +432,7 @@ var PresenterApp;
                         text: "Is there any reason at all to use Model-View-Controller\n\t\t\t\t\t\tinstead of Model-View-ViewModel or whatever other sensible\n\t\t\t\t\t\talternative?\n\t\t\t\t\t",
                         replies: [
                             {
-                                id: 5,
+                                id: "5",
                                 type: FFContentType.QuestionResponse,
                                 submitter: testUser1,
                                 timestamp: new Date().getTime(),
@@ -438,7 +441,7 @@ var PresenterApp;
                                 text: "No. Why would the model directly update the view?\n\t\t\t\t\t\t\t\tThat makes no sense.\n\t\t\t\t\t\t\t"
                             },
                             {
-                                id: 6,
+                                id: "6",
                                 type: FFContentType.QuestionResponse,
                                 submitter: testUser1,
                                 timestamp: new Date().getTime(),
@@ -479,8 +482,15 @@ var PresenterApp;
                     });
                 }, function () { return _this.error = "Your presentation was not found!"; });
             }
+            SlideCtrl.prototype.changeInstanceContent = function (action, data) {
+                this.presWindows.commandAll(action, data);
+                var blob = JSON.stringify({ action: action, data: data });
+                blob = blob.replace(/\//g, "%2f");
+                new Shared.PostPresentationStateAPIRequest(this.http, this.presInstance.id, this.presInstance.currentSlide, blob).then(function () { });
+            };
             SlideCtrl.prototype.updateSlide = function () {
                 this.presWindows.commandAll("changeSlide", this.presentation.slideUrls[this.presInstance.currentSlide]);
+                this.currentOverlay = this.currentQA = undefined;
                 new Shared.PostPresentationStateAPIRequest(this.http, this.presInstance.id, this.presInstance.currentSlide).then(function () { });
             };
             SlideCtrl.prototype.startPresentation = function () {
@@ -513,26 +523,26 @@ var PresenterApp;
                     this.currentOverlay = content;
                     if (content.type == FFContentType.Image) {
                         var linkContent = content;
-                        this.presWindows.commandAll("showOverlay", linkContent.link);
+                        this.changeInstanceContent("showOverlay", linkContent.link);
                     }
                     else if (content.type == FFContentType.Video) {
                         var vidContent = content;
-                        this.presWindows.commandAll("showOverlayVideo", vidContent.embed);
+                        this.changeInstanceContent("showOverlayVideo", vidContent.embed);
                     }
                 }
                 else {
                     this.currentOverlay = undefined;
-                    this.presWindows.commandAll("hideOverlay", "");
+                    this.changeInstanceContent("hideOverlay", "");
                 }
             };
             SlideCtrl.prototype.toggleQASidebar = function (question) {
                 if (!this.currentQA || this.currentQA.text !== question.text) {
                     this.currentQA = question;
-                    this.presWindows.commandAll("showQASidebar", angular.toJson(question));
+                    this.changeInstanceContent("showQASidebar", angular.toJson(question));
                 }
                 else {
                     this.currentQA = undefined;
-                    this.presWindows.commandAll("hideQASidebar", "");
+                    this.changeInstanceContent("hideQASidebar", "");
                 }
             };
             SlideCtrl.prototype.endPresentation = function () {
