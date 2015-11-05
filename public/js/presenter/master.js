@@ -95,11 +95,14 @@ var Shared;
     var PostPresentationStateAPIRequest = (function (_super) {
         __extends(PostPresentationStateAPIRequest, _super);
         function PostPresentationStateAPIRequest($http, instanceId, curslide, curContentId) {
-            var url = "/postCurrentState/" + instanceId + "/" + curslide;
+            reqbody = {
+                instanceid: instanceId,
+                curslide: curslide
+            };
             if (curContentId != undefined) {
-                url += "/" + curContentId;
+                reqbody.curcontentid = curContentId;
             }
-            _super.call(this, $http, url, {});
+            _super.call(this, $http, "/postCurrentState", reqbody, APIMethod.POST);
         }
         return PostPresentationStateAPIRequest;
     })(Shared.APIRequest);
@@ -479,8 +482,15 @@ var PresenterApp;
                     });
                 }, function () { return _this.error = "Your presentation was not found!"; });
             }
+            SlideCtrl.prototype.changeInstanceContent = function (action, data) {
+                this.presWindows.commandAll(action, data);
+                var blob = JSON.stringify({ action: action, data: data });
+                blob = blob.replace(/\//g, "%2f");
+                new Shared.PostPresentationStateAPIRequest(this.http, this.presInstance.id, this.presInstance.currentSlide, blob).then(function () { });
+            };
             SlideCtrl.prototype.updateSlide = function () {
                 this.presWindows.commandAll("changeSlide", this.presentation.slideUrls[this.presInstance.currentSlide]);
+                this.currentOverlay = this.currentQA = undefined;
                 new Shared.PostPresentationStateAPIRequest(this.http, this.presInstance.id, this.presInstance.currentSlide).then(function () { });
             };
             SlideCtrl.prototype.startPresentation = function () {
@@ -513,26 +523,26 @@ var PresenterApp;
                     this.currentOverlay = content;
                     if (content.type == FFContentType.Image) {
                         var linkContent = content;
-                        this.presWindows.commandAll("showOverlay", linkContent.link);
+                        this.changeInstanceContent("showOverlay", linkContent.link);
                     }
                     else if (content.type == FFContentType.Video) {
                         var vidContent = content;
-                        this.presWindows.commandAll("showOverlayVideo", vidContent.embed);
+                        this.changeInstanceContent("showOverlayVideo", vidContent.embed);
                     }
                 }
                 else {
                     this.currentOverlay = undefined;
-                    this.presWindows.commandAll("hideOverlay", "");
+                    this.changeInstanceContent("hideOverlay", "");
                 }
             };
             SlideCtrl.prototype.toggleQASidebar = function (question) {
                 if (!this.currentQA || this.currentQA.text !== question.text) {
                     this.currentQA = question;
-                    this.presWindows.commandAll("showQASidebar", angular.toJson(question));
+                    this.changeInstanceContent("showQASidebar", angular.toJson(question));
                 }
                 else {
                     this.currentQA = undefined;
-                    this.presWindows.commandAll("hideQASidebar", "");
+                    this.changeInstanceContent("hideQASidebar", "");
                 }
             };
             SlideCtrl.prototype.endPresentation = function () {

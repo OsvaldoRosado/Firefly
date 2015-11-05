@@ -95,11 +95,14 @@ var Shared;
     var PostPresentationStateAPIRequest = (function (_super) {
         __extends(PostPresentationStateAPIRequest, _super);
         function PostPresentationStateAPIRequest($http, instanceId, curslide, curContentId) {
-            var url = "/postCurrentState/" + instanceId + "/" + curslide;
+            reqbody = {
+                instanceid: instanceId,
+                curslide: curslide
+            };
             if (curContentId != undefined) {
-                url += "/" + curContentId;
+                reqbody.curcontentid = curContentId;
             }
-            _super.call(this, $http, url, {});
+            _super.call(this, $http, "/postCurrentState", reqbody, APIMethod.POST);
         }
         return PostPresentationStateAPIRequest;
     })(Shared.APIRequest);
