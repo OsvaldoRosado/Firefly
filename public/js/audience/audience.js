@@ -95,11 +95,15 @@ var Shared;
     var PostPresentationStateAPIRequest = (function (_super) {
         __extends(PostPresentationStateAPIRequest, _super);
         function PostPresentationStateAPIRequest($http, instanceId, curslide, curContentId) {
-            var url = "/postCurrentState/" + instanceId + "/" + curslide;
+            var reqbody = {
+                instanceid: instanceId,
+                curslide: curslide,
+                curcontentid: undefined
+            };
             if (curContentId != undefined) {
-                url += "/" + curContentId;
+                reqbody.curcontentid = curContentId;
             }
-            _super.call(this, $http, url, {});
+            _super.call(this, $http, "/postCurrentState", reqbody, APIMethod.POST);
         }
         return PostPresentationStateAPIRequest;
     })(Shared.APIRequest);
@@ -398,6 +402,9 @@ var AudienceApp;
         AppController.prototype.managePresentationView = function () {
             var _this = this;
             this.windowManager.commandAll("changeSlide", this.presentation.slideUrls[this.presentationInstance.currentSlide]);
+            if (this.presentationInstance.currentContentId && this.presentationInstance.currentContentId != "") {
+                this.windowManager.postAll(this.presentationInstance.currentContentId.replace("%2f", "/"));
+            }
             window.setTimeout(function () {
                 new Shared.GetPresentationStateAPIRequest(_this.http, _this.presentationInstance.id).then(function (data, headers) {
                     _this.presentationInstance = data.data;
