@@ -42,6 +42,15 @@ module.exports = function(grunt) {
 				],
 				dest: 'public/js/presentation/templates.js',
 				options: ngtemplatesOpts
+			},
+			audience: {
+				src: [
+					'public/directives/ff-content/*.html',
+					'public/directives/ff-content-box/*.html',
+					'public/directives/ff-question/*.html'
+				],
+				dest: 'public/js/audience/templates.js',
+				options: ngtemplatesOpts
 			}
 		},
 		ts: {
@@ -80,6 +89,20 @@ module.exports = function(grunt) {
 					"public/js/component-playground/playground.ts"
 				]),
 				dest: "public/js/component-playground/playground.js",
+				options: {
+					sourceMap: false
+				}
+			},
+			audience: {
+				src: shared.concat([
+					"shared/data-types.ts",
+					"public/directives/collapse/*.ts",
+					"public/directives/ff-content/*.ts",
+					"public/directives/ff-content-box/*.ts",
+					"public/directives/ff-question/*.ts",
+					"public/js/audience/audience.ts"
+				]),
+				dest: "public/js/audience/audience.js",
 				options: {
 					sourceMap: false
 				}

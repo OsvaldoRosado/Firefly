@@ -23,7 +23,7 @@
 						<button ng-click="sc.startPresentation()" ng-show="!sc.presRunning" class="button-primary">Start presentation!</button>
 						<button ng-show="sc.presRunning && sc.presInstance.currentSlide > 0" ng-click="sc.prevSlide()" class="button-primary">Previous</button>
 						<button ng-show="sc.presRunning && sc.presInstance.currentSlide < sc.presentation.slideCount-1" ng-click="sc.nextSlide()" class="button-primary">Next</button>
-						<button ng-show="sc.presRunning" ng-click="sc.endPresentation()" class="button">End Presentation</button>
+						<button ng-show="sc.presRunning" ng-click="sc.endPresentation()" class="button endPresentation">End Presentation</button>
 					</div>
 				</div>
 				<div class="three columns container contentBoxColumn">

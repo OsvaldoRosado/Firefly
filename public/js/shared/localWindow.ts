@@ -1,4 +1,4 @@
-module PresenterApp{
+module Shared{
 
 	/**
 	 * A special version of the Window object that should only be used for

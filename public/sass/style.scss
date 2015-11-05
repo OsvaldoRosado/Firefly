@@ -97,6 +97,12 @@ hr {
 		div.intro-text {
 			padding: 0 0 0 1.5em;
 		}
+		input.nobox {
+			color: white;
+			border: none;
+			text-align: left;
+			font-style: normal;
+		}
 	}
 
 	div.getStarted {
@@ -164,6 +170,11 @@ footer {
 				}
 			}
 		}
+	}
+
+	&.accessLink {
+		height: 23px;
+		font-size: 16px;
 	}
 }
 
@@ -499,6 +510,11 @@ body.presenter {
 				display: block;
 				margin-bottom: 10px;
 			}
+
+			button.endPresentation{
+				background-color: #fff;
+				float: right;
+			}
 		}
 
 		div.contentBoxColumn {
@@ -676,7 +692,7 @@ div.uploadPresentation {
 			&:last-child {
 				margin-bottom: 0;
 			}
-			a {
+			a,input {
 				width: 100%;
 				display: inline-block;
 				color: #FFFFFF;

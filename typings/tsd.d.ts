@@ -6,3 +6,4 @@
 /// <reference path="form-data/form-data.d.ts" />
 /// <reference path="mongodb/mongodb.d.ts" />
 /// <reference path="passport/passport.d.ts" />
+/// <reference path="body-parser/body-parser.d.ts" />

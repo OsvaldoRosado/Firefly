@@ -7,3 +7,4 @@ export import GetCurrentUserInfo = require("./GetCurrentUserInfo");
 export import GeneratePresentationInstance = require("./GeneratePresentationInstance");
 export import PostCurrentState = require("./PostCurrentState");
 export import GetCurrentState = require("./GetCurrentState");
+export import GenerateShortInstanceURL = require("./GenerateShortInstanceURL");

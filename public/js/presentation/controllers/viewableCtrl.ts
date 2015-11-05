@@ -14,11 +14,15 @@ module PresentationApp.Controllers {
 		scope: ng.IScope;
 
 		slideUrl: string;
+
 		overlayUrl: string;
 		overlayActive: boolean;
 		overlayIsVideo: boolean;
+
 		question: FFQuestion;
 		qaActive: boolean;
+		
+		accessLink: string;
 
 		static $inject = ["$scope"];
 		constructor($scope: ng.IScope){
@@ -31,26 +35,24 @@ module PresentationApp.Controllers {
 
 					case "changeSlide":
 						this.slideUrl = order.data;
+						this.overlayActive = this.qaActive = false;
 						break;
 
 					case "showOverlay":
 						this.overlayUrl = order.data;
-						this.qaActive = false;
-						this.overlayIsVideo = false;
+						this.qaActive = this.overlayIsVideo = false;
 						this.overlayActive = true;
 						break;
 
 					case "showOverlayVideo":
 						this.overlayUrl = order.data;
 						this.qaActive = false;
-						this.overlayActive = true;
-						this.overlayIsVideo = true;
+						this.overlayActive = this.overlayIsVideo = true;
 						break;
 					
 					case "hideOverlay":
 						this.overlayUrl = undefined;
-						this.overlayActive = false;
-						this.overlayIsVideo = false;
+						this.overlayActive = this.overlayIsVideo = false;
 						break;
 
 					case "showQASidebar":
@@ -62,6 +64,10 @@ module PresentationApp.Controllers {
 					case "hideQASidebar":
 						this.question = undefined;
 						this.qaActive = false;
+						break;
+
+					case "showAccessLink":
+						this.accessLink = order.data;
 						break;
 				}
 				$scope.$apply();

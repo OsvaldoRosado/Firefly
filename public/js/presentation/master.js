@@ -95,11 +95,15 @@ var Shared;
     var PostPresentationStateAPIRequest = (function (_super) {
         __extends(PostPresentationStateAPIRequest, _super);
         function PostPresentationStateAPIRequest($http, instanceId, curslide, curContentId) {
-            var url = "/postCurrentState/" + instanceId + "/" + curslide;
+            var reqbody = {
+                instanceid: instanceId,
+                curslide: curslide,
+                curcontentid: undefined
+            };
             if (curContentId != undefined) {
-                url += "/" + curContentId;
+                reqbody.curcontentid = curContentId;
             }
-            _super.call(this, $http, url, {});
+            _super.call(this, $http, "/postCurrentState", reqbody, APIMethod.POST);
         }
         return PostPresentationStateAPIRequest;
     })(Shared.APIRequest);
@@ -112,6 +116,49 @@ var Shared;
         return GetPresentationStateAPIRequest;
     })(Shared.APIRequest);
     Shared.GetPresentationStateAPIRequest = GetPresentationStateAPIRequest;
+    var GenerateShortInstanceURLAPIRequest = (function (_super) {
+        __extends(GenerateShortInstanceURLAPIRequest, _super);
+        function GenerateShortInstanceURLAPIRequest($http, instanceId) {
+            _super.call(this, $http, "/GenerateShortInstanceURL/" + instanceId, {});
+        }
+        return GenerateShortInstanceURLAPIRequest;
+    })(Shared.APIRequest);
+    Shared.GenerateShortInstanceURLAPIRequest = GenerateShortInstanceURLAPIRequest;
+})(Shared || (Shared = {}));
+var Shared;
+(function (Shared) {
+    var LocalWindow = (function () {
+        function LocalWindow(wnd) {
+            this.theWindow = wnd;
+        }
+        LocalWindow.prototype.postMessage = function (data) {
+            this.theWindow.postMessage(data, Config.HOST);
+        };
+        LocalWindow.prototype.command = function (action, data) {
+            this.postMessage(JSON.stringify({ action: action, data: data }));
+        };
+        LocalWindow.prototype.close = function () {
+            this.theWindow.close();
+        };
+        return LocalWindow;
+    })();
+    Shared.LocalWindow = LocalWindow;
+    var LocalWindowManager = (function () {
+        function LocalWindowManager(theWindows) {
+            this.windows = theWindows.map(function (wnd) { return new LocalWindow(wnd); });
+        }
+        LocalWindowManager.prototype.postAll = function (data) {
+            this.windows.forEach(function (wnd) { return wnd.postMessage(data); });
+        };
+        LocalWindowManager.prototype.commandAll = function (action, data) {
+            this.windows.forEach(function (wnd) { return wnd.command(action, data); });
+        };
+        LocalWindowManager.prototype.closeAll = function () {
+            this.windows.forEach(function (wnd) { return wnd.close(); });
+        };
+        return LocalWindowManager;
+    })();
+    Shared.LocalWindowManager = LocalWindowManager;
 })(Shared || (Shared = {}));
 /// <reference path="../../js/typings/angular/angular.d.ts" />
 var Shared;
@@ -345,23 +392,21 @@ var PresentationApp;
                     switch (order.action) {
                         case "changeSlide":
                             _this.slideUrl = order.data;
+                            _this.overlayActive = _this.qaActive = false;
                             break;
                         case "showOverlay":
                             _this.overlayUrl = order.data;
-                            _this.qaActive = false;
-                            _this.overlayIsVideo = false;
+                            _this.qaActive = _this.overlayIsVideo = false;
                             _this.overlayActive = true;
                             break;
                         case "showOverlayVideo":
                             _this.overlayUrl = order.data;
                             _this.qaActive = false;
-                            _this.overlayActive = true;
-                            _this.overlayIsVideo = true;
+                            _this.overlayActive = _this.overlayIsVideo = true;
                             break;
                         case "hideOverlay":
                             _this.overlayUrl = undefined;
-                            _this.overlayActive = false;
-                            _this.overlayIsVideo = false;
+                            _this.overlayActive = _this.overlayIsVideo = false;
                             break;
                         case "showQASidebar":
                             _this.question = JSON.parse(order.data);
@@ -371,6 +416,9 @@ var PresentationApp;
                         case "hideQASidebar":
                             _this.question = undefined;
                             _this.qaActive = false;
+                            break;
+                        case "showAccessLink":
+                            _this.accessLink = order.data;
                             break;
                     }
                     $scope.$apply();
