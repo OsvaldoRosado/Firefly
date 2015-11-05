@@ -1,15 +1,27 @@
 $(function() {
+	
+	$.get("/api/getCurrentUserInfo",function(data) {
+		data = JSON.parse(data);
+		if(!data.success){
+			window.location.replace("/");
+		}else{
+			$(".username").text(data.data.name);
+		}
+	});
+	
 	$('form#uploadForm').submit(function(e) {
 		e.preventDefault();
 		var formData = new FormData($('form#uploadForm')[0]);
 
 		$.ajax({
-			url: '/api/UploadPresentation',
+			url: '/api/uploadPresentation',
 			type: 'POST',
 			xhr: function() {
 				var presXhr = $.ajaxSettings.xhr();
 				if (presXhr.upload) {
 					presXhr.upload.addEventListener('progress', progressHandler, false);
+					$(".upstart").val("Please wait...");
+					$(".upstart").attr("disabled","disabled");
 				}
 				return presXhr;
 			},
