@@ -34,7 +34,7 @@ module PresenterApp.Controllers {
 					this.presentation = result.data;
 
 					new Shared.GeneratePresentationInstanceAPIRequest($http, id)
-						.then((result: ng.IHttpPromiseCallback<FFPresentationInstance>) => {
+						.then((result: ng.IHttpPromiseCallbackArg<FFPresentationInstance>) => {
 							this.presInstance = result.data;
 						});
 
@@ -66,7 +66,7 @@ module PresenterApp.Controllers {
 
 				new Shared.GenerateShortInstanceURLAPIRequest(
 					this.http, this.presInstance.id
-				).then((result: ng.IHttpPromiseCallback<string>) =>
+				).then((result: ng.IHttpPromiseCallbackArg<string>) =>
 					this.presWindows.commandAll("showAccessLink", result.data
 				));
 				

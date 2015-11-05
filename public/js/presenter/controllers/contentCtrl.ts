@@ -28,13 +28,13 @@ module PresenterApp.Controllers {
 
 			// Test stuff, all temporary
 			var testUser1 = {
-				id: 1,
+				id: "1",
 				name: "Keaton Brandt"
 			};
 
 			this.content = [
 				<FFGenericContent> {
-					id: 1,
+					id: "1",
 					type: FFContentType.Image,
 					submitter: testUser1,
 					timestamp: new Date().getTime(),
@@ -44,7 +44,7 @@ module PresenterApp.Controllers {
 					link: "/images/dummy/view.jpg"
 				},
 				<FFGenericContent> {
-					id: 7,
+					id: "7",
 					type: FFContentType.Image,
 					submitter: testUser1,
 					timestamp: new Date().getTime(),
@@ -55,7 +55,7 @@ module PresenterApp.Controllers {
 					link: "/images/dummy/montreal.jpg"
 				},
 				<FFGenericContent> {
-					id: 3,
+					id: "3",
 					type: FFContentType.Video,
 					submitter: testUser1,
 					timestamp: new Date().getTime(),
@@ -70,7 +70,7 @@ module PresenterApp.Controllers {
 			// Test questions
 			this.questions = [
 				{
-					id: 4,
+					id: "4",
 					type: FFContentType.Question,
 					submitter: testUser1,
 					timestamp: new Date().getTime(),
@@ -82,7 +82,7 @@ module PresenterApp.Controllers {
 					`,
 					replies: [
 						{
-							id: 5,
+							id: "5",
 							type: FFContentType.QuestionResponse,
 							submitter: testUser1,
 							timestamp: new Date().getTime(),
@@ -93,7 +93,7 @@ module PresenterApp.Controllers {
 							`
 						},
 						{
-							id: 6,
+							id: "6",
 							type: FFContentType.QuestionResponse,
 							submitter: testUser1,
 							timestamp: new Date().getTime(),

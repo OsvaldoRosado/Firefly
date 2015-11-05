@@ -381,12 +381,12 @@ var PresenterApp;
                 this.scope = $scope;
                 this.http = $http;
                 var testUser1 = {
-                    id: 1,
+                    id: "1",
                     name: "Keaton Brandt"
                 };
                 this.content = [
                     {
-                        id: 1,
+                        id: "1",
                         type: FFContentType.Image,
                         submitter: testUser1,
                         timestamp: new Date().getTime(),
@@ -396,7 +396,7 @@ var PresenterApp;
                         link: "/images/dummy/view.jpg"
                     },
                     {
-                        id: 7,
+                        id: "7",
                         type: FFContentType.Image,
                         submitter: testUser1,
                         timestamp: new Date().getTime(),
@@ -407,7 +407,7 @@ var PresenterApp;
                         link: "/images/dummy/montreal.jpg"
                     },
                     {
-                        id: 3,
+                        id: "3",
                         type: FFContentType.Video,
                         submitter: testUser1,
                         timestamp: new Date().getTime(),
@@ -420,7 +420,7 @@ var PresenterApp;
                 ];
                 this.questions = [
                     {
-                        id: 4,
+                        id: "4",
                         type: FFContentType.Question,
                         submitter: testUser1,
                         timestamp: new Date().getTime(),
@@ -429,7 +429,7 @@ var PresenterApp;
                         text: "Is there any reason at all to use Model-View-Controller\n\t\t\t\t\t\tinstead of Model-View-ViewModel or whatever other sensible\n\t\t\t\t\t\talternative?\n\t\t\t\t\t",
                         replies: [
                             {
-                                id: 5,
+                                id: "5",
                                 type: FFContentType.QuestionResponse,
                                 submitter: testUser1,
                                 timestamp: new Date().getTime(),
@@ -438,7 +438,7 @@ var PresenterApp;
                                 text: "No. Why would the model directly update the view?\n\t\t\t\t\t\t\t\tThat makes no sense.\n\t\t\t\t\t\t\t"
                             },
                             {
-                                id: 6,
+                                id: "6",
                                 type: FFContentType.QuestionResponse,
                                 submitter: testUser1,
                                 timestamp: new Date().getTime(),
