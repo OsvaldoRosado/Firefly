@@ -219,6 +219,65 @@ var Shared;
     })(Directives = Shared.Directives || (Shared.Directives = {}));
 })(Shared || (Shared = {}));
 /// <reference path="../../../shared/data-types.ts" />
+/// <reference path="../../js/typings/angular/angular.d.ts" />
+var Shared;
+(function (Shared) {
+    var Directives;
+    (function (Directives) {
+        function ffContent() {
+            return {
+                restrict: "E",
+                scope: true,
+                bindToController: {
+                    content: "=",
+                    thumbnail: "="
+                },
+                controller: Shared.Controllers.FFContentViewController,
+                controllerAs: "cview",
+                replace: false,
+                templateUrl: "public/directives/ff-content/template.html"
+            };
+        }
+        Directives.ffContent = ffContent;
+    })(Directives = Shared.Directives || (Shared.Directives = {}));
+})(Shared || (Shared = {}));
+var Shared;
+(function (Shared) {
+    var Controllers;
+    (function (Controllers) {
+        var FFContentViewController = (function () {
+            function FFContentViewController($scope) {
+                this.thumbnailCutoffWidth = 150;
+                this.updateRenderDetails();
+                $scope.$watch(function () { return this.content; }, this.updateRenderDetails.bind(this));
+            }
+            FFContentViewController.prototype.getThumbnail = function () {
+                return "http://img.youtube.com/vi/" + this.content.youtubeId + "/0.jpg";
+            };
+            FFContentViewController.prototype.getEmbedCode = function () {
+                return "http://www.youtube.com/embed/" + this.content.youtubeId;
+            };
+            FFContentViewController.prototype.updateRenderDetails = function () {
+                if (this.content == undefined) {
+                    return;
+                }
+                this.isImage = this.content.type == FFContentType.Image;
+                this.isVideo = this.content.type == FFContentType.Video;
+                if (this.content.youtubeId !== undefined) {
+                    this.renderYouTube(this.content);
+                }
+            };
+            FFContentViewController.prototype.renderYouTube = function (content) {
+                content.thumbnail = this.getThumbnail();
+                content.embed = this.getEmbedCode();
+            };
+            FFContentViewController.$inject = ["$scope"];
+            return FFContentViewController;
+        })();
+        Controllers.FFContentViewController = FFContentViewController;
+    })(Controllers = Shared.Controllers || (Shared.Controllers = {}));
+})(Shared || (Shared = {}));
+/// <reference path="../../../shared/data-types.ts" />
 /// <reference path="../../js/shared/api.ts" />
 /// <reference path="../../js/typings/angular/angular.d.ts" />
 var Shared;
@@ -299,65 +358,6 @@ var Shared;
 (function (Shared) {
     var Directives;
     (function (Directives) {
-        function ffContent() {
-            return {
-                restrict: "E",
-                scope: true,
-                bindToController: {
-                    content: "=",
-                    thumbnail: "="
-                },
-                controller: Shared.Controllers.FFContentViewController,
-                controllerAs: "cview",
-                replace: false,
-                templateUrl: "public/directives/ff-content/template.html"
-            };
-        }
-        Directives.ffContent = ffContent;
-    })(Directives = Shared.Directives || (Shared.Directives = {}));
-})(Shared || (Shared = {}));
-var Shared;
-(function (Shared) {
-    var Controllers;
-    (function (Controllers) {
-        var FFContentViewController = (function () {
-            function FFContentViewController($scope) {
-                this.thumbnailCutoffWidth = 150;
-                this.updateRenderDetails();
-                $scope.$watch(function () { return this.content; }, this.updateRenderDetails.bind(this));
-            }
-            FFContentViewController.prototype.getThumbnail = function () {
-                return "http://img.youtube.com/vi/" + this.content.youtubeId + "/0.jpg";
-            };
-            FFContentViewController.prototype.getEmbedCode = function () {
-                return "http://www.youtube.com/embed/" + this.content.youtubeId;
-            };
-            FFContentViewController.prototype.updateRenderDetails = function () {
-                if (this.content == undefined) {
-                    return;
-                }
-                this.isImage = this.content.type == FFContentType.Image;
-                this.isVideo = this.content.type == FFContentType.Video;
-                if (this.content.youtubeId !== undefined) {
-                    this.renderYouTube(this.content);
-                }
-            };
-            FFContentViewController.prototype.renderYouTube = function (content) {
-                content.thumbnail = this.getThumbnail();
-                content.embed = this.getEmbedCode();
-            };
-            FFContentViewController.$inject = ["$scope"];
-            return FFContentViewController;
-        })();
-        Controllers.FFContentViewController = FFContentViewController;
-    })(Controllers = Shared.Controllers || (Shared.Controllers = {}));
-})(Shared || (Shared = {}));
-/// <reference path="../../../shared/data-types.ts" />
-/// <reference path="../../js/typings/angular/angular.d.ts" />
-var Shared;
-(function (Shared) {
-    var Directives;
-    (function (Directives) {
         function ffQuestion() {
             return {
                 restrict: "E",
@@ -372,220 +372,52 @@ var Shared;
         Directives.ffQuestion = ffQuestion;
     })(Directives = Shared.Directives || (Shared.Directives = {}));
 })(Shared || (Shared = {}));
-/// <reference path="../../../../shared/data-types.ts" />
-/// <reference path="../../typings/angular/angular.d.ts" />
-/// <reference path="../../typings/firefly/firefly.d.ts" />
-/// <reference path="../../shared/config.ts" />
-var PresenterApp;
-(function (PresenterApp) {
-    var Controllers;
-    (function (Controllers) {
-        var ContentCtrl = (function () {
-            function ContentCtrl($scope, $http) {
-                this.scope = $scope;
-                this.http = $http;
-                var testUser1 = {
-                    id: "1",
-                    name: "Keaton Brandt"
-                };
-                var testUser2 = {
-                    id: "2",
-                    name: "Liam Jones"
-                };
-                this.content = [
-                    {
-                        id: "1",
-                        type: FFContentType.Image,
-                        submitter: testUser1,
-                        timestamp: new Date().getTime(),
-                        upvotes: 3,
-                        flagged: 0,
-                        filename: "crcCards.png",
-                        text: "This CRC card application looks useful.",
-                        link: "/images/dummy/crcCards.jpg"
-                    },
-                    {
-                        id: "7",
-                        type: FFContentType.Image,
-                        submitter: testUser2,
-                        timestamp: new Date().getTime(),
-                        upvotes: 0,
-                        flagged: 0,
-                        filename: "complicatedClassDiagram.png",
-                        text: "This class diagram seems like an example of one that's too complicated.",
-                        link: "/images/dummy/complicatedClassDiagram.png"
-                    },
-                    {
-                        id: "3",
-                        type: FFContentType.Video,
-                        submitter: testUser2,
-                        timestamp: new Date().getTime(),
-                        upvotes: 0,
-                        flagged: 0,
-                        title: "UML 2.0 Tutorial",
-                        youtubeId: "OkC7HKtiZC0",
-                        channelTitle: "Derek Banas"
-                    }
-                ];
-                this.questions = [
-                    {
-                        id: "4",
-                        type: FFContentType.Question,
-                        submitter: testUser1,
-                        timestamp: new Date().getTime(),
-                        upvotes: 3,
-                        flagged: 0,
-                        text: "What would be a good number of collaborators to have?",
-                        replies: [
-                            {
-                                id: "5",
-                                type: FFContentType.QuestionResponse,
-                                submitter: testUser2,
-                                timestamp: new Date().getTime(),
-                                upvotes: 0,
-                                flagged: 0,
-                                text: "I think it might depend on how complicated your overall class structure is."
-                            },
-                            {
-                                id: "6",
-                                type: FFContentType.QuestionResponse,
-                                submitter: testUser2,
-                                timestamp: new Date().getTime(),
-                                upvotes: 0,
-                                flagged: 0,
-                                text: "It should fit on the card!"
-                            }
-                        ]
-                    },
-                    {
-                        id: "8",
-                        type: FFContentType.Question,
-                        submitter: testUser1,
-                        timestamp: new Date().getTime(),
-                        upvotes: 1,
-                        flagged: 0,
-                        text: "Is it okay if I can't fit the responsibilities of my class on one side of the card?",
-                        replies: [
-                            {
-                                id: "9",
-                                type: FFContentType.QuestionResponse,
-                                submitter: testUser2,
-                                timestamp: new Date().getTime(),
-                                upvotes: 0,
-                                flagged: 0,
-                                text: "That probably means your class is doing too much! It should only have a single responsibility."
-                            }
-                        ]
-                    }
-                ];
+/// <reference path="../../../shared/data-types.ts" />
+/// <reference path="../shared/api.ts" />
+/// <reference path="../shared/localWindow.ts" />
+/// <reference path="../../js/typings/angular/angular.d.ts" />
+var AudienceApp;
+(function (AudienceApp) {
+    var AppController = (function () {
+        function AppController($scope, $http) {
+            var _this = this;
+            this.scope = $scope;
+            this.http = $http;
+            var id = window.location.hash.replace("#", "");
+            if (id == "") {
+                window.location.href = "/";
+                return;
             }
-            ContentCtrl.$inject = ["$scope", "$http"];
-            return ContentCtrl;
-        })();
-        Controllers.ContentCtrl = ContentCtrl;
-    })(Controllers = PresenterApp.Controllers || (PresenterApp.Controllers = {}));
-})(PresenterApp || (PresenterApp = {}));
-/// <reference path="../../shared/api.ts" />
-/// <reference path="../../shared/localWindow.ts" />
-/// <reference path="../../../../shared/data-types.ts" />
-var PresenterApp;
-(function (PresenterApp) {
-    var Controllers;
-    (function (Controllers) {
-        var SlideCtrl = (function () {
-            function SlideCtrl($scope, $http) {
-                var _this = this;
-                this.scope = $scope;
-                this.http = $http;
-                this.presRunning = false;
-                var id = window.location.hash.substr(1);
-                new Shared.GetPresentationAPIRequest($http, id)
-                    .then(function (result) {
-                    _this.presentation = result.data;
-                    new Shared.GeneratePresentationInstanceAPIRequest($http, id)
-                        .then(function (result) {
-                        _this.presInstance = result.data;
-                    });
-                }, function () { return _this.error = "Your presentation was not found!"; });
+            new Shared.GetPresentationStateAPIRequest($http, id).then(function (data, headers) {
+                _this.presentationInstance = data.data;
+                new Shared.GetPresentationAPIRequest($http, _this.presentationInstance.presentationId).then(function (data, headers) {
+                    _this.presentation = data.data;
+                    _this.managePresentationView();
+                });
+            });
+            var presPreview = document.getElementById("presPreview");
+            presPreview.style.height = Math.round(presPreview.offsetWidth * 9 / 16) + "px";
+            this.windowManager = new Shared.LocalWindowManager([presPreview.contentWindow]);
+        }
+        AppController.prototype.managePresentationView = function () {
+            var _this = this;
+            this.windowManager.commandAll("changeSlide", this.presentation.slideUrls[this.presentationInstance.currentSlide]);
+            if (this.presentationInstance.currentContentId && this.presentationInstance.currentContentId != "") {
+                this.windowManager.postAll(this.presentationInstance.currentContentId.replace("%2f", "/"));
             }
-            SlideCtrl.prototype.changeInstanceContent = function (action, data) {
-                this.presWindows.commandAll(action, data);
-                var blob = JSON.stringify({ action: action, data: data });
-                blob = blob.replace(/\//g, "%2f");
-                new Shared.PostPresentationStateAPIRequest(this.http, this.presInstance.id, this.presInstance.currentSlide, blob).then(function () { });
-            };
-            SlideCtrl.prototype.updateSlide = function () {
-                this.presWindows.commandAll("changeSlide", this.presentation.slideUrls[this.presInstance.currentSlide]);
-                this.currentOverlay = this.currentQA = undefined;
-                new Shared.PostPresentationStateAPIRequest(this.http, this.presInstance.id, this.presInstance.currentSlide).then(function () { });
-            };
-            SlideCtrl.prototype.startPresentation = function () {
-                var _this = this;
-                this.presRunning = true;
-                var presPreview = document.getElementById("presPreview");
-                this.presWindows = new Shared.LocalWindowManager([
-                    window.open("presentation.html", this.presentation.name, "width=802,height=450"),
-                    presPreview.contentWindow
-                ]);
-                setTimeout(function () {
-                    _this.updateSlide();
-                    new Shared.GenerateShortInstanceURLAPIRequest(_this.http, _this.presInstance.id).then(function (result) {
-                        return _this.presWindows.commandAll("showAccessLink", result.data);
-                    });
-                    presPreview.style.height =
-                        Math.round(presPreview.offsetWidth * 9 / 16) + "px";
-                }, 1000);
-            };
-            SlideCtrl.prototype.prevSlide = function () {
-                this.presInstance.currentSlide--;
-                this.updateSlide();
-            };
-            SlideCtrl.prototype.nextSlide = function () {
-                this.presInstance.currentSlide++;
-                this.updateSlide();
-            };
-            SlideCtrl.prototype.toggleOverlay = function (content) {
-                if (!this.currentOverlay || content.id !== this.currentOverlay.id) {
-                    this.currentOverlay = content;
-                    if (content.type == FFContentType.Image) {
-                        var linkContent = content;
-                        this.changeInstanceContent("showOverlay", linkContent.link);
-                    }
-                    else if (content.type == FFContentType.Video) {
-                        var vidContent = content;
-                        this.changeInstanceContent("showOverlayVideo", vidContent.embed);
-                    }
-                }
-                else {
-                    this.currentOverlay = undefined;
-                    this.changeInstanceContent("hideOverlay", "");
-                }
-            };
-            SlideCtrl.prototype.toggleQASidebar = function (question) {
-                if (!this.currentQA || this.currentQA.text !== question.text) {
-                    this.currentQA = question;
-                    this.changeInstanceContent("showQASidebar", angular.toJson(question));
-                }
-                else {
-                    this.currentQA = undefined;
-                    this.changeInstanceContent("hideQASidebar", "");
-                }
-            };
-            SlideCtrl.prototype.endPresentation = function () {
-                this.presRunning = false;
-                this.presWindows.closeAll();
-            };
-            SlideCtrl.$inject = ["$scope", "$http"];
-            return SlideCtrl;
-        })();
-        Controllers.SlideCtrl = SlideCtrl;
-    })(Controllers = PresenterApp.Controllers || (PresenterApp.Controllers = {}));
-})(PresenterApp || (PresenterApp = {}));
-var PresenterApp;
-(function (PresenterApp) {
-    angular.module("presenter", [])
+            window.setTimeout(function () {
+                new Shared.GetPresentationStateAPIRequest(_this.http, _this.presentationInstance.id).then(function (data, headers) {
+                    _this.presentationInstance = data.data;
+                    _this.managePresentationView();
+                });
+            }, 300);
+        };
+        AppController.$inject = ["$scope", "$http"];
+        return AppController;
+    })();
+    var app = angular.module("audience", [])
         .controller(Shared.Controllers)
-        .controller(PresenterApp.Controllers)
+        .controller("AppController", AppController)
         .directive(Shared.Directives)
         .filter("equals", function () {
         return function (value, equals) { return value == equals; };
@@ -593,4 +425,4 @@ var PresenterApp;
         .config(["$sceProvider", function ($sceProvider) {
             $sceProvider.enabled(false);
         }]);
-})(PresenterApp || (PresenterApp = {}));
+})(AudienceApp || (AudienceApp = {}));
