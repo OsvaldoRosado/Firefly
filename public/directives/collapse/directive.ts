@@ -11,8 +11,8 @@ module Shared {
 module Shared.Directives {
 
   /**
-    <ff-content> intelligently displays raw user submitted content. It changes format based
-    on the size of the box, condensing down to an icon if necessary.
+    <collapse> contains content that can be hidden or shown at runtime and
+    adds a little animation.
   */
   export function collapse(): ng.IDirective {
     return {

@@ -68,10 +68,20 @@ module PresentationApp.Controllers {
 
 					case "showAccessLink":
 						this.accessLink = order.data;
+						
+						// Make sure the box is updated to footer size
+						setTimeout(function(){
+							window.dispatchEvent(new Event("updateFloatingContent"));
+						},10);
 						break;
 				}
 				$scope.$apply();
 			});
+		}
+		
+		// Show an overlay
+		showOverlay(url: string, isVideo: boolean) {
+			
 		}
 	}
 }

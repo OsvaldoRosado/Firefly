@@ -1,0 +1,119 @@
+@import "style.scss";
+@import '../directives/floating-content/_style.scss';
+
+html, body {
+	background-color: $background-dark;
+	overflow: hidden;
+}
+
+footer {
+	text-align: left;
+	color: white;
+	font-size: 16px;
+	position: absolute;
+	padding: 15px;
+	bottom: 0px;
+	width: 100%;
+	height: 16px;
+	
+	a {
+		color: white;
+		text-decoration: none;
+		
+		b {
+			font-weight: 900;
+			letter-spacing: 1px;
+		}
+	}
+}
+
+
+// Presentation Main Page
+body.presentation {
+	background: $background-dark;
+	margin-bottom: 0;
+
+	.row{
+		position: absolute;
+		top: 0; bottom: 0;
+		left: 0; right: 0;
+		
+		&.hasFooter {
+			bottom: 46px;
+		}
+	}
+
+	.slide{
+		height: 100%;
+		position: absolute;
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-position: center;
+	}
+
+	.overlayContainer{
+		width: 100%;
+		text-align: center;
+	}
+
+	.overlay{
+		position: absolute;
+		margin: 0 auto;
+		left: 0;
+		right: 0;
+	}
+
+	img.overlay{
+		max-width: 100%;
+		max-height: 98%;
+	}
+
+	iframe.overlay{
+		width: 100%;
+		height: 98%;
+	}
+
+	aside {
+		margin: 0;
+		padding: 0;
+		width: 17.333333% !important;
+
+		div.contentBox {
+			color: $content-text-darkest;
+			padding: 10px 10px 0;
+			max-height: 99%;
+
+			div.ffContentBox, h1, h3, p {
+				margin-bottom: 10px;
+			}
+			
+			p, h3 {
+				color: $content-text-darkest;
+			}
+
+			h1 {
+				color: $callout-light;
+			}
+
+			@media(max-width: 800px) {
+				overflow: hidden;
+
+				div.ffContentBox, h1, h3, p {
+					margin-bottom: 1px;
+				}
+
+				h1 {
+					font-size: 8px;
+				}
+
+				h3 {
+					font-size: 6px;
+				}
+
+				p, cite {
+					font-size: 4px;
+				}
+			}
+		}
+	}
+}

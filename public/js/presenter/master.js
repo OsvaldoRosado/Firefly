@@ -375,6 +375,100 @@ var Shared;
         Directives.ffQuestion = ffQuestion;
     })(Directives = Shared.Directives || (Shared.Directives = {}));
 })(Shared || (Shared = {}));
+/// <reference path="../../../shared/data-types.ts" />
+/// <reference path="../../js/typings/angular/angular.d.ts" />
+/// <reference path="../../js/typings/angular/angular.d.ts" />
+var Shared;
+(function (Shared) {
+    var Directives;
+    (function (Directives) {
+        function floatingContent() {
+            return {
+                restrict: "E",
+                scope: {
+                    floatX: "@",
+                    floatY: "@",
+                    contentWidth: "@",
+                    contentHeight: "@",
+                    size: "@"
+                },
+                replace: false,
+                transclude: true,
+                template: "<ng-transclude></ng-transclude>",
+                controller: Shared.Controllers.FloatingContentController,
+                controllerAs: "cfv",
+                link: function (scope, jq, attrs) {
+                    var container = scope['container'] = jq[0];
+                    var element = container.children[0];
+                    if (!element) {
+                        return;
+                    }
+                    element = element.children[0];
+                    if (!element) {
+                        return;
+                    }
+                    scope['element'] = element;
+                    var parent = container.parentElement;
+                    if (!parent) {
+                        return;
+                    }
+                    function layout() {
+                        var floatX = parseFloat(scope['floatX']);
+                        if (floatX > 1) {
+                            floatX /= 100;
+                        }
+                        var floatY = parseFloat(scope['floatY']);
+                        if (floatY > 1) {
+                            floatY /= 100;
+                        }
+                        var elementWidth = parseInt(scope['contentWidth']);
+                        var elementHeight = parseInt(scope['contentHeight']);
+                        var parentSize = parent.getBoundingClientRect();
+                        if (scope['size']) {
+                            var scale = parseFloat(scope['size']);
+                            var elementAspect = elementWidth / elementHeight;
+                            var parentAspect = parentSize.width / parentSize.height;
+                            if (elementAspect > parentAspect) {
+                                elementWidth = parentSize.width * scale;
+                                elementHeight = elementWidth / elementAspect;
+                            }
+                            else {
+                                elementHeight = parentSize.height * scale;
+                                elementWidth = elementHeight * elementAspect;
+                            }
+                        }
+                        element.style.width = elementWidth + 'px';
+                        element.style.height = elementHeight + 'px';
+                        container.style.left = (parentSize.width - elementWidth) * floatX + "px";
+                        container.style.top = (parentSize.height - elementHeight) * floatY + "px";
+                    }
+                    window.addEventListener("resize", layout);
+                    window.addEventListener("updateFloatingContent", layout);
+                    scope.$watch("floatX", layout);
+                    scope.$watch("floatY", layout);
+                    scope.$watch("contentWidth", layout);
+                    scope.$watch("contentHeight", layout);
+                    scope.$watch("size", layout);
+                }
+            };
+        }
+        Directives.floatingContent = floatingContent;
+    })(Directives = Shared.Directives || (Shared.Directives = {}));
+})(Shared || (Shared = {}));
+var Shared;
+(function (Shared) {
+    var Controllers;
+    (function (Controllers) {
+        var FloatingContentController = (function () {
+            function FloatingContentController($scope) {
+                this.element = $scope.element;
+            }
+            FloatingContentController.$inject = ["$scope"];
+            return FloatingContentController;
+        })();
+        Controllers.FloatingContentController = FloatingContentController;
+    })(Controllers = Shared.Controllers || (Shared.Controllers = {}));
+})(Shared || (Shared = {}));
 /// <reference path="../../../../shared/data-types.ts" />
 /// <reference path="../../typings/angular/angular.d.ts" />
 /// <reference path="../../typings/firefly/firefly.d.ts" />

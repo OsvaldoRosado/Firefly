@@ -163,139 +163,6 @@ var Shared;
     })();
     Shared.LocalWindowManager = LocalWindowManager;
 })(Shared || (Shared = {}));
-/// <reference path="../../js/typings/angular/angular.d.ts" />
-var Shared;
-(function (Shared) {
-    var Directives;
-    (function (Directives) {
-        function collapse() {
-            return {
-                restrict: "E",
-                scope: {
-                    expanded: "=",
-                    duration: "@"
-                },
-                replace: false,
-                transclude: true,
-                template: "<ng-transclude></ng-transclude>",
-                link: function (scope, jq, attrs) {
-                    var element = jq[0];
-                    var transclude = element.querySelector("ng-transclude");
-                    transclude.style.display = "block";
-                    var getInnerHeight = function () {
-                        var lastChild = transclude.children[transclude.children.length - 1];
-                        var marginBottom = parseInt(window.getComputedStyle(lastChild).marginBottom);
-                        return transclude.getBoundingClientRect().height + marginBottom;
-                    };
-                    element.style.overflow = "hidden";
-                    element.style.display = "block";
-                    if (!scope.expanded) {
-                        element.style.height = "0px";
-                    }
-                    else {
-                        setTimeout(function () {
-                            element.style.height = getInnerHeight() + "px";
-                        }, 100);
-                    }
-                    scope.$watch("expanded", function (newValue, oldValue) {
-                        if (newValue == oldValue) {
-                            return;
-                        }
-                        element.setAttribute("is-expanded", newValue.toString());
-                        var destinationHeight = "0px";
-                        if (newValue) {
-                            destinationHeight = (getInnerHeight() + "px") || "100%";
-                        }
-                        var duration = parseInt(scope.duration) || 200;
-                        element.style.transition = "height " + duration + "ms ease-out";
-                        setTimeout(function () {
-                            element.style.height = destinationHeight;
-                            setTimeout(function () {
-                                element.style.transition = "";
-                            }, 100 + duration);
-                        }, 100);
-                    });
-                }
-            };
-        }
-        Directives.collapse = collapse;
-    })(Directives = Shared.Directives || (Shared.Directives = {}));
-})(Shared || (Shared = {}));
-/// <reference path="../../../shared/data-types.ts" />
-/// <reference path="../../js/shared/api.ts" />
-/// <reference path="../../js/typings/angular/angular.d.ts" />
-var Shared;
-(function (Shared) {
-    var UpvoteAPIRequest = (function (_super) {
-        __extends(UpvoteAPIRequest, _super);
-        function UpvoteAPIRequest($http, contentId) {
-            _super.call(this, $http, "/UpvotePresContent", { id: contentId }, Shared.APIMethod.GET);
-        }
-        return UpvoteAPIRequest;
-    })(Shared.APIRequest);
-    Shared.UpvoteAPIRequest = UpvoteAPIRequest;
-})(Shared || (Shared = {}));
-/// <reference path="../../../shared/data-types.ts" />
-/// <reference path="../../js/typings/angular/angular.d.ts" />
-/// <reference path="./api.ts" />
-var Shared;
-(function (Shared) {
-    var Directives;
-    (function (Directives) {
-        function ffContentBox() {
-            return {
-                restrict: "E",
-                scope: true,
-                bindToController: {
-                    content: "=",
-                    showThumbnail: "=",
-                    expanded: "=",
-                    onToggle: "&"
-                },
-                controller: Shared.Controllers.FFContentBoxController,
-                controllerAs: "cc",
-                replace: true,
-                templateUrl: "public/directives/ff-content-box/template.html"
-            };
-        }
-        Directives.ffContentBox = ffContentBox;
-    })(Directives = Shared.Directives || (Shared.Directives = {}));
-})(Shared || (Shared = {}));
-var Shared;
-(function (Shared) {
-    var Controllers;
-    (function (Controllers) {
-        var FFContentBoxController = (function () {
-            function FFContentBoxController($scope, $element, $http) {
-                this.scope = $scope;
-                this.http = $http;
-                this.isQuestion = (this.content.type == FFContentType.Question);
-                if (this.showThumbnail !== undefined) {
-                    return;
-                }
-                var element = $element[0];
-                this.resize(element.offsetWidth);
-                $element.on("resize", function () {
-                    this.resize(element.offsetWidth);
-                }.bind(this));
-            }
-            FFContentBoxController.prototype.resize = function (width) {
-                this.showThumbnail = (this.content.type == FFContentType.Image ||
-                    this.content.type == FFContentType.Video) && width > 300;
-            };
-            FFContentBoxController.prototype.upvoteContent = function () {
-                var _this = this;
-                this.content.upvotes += 1;
-                new Shared.UpvoteAPIRequest(this.http, this.content.id).catch(function () {
-                    _this.content.upvotes -= 1;
-                });
-            };
-            FFContentBoxController.$inject = ["$scope", "$element", "$http"];
-            return FFContentBoxController;
-        })();
-        Controllers.FFContentBoxController = FFContentBoxController;
-    })(Controllers = Shared.Controllers || (Shared.Controllers = {}));
-})(Shared || (Shared = {}));
 /// <reference path="../../../shared/data-types.ts" />
 /// <reference path="../../js/typings/angular/angular.d.ts" />
 var Shared;
@@ -357,23 +224,97 @@ var Shared;
 })(Shared || (Shared = {}));
 /// <reference path="../../../shared/data-types.ts" />
 /// <reference path="../../js/typings/angular/angular.d.ts" />
+/// <reference path="../../js/typings/angular/angular.d.ts" />
 var Shared;
 (function (Shared) {
     var Directives;
     (function (Directives) {
-        function ffQuestion() {
+        function floatingContent() {
             return {
                 restrict: "E",
                 scope: {
-                    content: "=",
-                    isReply: "="
+                    floatX: "@",
+                    floatY: "@",
+                    contentWidth: "@",
+                    contentHeight: "@",
+                    size: "@"
                 },
-                replace: true,
-                templateUrl: "public/directives/ff-question/template.html"
+                replace: false,
+                transclude: true,
+                template: "<ng-transclude></ng-transclude>",
+                controller: Shared.Controllers.FloatingContentController,
+                controllerAs: "cfv",
+                link: function (scope, jq, attrs) {
+                    var container = scope['container'] = jq[0];
+                    var element = container.children[0];
+                    if (!element) {
+                        return;
+                    }
+                    element = element.children[0];
+                    if (!element) {
+                        return;
+                    }
+                    scope['element'] = element;
+                    var parent = container.parentElement;
+                    if (!parent) {
+                        return;
+                    }
+                    function layout() {
+                        var floatX = parseFloat(scope['floatX']);
+                        if (floatX > 1) {
+                            floatX /= 100;
+                        }
+                        var floatY = parseFloat(scope['floatY']);
+                        if (floatY > 1) {
+                            floatY /= 100;
+                        }
+                        var elementWidth = parseInt(scope['contentWidth']);
+                        var elementHeight = parseInt(scope['contentHeight']);
+                        var parentSize = parent.getBoundingClientRect();
+                        if (scope['size']) {
+                            var scale = parseFloat(scope['size']);
+                            var elementAspect = elementWidth / elementHeight;
+                            var parentAspect = parentSize.width / parentSize.height;
+                            if (elementAspect > parentAspect) {
+                                elementWidth = parentSize.width * scale;
+                                elementHeight = elementWidth / elementAspect;
+                            }
+                            else {
+                                elementHeight = parentSize.height * scale;
+                                elementWidth = elementHeight * elementAspect;
+                            }
+                        }
+                        element.style.width = elementWidth + 'px';
+                        element.style.height = elementHeight + 'px';
+                        container.style.left = (parentSize.width - elementWidth) * floatX + "px";
+                        container.style.top = (parentSize.height - elementHeight) * floatY + "px";
+                    }
+                    window.addEventListener("resize", layout);
+                    window.addEventListener("updateFloatingContent", layout);
+                    scope.$watch("floatX", layout);
+                    scope.$watch("floatY", layout);
+                    scope.$watch("contentWidth", layout);
+                    scope.$watch("contentHeight", layout);
+                    scope.$watch("size", layout);
+                }
             };
         }
-        Directives.ffQuestion = ffQuestion;
+        Directives.floatingContent = floatingContent;
     })(Directives = Shared.Directives || (Shared.Directives = {}));
+})(Shared || (Shared = {}));
+var Shared;
+(function (Shared) {
+    var Controllers;
+    (function (Controllers) {
+        var FloatingContentController = (function () {
+            function FloatingContentController($scope) {
+                this.element = $scope.element;
+            }
+            FloatingContentController.$inject = ["$scope"];
+            return FloatingContentController;
+        })();
+        Controllers.FloatingContentController = FloatingContentController;
+    })(Controllers = Shared.Controllers || (Shared.Controllers = {}));
 })(Shared || (Shared = {}));
 /// <reference path="../../../../shared/data-types.ts" />
 /// <reference path="../../typings/angular/angular.d.ts" />
@@ -422,11 +363,16 @@ var PresentationApp;
                             break;
                         case "showAccessLink":
                             _this.accessLink = order.data;
+                            setTimeout(function () {
+                                window.dispatchEvent(new Event("updateFloatingContent"));
+                            }, 10);
                             break;
                     }
                     $scope.$apply();
                 });
             }
+            ViewableCtrl.prototype.showOverlay = function (url, isVideo) {
+            };
             ViewableCtrl.$inject = ["$scope"];
             return ViewableCtrl;
         })();
@@ -435,9 +381,40 @@ var PresentationApp;
 })(PresentationApp || (PresentationApp = {}));
 var PresentationApp;
 (function (PresentationApp) {
+    var AppController = (function () {
+        function AppController() {
+            this.dummyMode = (window.location.hash === "#dummy");
+            if (this.dummyMode) {
+                console.log("Dummy mode enabled. Interact on window.dummy");
+                window['dummy'] = this;
+                var command = {
+                    action: "changeSlide",
+                    data: "./images/dummy/slide.png"
+                };
+                window.postMessage(JSON.stringify(command), Config.HOST);
+                var command = {
+                    action: "showAccessLink",
+                    data: "onfirefly.ws"
+                };
+                window.postMessage(JSON.stringify(command), Config.HOST);
+            }
+        }
+        AppController.prototype.imageOverlay = function () {
+            var command = {
+                action: "showOverlay",
+                data: "./images/dummy/view.jpg"
+            };
+            window.postMessage(JSON.stringify(command), Config.HOST);
+        };
+        AppController.prototype.clearOverlay = function () {
+            window.postMessage(JSON.stringify({ action: "hideOverlay" }), Config.HOST);
+        };
+        return AppController;
+    })();
     angular.module("presentation", [])
         .controller(Shared.Controllers)
         .controller(PresentationApp.Controllers)
+        .controller("AppController", AppController)
         .directive(Shared.Directives)
         .filter("equals", function () {
         return function (value, equals) { return value == equals; };
