@@ -2,26 +2,19 @@
 /// <reference path="../../js/typings/angular/angular.d.ts" />
 
 /// <reference path="../../js/typings/angular/angular.d.ts" />
-module Shared {
-
-  export interface FloatingContentScope extends ng.IScope {
-    floatX: string;
-    floatY: string;
-    contentWidth: string;
-    contentHeight: string;
-    size: string;
-    element: HTMLElement;
-    container: HTMLElement;
-  }
-
-}
-
 
 module Shared.Directives {
 
   /**
     <floating-content> uses absolute positioning to fit content within its parent.
     It has a few different animations to spice things up.
+    
+    @attribute floatX: Horizontal positioning of content, as a percent or decimal
+    @attribute floatY: Vertical positioning of content, as a percent or decimal
+    @attribute contentWidth: Pixel width of original content (may be scaled)
+    @attribute contentHeight: Pixel height of original content (may be scaled)
+    @attribute size: When present, content is scaled to fit in the container.
+      Value is a decimal that specifies what fraction of the max size to be.
   */
   export function floatingContent(): ng.IDirective {
     return {
@@ -38,10 +31,6 @@ module Shared.Directives {
       // This directive is a dumb wrapper
       transclude: true,
       template: "<ng-transclude></ng-transclude>",
-      
-      // But it does have a controller
-      controller: Shared.Controllers.FloatingContentController,
-      controllerAs: "cfv",
 
       // The only thing is does is expand or contract
       link: function(scope: ng.IScope, jq: ng.IAugmentedJQuery, attrs: Object) {
@@ -109,23 +98,5 @@ module Shared.Directives {
        
       }
     };
-  }
-}
-
-
-module Shared.Controllers {
-  
-  /**
-   * Animations and stuff for <floating-content>
-   */
-  export class FloatingContentController {
-    element: HTMLElement;
-
-    // Load in the element (passed from the linker)
-    static $inject = ["$scope"];
-		constructor($scope: Shared.FloatingContentScope) {
-      this.element = $scope.element;
-    }
-  
   }
 }

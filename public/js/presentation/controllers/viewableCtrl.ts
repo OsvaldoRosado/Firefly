@@ -2,6 +2,17 @@
 /// <reference path="../../typings/angular/angular.d.ts" />
 /// <reference path="../../typings/firefly/firefly.d.ts" />
 /// <reference path="../../shared/config.ts" />
+
+module PresentationApp {
+	
+	export interface Slide {
+		url: string;
+		width: number;
+		height: number;
+	}
+	
+}
+
 module PresentationApp.Controllers {
 	
 	/**
@@ -13,7 +24,8 @@ module PresentationApp.Controllers {
 
 		scope: ng.IScope;
 
-		slideUrl: string;
+		slides: Array<PresentationApp.Slide>;
+		isLoading: boolean;
 
 		overlayUrl: string;
 		overlayActive: boolean;
@@ -27,6 +39,9 @@ module PresentationApp.Controllers {
 		static $inject = ["$scope"];
 		constructor($scope: ng.IScope){
 			this.scope = $scope;
+			
+			this.slides = [];
+			this.isLoading = false;
 
 			window.addEventListener("message", (event) => {
 				if (event.origin !== Config.HOST) { return; }
@@ -34,8 +49,7 @@ module PresentationApp.Controllers {
 				switch(order.action){
 
 					case "changeSlide":
-						this.slideUrl = order.data;
-						this.overlayActive = this.qaActive = false;
+						this.changeSlide(order.data);
 						break;
 
 					case "showOverlay":
@@ -77,6 +91,28 @@ module PresentationApp.Controllers {
 				}
 				$scope.$apply();
 			});
+		}
+		
+		// Proceed to the next slide
+		changeSlide(url: string, forwards: boolean = true) {
+			
+			// First step is to load the image
+			var slideImage = new Image;
+			slideImage.addEventListener("load", ()=> {
+				this.scope.$apply(()=>{
+					this.isLoading = false;
+					
+					// Make a slide object and send it off to Angular
+					this.slides.push({
+						url: url,
+						width: slideImage.width,
+						height: slideImage.height
+					});
+				});
+			});
+			
+			this.isLoading = true;
+			slideImage.src = url;
 		}
 		
 		// Show an overlay

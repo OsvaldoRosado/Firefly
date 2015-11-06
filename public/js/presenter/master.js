@@ -395,8 +395,6 @@ var Shared;
                 replace: false,
                 transclude: true,
                 template: "<ng-transclude></ng-transclude>",
-                controller: Shared.Controllers.FloatingContentController,
-                controllerAs: "cfv",
                 link: function (scope, jq, attrs) {
                     var container = scope['container'] = jq[0];
                     var element = container.children[0];
@@ -454,20 +452,6 @@ var Shared;
         }
         Directives.floatingContent = floatingContent;
     })(Directives = Shared.Directives || (Shared.Directives = {}));
-})(Shared || (Shared = {}));
-var Shared;
-(function (Shared) {
-    var Controllers;
-    (function (Controllers) {
-        var FloatingContentController = (function () {
-            function FloatingContentController($scope) {
-                this.element = $scope.element;
-            }
-            FloatingContentController.$inject = ["$scope"];
-            return FloatingContentController;
-        })();
-        Controllers.FloatingContentController = FloatingContentController;
-    })(Controllers = Shared.Controllers || (Shared.Controllers = {}));
 })(Shared || (Shared = {}));
 /// <reference path="../../../../shared/data-types.ts" />
 /// <reference path="../../typings/angular/angular.d.ts" />

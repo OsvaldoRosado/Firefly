@@ -6,16 +6,25 @@
 		<meta name="author" content="">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Presentation</title>
+		
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.js"></script>
 		<script src="js/presentation/master.js"></script>
 		<script src="js/presentation/templates.js"></script>
+		
 		<link rel="stylesheet" href="css/presentation.css">
 	</head>
 	<body ng-controller="ViewableCtrl as vc" class="presentation">
 		<div class="row" ng-class="{hasFooter: vc.accessLink}">
-			<floating-content float-x="0.5" float-y="0.5" size="0.98" content-width="1024" content-height="768">
-				<img ng-src="{{ vc.slideUrl }}" alt="">
+			
+			<!-- Display slides -->
+			<floating-content class="slide"
+				float-x="0.5" float-y="0.5" size="{{vc.accessLink ? 0.98 : 1.00}}" 
+				ng-repeat="slide in vc.slides | limitTo:2"
+				content-width="{{slide.width}}" content-height="{{slide.height}}">
+				<img ng-src="{{ slide.url }}" alt="">
 			</floating-content>
+			
 			<div class="overlayContainer">
 				<img ng-if="!vc.overlayIsVideo" ng-src="{{ vc.overlayUrl }}" ng-show="vc.overlayActive" class="overlay"/>
 				<iframe ng-if="vc.overlayIsVideo" ng-src="{{ vc.overlayUrl }}" ng-show="vc.overlayActive" class="overlay" frameborder="0"></iframe>
@@ -29,7 +38,8 @@
 		</div>
 		<footer ng-if="vc.accessLink" class="accessLink">
 			<a ng-href="{{vc.accessLink}}">Join the presentation at <b>{{ vc.accessLink }}</b></a>
-			<img ng-show="vc.loading" src="./images/Pres-Loader.gif" alt="Loading" class="loader">
+			<img ng-show="vc.isLoading" src="./images/Pres-Loader.gif" alt="Loading" class="loader">
+			<img ng-show="!vc.isLoading" src="./images/Logo.png" alt="Logo" class="logo">
 		</footer>
 	</body>
 </html>

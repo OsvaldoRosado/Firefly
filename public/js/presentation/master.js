@@ -242,8 +242,6 @@ var Shared;
                 replace: false,
                 transclude: true,
                 template: "<ng-transclude></ng-transclude>",
-                controller: Shared.Controllers.FloatingContentController,
-                controllerAs: "cfv",
                 link: function (scope, jq, attrs) {
                     var container = scope['container'] = jq[0];
                     var element = container.children[0];
@@ -302,20 +300,6 @@ var Shared;
         Directives.floatingContent = floatingContent;
     })(Directives = Shared.Directives || (Shared.Directives = {}));
 })(Shared || (Shared = {}));
-var Shared;
-(function (Shared) {
-    var Controllers;
-    (function (Controllers) {
-        var FloatingContentController = (function () {
-            function FloatingContentController($scope) {
-                this.element = $scope.element;
-            }
-            FloatingContentController.$inject = ["$scope"];
-            return FloatingContentController;
-        })();
-        Controllers.FloatingContentController = FloatingContentController;
-    })(Controllers = Shared.Controllers || (Shared.Controllers = {}));
-})(Shared || (Shared = {}));
 /// <reference path="../../../../shared/data-types.ts" />
 /// <reference path="../../typings/angular/angular.d.ts" />
 /// <reference path="../../typings/firefly/firefly.d.ts" />
@@ -328,6 +312,8 @@ var PresentationApp;
             function ViewableCtrl($scope) {
                 var _this = this;
                 this.scope = $scope;
+                this.slides = [];
+                this.isLoading = false;
                 window.addEventListener("message", function (event) {
                     if (event.origin !== Config.HOST) {
                         return;
@@ -335,8 +321,7 @@ var PresentationApp;
                     var order = JSON.parse(event.data);
                     switch (order.action) {
                         case "changeSlide":
-                            _this.slideUrl = order.data;
-                            _this.overlayActive = _this.qaActive = false;
+                            _this.changeSlide(order.data);
                             break;
                         case "showOverlay":
                             _this.overlayUrl = order.data;
@@ -371,6 +356,23 @@ var PresentationApp;
                     $scope.$apply();
                 });
             }
+            ViewableCtrl.prototype.changeSlide = function (url, forwards) {
+                var _this = this;
+                if (forwards === void 0) { forwards = true; }
+                var slideImage = new Image;
+                slideImage.addEventListener("load", function () {
+                    _this.scope.$apply(function () {
+                        _this.isLoading = false;
+                        _this.slides.push({
+                            url: url,
+                            width: slideImage.width,
+                            height: slideImage.height
+                        });
+                    });
+                });
+                this.isLoading = true;
+                slideImage.src = url;
+            };
             ViewableCtrl.prototype.showOverlay = function (url, isVideo) {
             };
             ViewableCtrl.$inject = ["$scope"];
@@ -392,13 +394,22 @@ var PresentationApp;
                     data: "./images/dummy/slide.png"
                 };
                 window.postMessage(JSON.stringify(command), Config.HOST);
-                var command = {
-                    action: "showAccessLink",
-                    data: "onfirefly.ws"
-                };
-                window.postMessage(JSON.stringify(command), Config.HOST);
             }
         }
+        AppController.prototype.showAccessLink = function () {
+            var command = {
+                action: "showAccessLink",
+                data: "onfirefly.ws"
+            };
+            window.postMessage(JSON.stringify(command), Config.HOST);
+        };
+        AppController.prototype.advanceSlide = function () {
+            var command = {
+                action: "changeSlide",
+                data: "./images/dummy/slide2.png"
+            };
+            window.postMessage(JSON.stringify(command), Config.HOST);
+        };
         AppController.prototype.imageOverlay = function () {
             var command = {
                 action: "showOverlay",
@@ -411,14 +422,11 @@ var PresentationApp;
         };
         return AppController;
     })();
-    angular.module("presentation", [])
+    angular.module("presentation", ["ngAnimate"])
         .controller(Shared.Controllers)
         .controller(PresentationApp.Controllers)
         .controller("AppController", AppController)
         .directive(Shared.Directives)
-        .filter("equals", function () {
-        return function (value, equals) { return value == equals; };
-    })
         .config(["$sceProvider", function ($sceProvider) {
             $sceProvider.enabled(false);
         }]);

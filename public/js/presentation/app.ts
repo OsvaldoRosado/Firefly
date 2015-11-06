@@ -18,17 +18,27 @@ module PresentationApp{
 					data: "./images/dummy/slide.png"
 				}
 				window.postMessage(JSON.stringify(command), Config.HOST);
-				
-				// Set a dummy access link
-				var command : Object = {
-					action: "showAccessLink",
-					data: "onfirefly.ws"
-				}
-				window.postMessage(JSON.stringify(command), Config.HOST);
 			}
 		}
 		
 		// Dummy functions
+		showAccessLink() {
+			// Set a dummy access link
+			var command : Object = {
+				action: "showAccessLink",
+				data: "onfirefly.ws"
+			}
+			window.postMessage(JSON.stringify(command), Config.HOST);
+		}
+		
+		advanceSlide() {
+			var command : Object = {
+				action: "changeSlide",
+				data: "./images/dummy/slide2.png"
+			}
+			window.postMessage(JSON.stringify(command), Config.HOST);
+		}
+		
 		imageOverlay(){
 			var command : Object = {
 				action: "showOverlay",
@@ -42,14 +52,11 @@ module PresentationApp{
 		}
 	}
 	
-	angular.module("presentation", [])
+	angular.module("presentation", ["ngAnimate"])
 		.controller(Shared.Controllers)
 		.controller(PresentationApp.Controllers)
 		.controller("AppController", AppController)
 		.directive(Shared.Directives)
-		.filter("equals", function() {
-			return function(value,  equals) : boolean {return value == equals;}
-		})
 		.config(["$sceProvider",function($sceProvider) {
 			// Completely disable SCE so Youtube embeds will work.
 			$sceProvider.enabled(false);
