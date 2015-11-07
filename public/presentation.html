@@ -18,17 +18,27 @@
 		<div class="row" ng-class="{hasFooter: vc.accessLink}">
 			
 			<!-- Display slides -->
-			<floating-content class="slide"
-				float-x="0.5" float-y="0.5" size="{{vc.accessLink ? 0.98 : 1.00}}" 
-				ng-repeat="slide in vc.slides | limitTo:2"
-				content-width="{{slide.width}}" content-height="{{slide.height}}">
-				<img ng-src="{{ slide.url }}" alt="">
+			<div class="slides" ng-class="{background: vc.overlayActive}">
+				<floating-content class="slide"
+					float-x="0.5" float-y="0.5" size="{{vc.accessLink ? 0.98 : 1.00}}" 
+					ng-repeat="slide in vc.slides | limitTo:2"
+					content-width="{{slide.width}}" content-height="{{slide.height}}">
+					<img ng-src="{{ slide.url }}" alt="">
+				</floating-content>
+			</div>
+			
+			<!-- Display overlay -->
+			<floating-content class="overlayContainer" ng-class="{visible: vc.overlayActive}"
+				float-x="0.5" float-y="0.5" size="{{vc.accessLink ? 0.98 : 1.00}}"
+				content-width="{{vc.overlay.width}}" content-height="{{vc.overlay.height}}">
+				<div class="overlayContent">
+					<!-- Image and Video content are currently supported -->
+					<img ng-if="!vc.overlay.isVideo" ng-src="{{ vc.overlay.url }}"/>
+					<iframe ng-if="vc.overlay.isVideo" ng-src="{{ vc.overlay.url }}" frameborder="0"></iframe>
+				</div>
 			</floating-content>
 			
-			<div class="overlayContainer">
-				<img ng-if="!vc.overlayIsVideo" ng-src="{{ vc.overlayUrl }}" ng-show="vc.overlayActive" class="overlay"/>
-				<iframe ng-if="vc.overlayIsVideo" ng-src="{{ vc.overlayUrl }}" ng-show="vc.overlayActive" class="overlay" frameborder="0"></iframe>
-			</div>
+			
 			<aside ng-if="vc.qaActive" class="u-pull-right two columns">
 				<div class="contentBox">
 					<h1>A Question</h1>

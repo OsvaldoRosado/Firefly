@@ -397,11 +397,11 @@ var Shared;
                 template: "<ng-transclude></ng-transclude>",
                 link: function (scope, jq, attrs) {
                     var container = scope['container'] = jq[0];
-                    var element = container.children[0];
-                    if (!element) {
+                    var transclude = container.children[0];
+                    if (!transclude) {
                         return;
                     }
-                    element = element.children[0];
+                    var element = transclude.children[0];
                     if (!element) {
                         return;
                     }
@@ -437,6 +437,8 @@ var Shared;
                         }
                         element.style.width = elementWidth + 'px';
                         element.style.height = elementHeight + 'px';
+                        transclude.style.width = elementWidth + 'px';
+                        transclude.style.height = elementHeight + 'px';
                         container.style.left = (parentSize.width - elementWidth) * floatX + "px";
                         container.style.top = (parentSize.height - elementHeight) * floatY + "px";
                     }

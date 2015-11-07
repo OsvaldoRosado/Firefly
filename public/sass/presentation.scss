@@ -16,6 +16,7 @@ footer {
 	width: 100%;
 	height: 16px;
 	box-sizing: border-box;
+	font-weight: 300;
 	
 	a {
 		color: white;
@@ -44,7 +45,7 @@ body.presentation {
 	background: $background-dark;
 	margin-bottom: 0;
 
-	.row{
+	.row, .slides {
 		position: absolute;
 		top: 0; bottom: 0;
 		left: 0; right: 0;
@@ -58,13 +59,18 @@ body.presentation {
 	.overlayContainer{
 		width: 100%;
 		text-align: center;
+		
+		opacity: 0;
+		&.visible {
+			opacity: 1;
+		}
 	}
-
-	.overlay{
-		position: absolute;
-		margin: 0 auto;
-		left: 0;
-		right: 0;
+	
+	.overlayContent, .overlayContent *  {
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		padding: 0;
 	}
 
 	img.overlay{
@@ -122,10 +128,11 @@ body.presentation {
 	}
 }
 
-// Presentation Animations
+// ANIMATIONS ==============================================================================
+
 floating-content.ng-enter {
-	transition: 150ms ease-out opacity, 300ms ease-out transform;
-	transform: rotateX(20deg);
+	transition: opacity 150ms ease-out, transform 250ms ease-out;
+	transform: rotateX(15deg);
 	transform-origin: 50% 0%;
 	opacity: 0;
 	transform-style: preserve-3d;
@@ -134,4 +141,94 @@ floating-content.ng-enter {
 floating-content.ng-enter-active {
 	transform: rotateX(0deg);
 	opacity: 1;
+}
+
+.slides.background-add {
+	animation: background_slides 450ms linear;
+	-webkit-animation: background_slides 450ms linear;
+}
+
+.slides.background-remove {
+	opacity: 0.66;
+	transform: scale(0.94) rotateX(0deg);
+	animation: foreground_slides 300ms linear 200ms;
+	-webkit-animation: foreground_slides 300ms linear 200ms;
+}
+
+.slides.background {
+	opacity: 0.66;
+	transform: scale(0.94);
+}
+
+@keyframes background_slides {
+	0% {
+		opacity: 1;
+		transform: scale(1) rotateX(-1deg);
+	}
+	40% {
+		opacity: 1;
+		transform: scale(0.97) rotateX(-13deg);
+	}
+	100% {
+		opacity: 0.66;
+		transform: scale(0.94) rotateX(0deg);
+	}
+}
+
+@-webkit-keyframes background_slides {
+	0% {
+		opacity: 1;
+		transform: scale(1) rotateX(-1deg);
+	}
+	40% {
+		opacity: 1;
+		transform: scale(0.97) rotateX(-13deg);
+	}
+	100% {
+		opacity: 0.66;
+		transform: scale(0.94) rotateX(0deg);
+	}
+}
+
+@keyframes foreground_slides {
+	0% {
+		opacity: 0.66;
+		transform: scale(0.94) rotateX(0deg);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1) rotateX(0deg);
+	}
+}
+
+@-webkit-keyframes foreground_slides {
+	0% {
+		opacity: 0.66;
+		transform: scale(0.94) rotateX(0deg);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1) rotateX(0deg);
+	}
+}
+
+.overlayContainer {
+	transition: opacity 300ms ease-out 200ms;
+	
+	ng-transclude {
+		transition: top 300ms ease-out;
+	}
+}
+
+.overlayContainer.visible-add ng-transclude, .overlayContainer.visible-remove ng-transclude {
+	top: 100vh !important;
+}
+
+.overlayContainer.visible { 
+	transition: inherit;
+	
+	ng-transclude {
+		transition: top 300ms ease-out 150ms;
+		top: 0vh;
+	}
 }

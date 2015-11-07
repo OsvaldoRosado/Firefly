@@ -244,11 +244,11 @@ var Shared;
                 template: "<ng-transclude></ng-transclude>",
                 link: function (scope, jq, attrs) {
                     var container = scope['container'] = jq[0];
-                    var element = container.children[0];
-                    if (!element) {
+                    var transclude = container.children[0];
+                    if (!transclude) {
                         return;
                     }
-                    element = element.children[0];
+                    var element = transclude.children[0];
                     if (!element) {
                         return;
                     }
@@ -284,6 +284,8 @@ var Shared;
                         }
                         element.style.width = elementWidth + 'px';
                         element.style.height = elementHeight + 'px';
+                        transclude.style.width = elementWidth + 'px';
+                        transclude.style.height = elementHeight + 'px';
                         container.style.left = (parentSize.width - elementWidth) * floatX + "px";
                         container.style.top = (parentSize.height - elementHeight) * floatY + "px";
                     }
@@ -324,18 +326,13 @@ var PresentationApp;
                             _this.changeSlide(order.data);
                             break;
                         case "showOverlay":
-                            _this.overlayUrl = order.data;
-                            _this.qaActive = _this.overlayIsVideo = false;
-                            _this.overlayActive = true;
+                            _this.showOverlay(order.data, false);
                             break;
                         case "showOverlayVideo":
-                            _this.overlayUrl = order.data;
-                            _this.qaActive = false;
-                            _this.overlayActive = _this.overlayIsVideo = true;
+                            _this.showOverlay(order.data, true);
                             break;
                         case "hideOverlay":
-                            _this.overlayUrl = undefined;
-                            _this.overlayActive = _this.overlayIsVideo = false;
+                            _this.overlayActive = false;
                             break;
                         case "showQASidebar":
                             _this.question = JSON.parse(order.data);
@@ -374,6 +371,33 @@ var PresentationApp;
                 slideImage.src = url;
             };
             ViewableCtrl.prototype.showOverlay = function (url, isVideo) {
+                var _this = this;
+                if (isVideo) {
+                    this.overlay = {
+                        url: url,
+                        width: 1280,
+                        height: 720,
+                        isVideo: true
+                    };
+                    this.overlayActive = true;
+                }
+                else {
+                    var overlayImage = new Image;
+                    overlayImage.addEventListener("load", function () {
+                        _this.scope.$apply(function () {
+                            _this.isLoading = false;
+                            _this.overlay = {
+                                url: url,
+                                width: overlayImage.width,
+                                height: overlayImage.height,
+                                isVideo: false
+                            };
+                            _this.overlayActive = true;
+                        });
+                    });
+                    this.isLoading = true;
+                    overlayImage.src = url;
+                }
             };
             ViewableCtrl.$inject = ["$scope"];
             return ViewableCtrl;

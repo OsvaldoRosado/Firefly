@@ -11,6 +11,10 @@ module PresentationApp {
 		height: number;
 	}
 	
+	export interface Overlay extends Slide {
+		isVideo: boolean;
+	}
+	
 }
 
 module PresentationApp.Controllers {
@@ -27,9 +31,8 @@ module PresentationApp.Controllers {
 		slides: Array<PresentationApp.Slide>;
 		isLoading: boolean;
 
-		overlayUrl: string;
 		overlayActive: boolean;
-		overlayIsVideo: boolean;
+		overlay: PresentationApp.Overlay;
 
 		question: FFQuestion;
 		qaActive: boolean;
@@ -43,6 +46,9 @@ module PresentationApp.Controllers {
 			this.slides = [];
 			this.isLoading = false;
 
+			// Other components communicate with this one through window.postMessage
+			// This setup cuts down on the number of requests to the server and ensures
+			// that the presentation stays in perfect sync with the presenter view.
 			window.addEventListener("message", (event) => {
 				if (event.origin !== Config.HOST) { return; }
 				var order = JSON.parse(event.data);
@@ -53,20 +59,15 @@ module PresentationApp.Controllers {
 						break;
 
 					case "showOverlay":
-						this.overlayUrl = order.data;
-						this.qaActive = this.overlayIsVideo = false;
-						this.overlayActive = true;
+						this.showOverlay(order.data, false);
 						break;
 
 					case "showOverlayVideo":
-						this.overlayUrl = order.data;
-						this.qaActive = false;
-						this.overlayActive = this.overlayIsVideo = true;
+						this.showOverlay(order.data, true);
 						break;
 					
 					case "hideOverlay":
-						this.overlayUrl = undefined;
-						this.overlayActive = this.overlayIsVideo = false;
+						this.overlayActive = false;
 						break;
 
 					case "showQASidebar":
@@ -117,7 +118,37 @@ module PresentationApp.Controllers {
 		
 		// Show an overlay
 		showOverlay(url: string, isVideo: boolean) {
+			if (isVideo){
+				// Make a video overlay
+				this.overlay = {
+					url: url,
+					width: 1280, // Hard coded to 16:9
+					height: 720,
+					isVideo: true
+				};
+				this.overlayActive = true;
 			
+			// Right now, everything that isn't a video is an image
+			} else {
+				var overlayImage = new Image;
+				overlayImage.addEventListener("load", ()=> {
+					this.scope.$apply(()=>{
+						this.isLoading = false;
+						
+						// Make an image overlay for Angular
+						this.overlay = {
+							url: url,
+							width: overlayImage.width,
+							height: overlayImage.height,
+							isVideo: false
+						};
+						this.overlayActive = true;
+					});
+				});
+				
+				this.isLoading = true;
+				overlayImage.src = url;
+			}
 		}
 	}
 }

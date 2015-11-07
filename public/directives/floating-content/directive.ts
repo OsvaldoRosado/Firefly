@@ -35,8 +35,8 @@ module Shared.Directives {
       // The only thing is does is expand or contract
       link: function(scope: ng.IScope, jq: ng.IAugmentedJQuery, attrs: Object) {
         var container : HTMLElement = scope['container'] = jq[0];
-        var element = container.children[0]; if (!element) {return;}
-        element = element.children[0]; if (!element) {return;}
+        var transclude = container.children[0]; if (!transclude) {return;}
+        var element = transclude.children[0]; if (!element) {return;}
         scope['element'] = element;
         
         var parent = container.parentElement;
@@ -80,6 +80,10 @@ module Shared.Directives {
           // Size the element
           element.style.width = elementWidth + 'px';
           element.style.height = elementHeight + 'px';
+          
+          // Size its container
+          transclude.style.width = elementWidth + 'px';
+          transclude.style.height = elementHeight + 'px';
           
           // Position the container
           container.style.left = (parentSize.width - elementWidth) * floatX + "px";
