@@ -18,7 +18,7 @@
 		<div class="row" ng-class="{hasFooter: vc.accessLink}">
 			
 			<!-- Display slides -->
-			<div class="slides" ng-class="{background: vc.overlayActive}">
+			<div class="slides" ng-class="{background: vc.overlayActive, aside: vc.qaActive}">
 				<floating-content class="slide"
 					float-x="0.5" float-y="0.5" size="{{vc.accessLink ? 0.98 : 1.00}}" 
 					ng-repeat="slide in vc.slides | limitTo:2"
@@ -27,7 +27,18 @@
 				</floating-content>
 			</div>
 			
-			<!-- Display overlay -->
+			<!-- Display content overlays -->
+			<floating-content class="overlayContainer" ng-class="{visible: vc.overlayActive}"
+				float-x="0.5" float-y="0.5" size="{{vc.accessLink ? 0.98 : 1.00}}"
+				content-width="{{vc.overlay.width}}" content-height="{{vc.overlay.height}}">
+				<div class="overlayContent">
+					<!-- Image and Video content are currently supported -->
+					<img ng-if="!vc.overlay.isVideo" ng-src="{{ vc.overlay.url }}"/>
+					<iframe ng-if="vc.overlay.isVideo" ng-src="{{ vc.overlay.url }}" frameborder="0"></iframe>
+				</div>
+			</floating-content>
+			
+			<!-- Display questions & replies -->
 			<floating-content class="overlayContainer" ng-class="{visible: vc.overlayActive}"
 				float-x="0.5" float-y="0.5" size="{{vc.accessLink ? 0.98 : 1.00}}"
 				content-width="{{vc.overlay.width}}" content-height="{{vc.overlay.height}}">

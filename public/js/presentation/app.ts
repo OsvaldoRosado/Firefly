@@ -47,6 +47,14 @@ module PresentationApp{
 			window.postMessage(JSON.stringify(command), Config.HOST);
 		}
 		
+		videoOverlay(){
+			var command : Object = {
+				action: "showOverlayVideo",
+				data: "http://www.youtube.com/embed/0qz0IJXQ720"
+			}
+			window.postMessage(JSON.stringify(command), Config.HOST);
+		}
+		
 		clearOverlay(){
 			window.postMessage(JSON.stringify({action: "hideOverlay"}), Config.HOST);
 		}

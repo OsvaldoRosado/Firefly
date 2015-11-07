@@ -68,6 +68,13 @@ module PresentationApp.Controllers {
 					
 					case "hideOverlay":
 						this.overlayActive = false;
+						
+						// Clear the content after a short time
+						setTimeout(()=>{
+							this.scope.$apply(()=>{
+								this.overlay = undefined;
+							});
+						}, 500);
 						break;
 
 					case "showQASidebar":
@@ -119,6 +126,8 @@ module PresentationApp.Controllers {
 		// Show an overlay
 		showOverlay(url: string, isVideo: boolean) {
 			if (isVideo){
+				this.isLoading = true;
+				
 				// Make a video overlay
 				this.overlay = {
 					url: url,
@@ -126,7 +135,15 @@ module PresentationApp.Controllers {
 					height: 720,
 					isVideo: true
 				};
-				this.overlayActive = true;
+				
+				// Wait a bit for the embed to load
+				setTimeout(()=>{
+					this.scope.$apply(()=>{
+						this.isLoading = false;
+						this.overlayActive = true;
+					});
+				}, 1000);
+				
 			
 			// Right now, everything that isn't a video is an image
 			} else {

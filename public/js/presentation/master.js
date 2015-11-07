@@ -333,6 +333,11 @@ var PresentationApp;
                             break;
                         case "hideOverlay":
                             _this.overlayActive = false;
+                            setTimeout(function () {
+                                _this.scope.$apply(function () {
+                                    _this.overlay = undefined;
+                                });
+                            }, 500);
                             break;
                         case "showQASidebar":
                             _this.question = JSON.parse(order.data);
@@ -373,13 +378,19 @@ var PresentationApp;
             ViewableCtrl.prototype.showOverlay = function (url, isVideo) {
                 var _this = this;
                 if (isVideo) {
+                    this.isLoading = true;
                     this.overlay = {
                         url: url,
                         width: 1280,
                         height: 720,
                         isVideo: true
                     };
-                    this.overlayActive = true;
+                    setTimeout(function () {
+                        _this.scope.$apply(function () {
+                            _this.isLoading = false;
+                            _this.overlayActive = true;
+                        });
+                    }, 1000);
                 }
                 else {
                     var overlayImage = new Image;
@@ -438,6 +449,13 @@ var PresentationApp;
             var command = {
                 action: "showOverlay",
                 data: "./images/dummy/view.jpg"
+            };
+            window.postMessage(JSON.stringify(command), Config.HOST);
+        };
+        AppController.prototype.videoOverlay = function () {
+            var command = {
+                action: "showOverlayVideo",
+                data: "http://www.youtube.com/embed/0qz0IJXQ720"
             };
             window.postMessage(JSON.stringify(command), Config.HOST);
         };
