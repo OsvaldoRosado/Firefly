@@ -332,12 +332,7 @@ var PresentationApp;
                             _this.showOverlay(order.data, true);
                             break;
                         case "hideOverlay":
-                            _this.overlayActive = false;
-                            setTimeout(function () {
-                                _this.scope.$apply(function () {
-                                    _this.overlay = undefined;
-                                });
-                            }, 500);
+                            _this.hideOverlay();
                             break;
                         case "showQASidebar":
                             _this.question = JSON.parse(order.data);
@@ -359,6 +354,16 @@ var PresentationApp;
                 });
             }
             ViewableCtrl.prototype.changeSlide = function (url, forwards) {
+                if (forwards === void 0) { forwards = true; }
+                if (this.overlayActive) {
+                    this.hideOverlay();
+                    setTimeout(this.reallyChangeSlide.bind(this, url, forwards), 800);
+                }
+                else {
+                    this.reallyChangeSlide(url, forwards);
+                }
+            };
+            ViewableCtrl.prototype.reallyChangeSlide = function (url, forwards) {
                 var _this = this;
                 if (forwards === void 0) { forwards = true; }
                 var slideImage = new Image;
@@ -409,6 +414,15 @@ var PresentationApp;
                     this.isLoading = true;
                     overlayImage.src = url;
                 }
+            };
+            ViewableCtrl.prototype.hideOverlay = function () {
+                var _this = this;
+                this.overlayActive = false;
+                setTimeout(function () {
+                    _this.scope.$apply(function () {
+                        _this.overlay = undefined;
+                    });
+                }, 500);
             };
             ViewableCtrl.$inject = ["$scope"];
             return ViewableCtrl;

@@ -67,14 +67,7 @@ module PresentationApp.Controllers {
 						break;
 					
 					case "hideOverlay":
-						this.overlayActive = false;
-						
-						// Clear the content after a short time
-						setTimeout(()=>{
-							this.scope.$apply(()=>{
-								this.overlay = undefined;
-							});
-						}, 500);
+						this.hideOverlay();
 						break;
 
 					case "showQASidebar":
@@ -101,9 +94,17 @@ module PresentationApp.Controllers {
 			});
 		}
 		
-		// Proceed to the next slide
+		// Proceed to a new slide
 		changeSlide(url: string, forwards: boolean = true) {
+			if (this.overlayActive) {
+				this.hideOverlay();
+				setTimeout(this.reallyChangeSlide.bind(this, url, forwards), 800);
+			} else {
+				this.reallyChangeSlide(url, forwards);
+			}
+		}
 			
+		private reallyChangeSlide(url: string, forwards: boolean = true) {
 			// First step is to load the image
 			var slideImage = new Image;
 			slideImage.addEventListener("load", ()=> {
@@ -166,6 +167,18 @@ module PresentationApp.Controllers {
 				this.isLoading = true;
 				overlayImage.src = url;
 			}
+		}
+		
+		// Hide the overlay (pretty self-explanatory really)
+		hideOverlay(){
+			this.overlayActive = false;
+						
+			// Clear the content after a short time
+			setTimeout(()=>{
+				this.scope.$apply(()=>{
+					this.overlay = undefined;
+				});
+			}, 500);
 		}
 	}
 }
