@@ -15,6 +15,8 @@ module PresentationApp {
 		isVideo: boolean;
 	}
 	
+	export const QuestionMinWidth : number = 640;
+	
 }
 
 module PresentationApp.Controllers {
@@ -195,6 +197,10 @@ module PresentationApp.Controllers {
 		
 		// Show a question
 		showQA(question: FFQuestion) {
+			
+			// If the window is too small, don't display anything
+			if (window.innerWidth < QuestionMinWidth) {return;}
+			
 			if (this.overlayActive) {
 				this.hideOverlay();
 				this.timeout(this.reallyShowQA.bind(this, question), 800);

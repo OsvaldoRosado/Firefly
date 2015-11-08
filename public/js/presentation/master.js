@@ -328,6 +328,10 @@ var Shared;
 /// <reference path="../../shared/config.ts" />
 var PresentationApp;
 (function (PresentationApp) {
+    PresentationApp.QuestionMinWidth = 640;
+})(PresentationApp || (PresentationApp = {}));
+var PresentationApp;
+(function (PresentationApp) {
     var Controllers;
     (function (Controllers) {
         var ViewableCtrl = (function () {
@@ -456,6 +460,9 @@ var PresentationApp;
                 }, 500);
             };
             ViewableCtrl.prototype.showQA = function (question) {
+                if (window.innerWidth < PresentationApp.QuestionMinWidth) {
+                    return;
+                }
                 if (this.overlayActive) {
                     this.hideOverlay();
                     this.timeout(this.reallyShowQA.bind(this, question), 800);
