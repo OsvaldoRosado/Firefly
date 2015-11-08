@@ -224,6 +224,26 @@ var Shared;
 })(Shared || (Shared = {}));
 /// <reference path="../../../shared/data-types.ts" />
 /// <reference path="../../js/typings/angular/angular.d.ts" />
+var Shared;
+(function (Shared) {
+    var Directives;
+    (function (Directives) {
+        function ffQuestion() {
+            return {
+                restrict: "E",
+                scope: {
+                    content: "=",
+                    isReply: "="
+                },
+                replace: true,
+                templateUrl: "public/directives/ff-question/template.html"
+            };
+        }
+        Directives.ffQuestion = ffQuestion;
+    })(Directives = Shared.Directives || (Shared.Directives = {}));
+})(Shared || (Shared = {}));
+/// <reference path="../../../shared/data-types.ts" />
+/// <reference path="../../js/typings/angular/angular.d.ts" />
 /// <reference path="../../js/typings/angular/angular.d.ts" />
 var Shared;
 (function (Shared) {
@@ -311,9 +331,10 @@ var PresentationApp;
     var Controllers;
     (function (Controllers) {
         var ViewableCtrl = (function () {
-            function ViewableCtrl($scope) {
+            function ViewableCtrl($scope, $timeout) {
                 var _this = this;
                 this.scope = $scope;
+                this.timeout = $timeout;
                 this.slides = [];
                 this.isLoading = false;
                 window.addEventListener("message", function (event) {
@@ -335,12 +356,9 @@ var PresentationApp;
                             _this.hideOverlay();
                             break;
                         case "showQASidebar":
-                            _this.question = JSON.parse(order.data);
-                            _this.overlayActive = false;
-                            _this.qaActive = true;
+                            _this.showQA(JSON.parse(order.data));
                             break;
                         case "hideQASidebar":
-                            _this.question = undefined;
                             _this.qaActive = false;
                             break;
                         case "showAccessLink":
@@ -357,7 +375,11 @@ var PresentationApp;
                 if (forwards === void 0) { forwards = true; }
                 if (this.overlayActive) {
                     this.hideOverlay();
-                    setTimeout(this.reallyChangeSlide.bind(this, url, forwards), 800);
+                    this.timeout(this.reallyChangeSlide.bind(this, url, forwards), 800);
+                }
+                else if (this.qaActive) {
+                    this.qaActive = false;
+                    this.timeout(this.reallyChangeSlide.bind(this, url, forwards), 600);
                 }
                 else {
                     this.reallyChangeSlide(url, forwards);
@@ -381,6 +403,19 @@ var PresentationApp;
                 slideImage.src = url;
             };
             ViewableCtrl.prototype.showOverlay = function (url, isVideo) {
+                if (this.overlayActive) {
+                    this.hideOverlay();
+                    this.timeout(this.reallyShowOverlay.bind(this, url, isVideo), 800);
+                }
+                else if (this.qaActive) {
+                    this.qaActive = false;
+                    this.timeout(this.reallyShowOverlay.bind(this, url, isVideo), 600);
+                }
+                else {
+                    this.reallyShowOverlay(url, isVideo);
+                }
+            };
+            ViewableCtrl.prototype.reallyShowOverlay = function (url, isVideo) {
                 var _this = this;
                 if (isVideo) {
                     this.isLoading = true;
@@ -390,11 +425,9 @@ var PresentationApp;
                         height: 720,
                         isVideo: true
                     };
-                    setTimeout(function () {
-                        _this.scope.$apply(function () {
-                            _this.isLoading = false;
-                            _this.overlayActive = true;
-                        });
+                    this.timeout(function () {
+                        _this.isLoading = false;
+                        _this.overlayActive = true;
                     }, 1000);
                 }
                 else {
@@ -418,18 +451,35 @@ var PresentationApp;
             ViewableCtrl.prototype.hideOverlay = function () {
                 var _this = this;
                 this.overlayActive = false;
-                setTimeout(function () {
-                    _this.scope.$apply(function () {
-                        _this.overlay = undefined;
-                    });
+                this.timeout(function () {
+                    _this.overlay = undefined;
                 }, 500);
             };
-            ViewableCtrl.$inject = ["$scope"];
+            ViewableCtrl.prototype.showQA = function (question) {
+                if (this.overlayActive) {
+                    this.hideOverlay();
+                    this.timeout(this.reallyShowQA.bind(this, question), 800);
+                }
+                else if (this.qaActive) {
+                    this.qaActive = false;
+                    this.timeout(this.reallyShowQA.bind(this, question), 600);
+                }
+                else {
+                    this.reallyShowQA(question);
+                }
+            };
+            ViewableCtrl.prototype.reallyShowQA = function (question) {
+                this.question = question;
+                this.overlayActive = false;
+                this.qaActive = true;
+            };
+            ViewableCtrl.$inject = ["$scope", "$timeout"];
             return ViewableCtrl;
         })();
         Controllers.ViewableCtrl = ViewableCtrl;
     })(Controllers = PresentationApp.Controllers || (PresentationApp.Controllers = {}));
 })(PresentationApp || (PresentationApp = {}));
+/// <reference path="../../../shared/data-types.ts" />
 var PresentationApp;
 (function (PresentationApp) {
     var AppController = (function () {
@@ -475,6 +525,35 @@ var PresentationApp;
         };
         AppController.prototype.clearOverlay = function () {
             window.postMessage(JSON.stringify({ action: "hideOverlay" }), Config.HOST);
+        };
+        AppController.prototype.openQuestion = function () {
+            var command = {
+                action: "showQASidebar",
+                data: JSON.stringify({
+                    id: "4",
+                    type: FFContentType.Question,
+                    submitter: { id: "1", name: "Keaton Brandt" },
+                    timestamp: new Date().getTime(),
+                    upvotes: 0,
+                    flagged: 0,
+                    text: "Is there any reason at all to use Model-View-Controller\n\t\t\t\t\t\tinstead of Model-View-ViewModel or whatever other sensible\n\t\t\t\t\t\talternative?\n\t\t\t\t\t",
+                    replies: [
+                        {
+                            id: "5",
+                            type: FFContentType.QuestionResponse,
+                            submitter: { id: "2", name: "Another Person" },
+                            timestamp: new Date().getTime(),
+                            upvotes: 0,
+                            flagged: 0,
+                            text: "No. Why would the model directly update the view?\n\t\t\t\t\t\t\t\tThat makes no sense.\n\t\t\t\t\t\t\t"
+                        }
+                    ]
+                })
+            };
+            window.postMessage(JSON.stringify(command), Config.HOST);
+        };
+        AppController.prototype.closeQuestion = function () {
+            window.postMessage(JSON.stringify({ action: "hideQASidebar" }), Config.HOST);
         };
         return AppController;
     })();

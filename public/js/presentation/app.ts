@@ -1,3 +1,4 @@
+/// <reference path="../../../shared/data-types.ts" />
 module PresentationApp{
 	
 	class AppController {
@@ -57,6 +58,43 @@ module PresentationApp{
 		
 		clearOverlay(){
 			window.postMessage(JSON.stringify({action: "hideOverlay"}), Config.HOST);
+		}
+		
+		// This one is kind of long, we should probably remove it before finalizing the code
+		openQuestion() {
+			var command : Object = {
+				action: "showQASidebar",
+				data: JSON.stringify(<FFQuestion>{
+					id: "4",
+					type: FFContentType.Question,
+					submitter: <FFUser>{id:"1", name:"Keaton Brandt"},
+					timestamp: new Date().getTime(),
+					upvotes: 0,
+					flagged: 0,
+					text: `Is there any reason at all to use Model-View-Controller
+						instead of Model-View-ViewModel or whatever other sensible
+						alternative?
+					`,
+					replies: [
+						{
+							id: "5",
+							type: FFContentType.QuestionResponse,
+							submitter: <FFUser>{id:"2", name:"Another Person"},
+							timestamp: new Date().getTime(),
+							upvotes: 0,
+							flagged: 0,
+							text: `No. Why would the model directly update the view?
+								That makes no sense.
+							`
+						}
+					]
+				})
+			}
+			window.postMessage(JSON.stringify(command), Config.HOST);
+		}
+		
+		closeQuestion(){
+			window.postMessage(JSON.stringify({action: "hideQASidebar"}), Config.HOST);
 		}
 	}
 	

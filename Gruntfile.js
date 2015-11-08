@@ -37,7 +37,6 @@ module.exports = function(grunt) {
 			presentation: {
 				src: [
 					'public/directives/ff-content/*.html',
-					'public/directives/ff-content-box/*.html',
 					'public/directives/ff-question/*.html'
 				],
 				dest: 'public/js/presentation/templates.js',
@@ -58,6 +57,7 @@ module.exports = function(grunt) {
 				src: shared.concat([
 					"public/js/shared/*.ts",
 					"public/directives/ff-content/*.ts",
+					"public/directives/ff-question/*.ts",
 					"public/directives/floating-content/*.ts",
 					"public/js/presentation/controllers/*.ts",
 					"public/js/presentation/app.ts"

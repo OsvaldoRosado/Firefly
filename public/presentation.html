@@ -39,24 +39,18 @@
 			</floating-content>
 			
 			<!-- Display questions & replies -->
-			<floating-content class="overlayContainer" ng-class="{visible: vc.overlayActive}"
-				float-x="0.5" float-y="0.5" size="{{vc.accessLink ? 0.98 : 1.00}}"
-				content-width="{{vc.overlay.width}}" content-height="{{vc.overlay.height}}">
-				<div class="overlayContent">
-					<!-- Image and Video content are currently supported -->
-					<img ng-if="!vc.overlay.isVideo" ng-src="{{ vc.overlay.url }}"/>
-					<iframe ng-if="vc.overlay.isVideo" ng-src="{{ vc.overlay.url }}" frameborder="0"></iframe>
-				</div>
-			</floating-content>
-			
-			
-			<aside ng-if="vc.qaActive" class="u-pull-right two columns">
+			<aside ng-show="vc.qaActive" class="u-pull-right">
 				<div class="contentBox">
-					<h1>A Question</h1>
-					<ff-content-box display="0" content="vc.question" expanded="1"></ff-content-box>
+					<h1>LIVE QUESTION</h1>
+					<ff-question content="vc.question"></ff-question>
+					<ff-question ng-repeat="reply in vc.question.replies | limitTo:2" 
+								 content="reply" is-reply="true"></ff-question>
 				</div>
 			</aside>
+			
 		</div>
+		
+		<!-- Only visible on the projected view, not on mobile -->
 		<footer ng-if="vc.accessLink" class="accessLink">
 			<a ng-href="{{vc.accessLink}}">Join the presentation at <b>{{ vc.accessLink }}</b></a>
 			<img ng-show="vc.isLoading" src="./images/Pres-Loader.gif" alt="Loading" class="loader">

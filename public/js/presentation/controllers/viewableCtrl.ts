@@ -27,6 +27,7 @@ module PresentationApp.Controllers {
 	export class ViewableCtrl{
 
 		scope: ng.IScope;
+		timeout: ng.ITimeoutService;
 
 		slides: Array<PresentationApp.Slide>;
 		isLoading: boolean;
@@ -39,9 +40,12 @@ module PresentationApp.Controllers {
 		
 		accessLink: string;
 
-		static $inject = ["$scope"];
-		constructor($scope: ng.IScope){
+		static $inject = ["$scope", "$timeout"];
+		constructor($scope: ng.IScope, $timeout: ng.ITimeoutService){
 			this.scope = $scope;
+			
+			// setTimeout doesn't digest angular scope changes, $timeout does
+			this.timeout = $timeout;
 			
 			this.slides = [];
 			this.isLoading = false;
@@ -71,13 +75,10 @@ module PresentationApp.Controllers {
 						break;
 
 					case "showQASidebar":
-						this.question = JSON.parse(order.data);
-						this.overlayActive = false;
-						this.qaActive = true;
+						this.showQA(<FFQuestion>JSON.parse(order.data));
 						break;
 						
 					case "hideQASidebar":
-						this.question = undefined;
 						this.qaActive = false;
 						break;
 
@@ -98,7 +99,10 @@ module PresentationApp.Controllers {
 		changeSlide(url: string, forwards: boolean = true) {
 			if (this.overlayActive) {
 				this.hideOverlay();
-				setTimeout(this.reallyChangeSlide.bind(this, url, forwards), 800);
+				this.timeout(this.reallyChangeSlide.bind(this, url, forwards), 800);
+			} else if (this.qaActive) {
+				this.qaActive = false;
+				this.timeout(this.reallyChangeSlide.bind(this, url, forwards), 600);
 			} else {
 				this.reallyChangeSlide(url, forwards);
 			}
@@ -126,6 +130,18 @@ module PresentationApp.Controllers {
 		
 		// Show an overlay
 		showOverlay(url: string, isVideo: boolean) {
+			if (this.overlayActive) {
+				this.hideOverlay();
+				this.timeout(this.reallyShowOverlay.bind(this, url, isVideo), 800);
+			} else if (this.qaActive) {
+				this.qaActive = false;
+				this.timeout(this.reallyShowOverlay.bind(this, url, isVideo), 600);
+			} else {
+				this.reallyShowOverlay(url, isVideo);
+			}
+		}
+		
+		private reallyShowOverlay(url: string, isVideo: boolean) {
 			if (isVideo){
 				this.isLoading = true;
 				
@@ -138,11 +154,9 @@ module PresentationApp.Controllers {
 				};
 				
 				// Wait a bit for the embed to load
-				setTimeout(()=>{
-					this.scope.$apply(()=>{
-						this.isLoading = false;
-						this.overlayActive = true;
-					});
+				this.timeout(()=>{
+					this.isLoading = false;
+					this.overlayActive = true;
 				}, 1000);
 				
 			
@@ -174,11 +188,28 @@ module PresentationApp.Controllers {
 			this.overlayActive = false;
 						
 			// Clear the content after a short time
-			setTimeout(()=>{
-				this.scope.$apply(()=>{
-					this.overlay = undefined;
-				});
+			this.timeout(()=>{
+				this.overlay = undefined;
 			}, 500);
+		}
+		
+		// Show a question
+		showQA(question: FFQuestion) {
+			if (this.overlayActive) {
+				this.hideOverlay();
+				this.timeout(this.reallyShowQA.bind(this, question), 800);
+			} else if (this.qaActive) {
+				this.qaActive = false;
+				this.timeout(this.reallyShowQA.bind(this, question), 600);
+			} else {
+				this.reallyShowQA(question);
+			}
+		}
+		
+		private reallyShowQA(question: FFQuestion) {
+			this.question = question;
+			this.overlayActive = false;
+			this.qaActive = true;
 		}
 	}
 }
