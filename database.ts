@@ -77,6 +77,29 @@ class Database {
 			}
 		});
 	}
+	
+	public pullModels<T extends BaseModel.BaseModel>(match:Object, model:T, cb:(success:T[])=>void) {
+		var collection = this.database.collection(model.getType());
+		collection.find(match, function(err, data) {
+			if(!err && data){
+				data.toArray((err, res)=>{
+					if(err || !res) {
+						return cb(null);
+					}
+					var models : T[] = [];
+					res.forEach((item)=>{
+						var m = model.constructor();
+						for(var key in item){
+							m[key] = item[key];
+						}
+						models.push(m);
+					});
+				});
+			} else {
+				return cb(null);
+			}
+		});
+	}
 }
 
 // Exporting an instance rather than a class will make a singleton
