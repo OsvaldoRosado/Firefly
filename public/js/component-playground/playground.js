@@ -376,8 +376,6 @@ var Shared;
             };
             FFContentBoxController.prototype.upvoteContent = function () {
                 this.content.upvotes = 1;
-                new Shared.UpvoteAPIRequest(this.http, this.content.id).catch(function () {
-                });
             };
             FFContentBoxController.$inject = ["$scope", "$element", "$http"];
             return FFContentBoxController;
@@ -418,6 +416,7 @@ var Playground;
             };
             this.imageContent = {
                 id: "1",
+                presentationId: "1",
                 type: FFContentType.Image,
                 submitter: this.testUser1,
                 timestamp: new Date().getTime(),
@@ -428,6 +427,7 @@ var Playground;
             };
             this.imageContent2 = {
                 id: "2",
+                presentationId: "1",
                 type: FFContentType.Image,
                 submitter: this.testUser1,
                 timestamp: new Date().getTime(),
@@ -439,6 +439,7 @@ var Playground;
             };
             this.videoContent = {
                 id: "3",
+                presentationId: "1",
                 type: FFContentType.Video,
                 submitter: this.testUser1,
                 timestamp: new Date().getTime(),
@@ -450,6 +451,7 @@ var Playground;
             };
             this.questionContent = {
                 id: "4",
+                presentationId: "1",
                 type: FFContentType.Question,
                 submitter: this.testUser1,
                 timestamp: new Date().getTime(),
@@ -459,6 +461,7 @@ var Playground;
                 replies: [
                     {
                         id: "5",
+                        presentationId: "1",
                         type: FFContentType.QuestionResponse,
                         submitter: this.testUser1,
                         timestamp: new Date().getTime(),
@@ -468,6 +471,7 @@ var Playground;
                     },
                     {
                         id: "6",
+                        presentationId: "1",
                         type: FFContentType.QuestionResponse,
                         submitter: this.testUser1,
                         timestamp: new Date().getTime(),

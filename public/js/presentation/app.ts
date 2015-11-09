@@ -65,7 +65,6 @@ module PresentationApp{
 			var command : Object = {
 				action: "showQASidebar",
 				data: JSON.stringify(<FFQuestion>{
-					id: "4",
 					type: FFContentType.Question,
 					submitter: <FFUser>{id:"1", name:"Keaton Brandt"},
 					timestamp: new Date().getTime(),
@@ -77,7 +76,6 @@ module PresentationApp{
 					`,
 					replies: [
 						{
-							id: "5",
 							type: FFContentType.QuestionResponse,
 							submitter: <FFUser>{id:"2", name:"Another Person"},
 							timestamp: new Date().getTime(),

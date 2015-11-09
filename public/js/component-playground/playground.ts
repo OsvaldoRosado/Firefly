@@ -28,6 +28,7 @@ module Playground {
 
 			this.imageContent = {
 				id: "1",
+				presentationId: "1",
 				type: FFContentType.Image,
 				submitter: this.testUser1,
 				timestamp: new Date().getTime(),
@@ -39,6 +40,7 @@ module Playground {
 			
 			this.imageContent2 = {
 				id: "2",
+				presentationId: "1",
 				type: FFContentType.Image,
 				submitter: this.testUser1,
 				timestamp: new Date().getTime(),
@@ -51,6 +53,7 @@ module Playground {
 			
 			this.videoContent = {
 				id: "3",
+				presentationId: "1",
 				type: FFContentType.Video,
 				submitter: this.testUser1,
 				timestamp: new Date().getTime(),
@@ -63,6 +66,7 @@ module Playground {
 			
 			this.questionContent = {
 				id: "4",
+				presentationId: "1",
 				type: FFContentType.Question,
 				submitter: this.testUser1,
 				timestamp: new Date().getTime(),
@@ -75,6 +79,7 @@ module Playground {
 				replies: [
 					{
 						id: "5",
+						presentationId: "1",
 						type: FFContentType.QuestionResponse,
 						submitter: this.testUser1,
 						timestamp: new Date().getTime(),
@@ -86,6 +91,7 @@ module Playground {
 					},
 					{
 						id: "6",
+						presentationId: "1",
 						type: FFContentType.QuestionResponse,
 						submitter: this.testUser1,
 						timestamp: new Date().getTime(),
