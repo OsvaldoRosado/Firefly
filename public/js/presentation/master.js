@@ -431,10 +431,10 @@ var PresentationApp;
                 slideImage.src = url;
             };
             ViewableCtrl.prototype.showOverlay = function (url, isVideo) {
+                if (this.overlay && this.overlay.url == url) {
+                    return;
+                }
                 if (this.overlayActive) {
-                    if (this.overlay && this.overlay.url == url) {
-                        return;
-                    }
                     this.hideOverlay();
                     this.timeout(this.reallyShowOverlay.bind(this, url, isVideo), 800);
                 }
@@ -481,6 +481,9 @@ var PresentationApp;
             };
             ViewableCtrl.prototype.hideOverlay = function () {
                 var _this = this;
+                if (this.overlayActive == false) {
+                    return;
+                }
                 this.overlayActive = false;
                 this.timeout(function () {
                     _this.overlay = undefined;

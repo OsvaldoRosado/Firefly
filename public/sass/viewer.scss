@@ -82,7 +82,6 @@ nav.viewer {
 
 h3, h4 {
 	font-family: $content-font-stack !important;
-    text-align: center;
     color: black;
 }
 
@@ -121,6 +120,7 @@ form {
 #presPreview {
 	width: 94vw;
 	height: calc(94vw * 0.75);
+	max-height: 60vh;
 	display: block;
 	border: 1px solid #ccc;
 	border-radius: 1px;
@@ -279,5 +279,13 @@ form {
 				}
 			}
 		}
+	}
+}
+
+// ERROR PAGES =============================================================================
+
+.nothing {
+	h3, h4 {
+		text-align: center;
 	}
 }

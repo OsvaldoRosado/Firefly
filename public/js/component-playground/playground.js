@@ -375,10 +375,8 @@ var Shared;
                     this.content.type == FFContentType.Video) && width > 300;
             };
             FFContentBoxController.prototype.upvoteContent = function () {
-                var _this = this;
-                this.content.upvotes += 1;
+                this.content.upvotes = 1;
                 new Shared.UpvoteAPIRequest(this.http, this.content.id).catch(function () {
-                    _this.content.upvotes -= 1;
                 });
             };
             FFContentBoxController.$inject = ["$scope", "$element", "$http"];

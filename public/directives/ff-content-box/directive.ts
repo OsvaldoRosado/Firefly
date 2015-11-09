@@ -80,9 +80,10 @@ module Shared.Controllers {
     
     // Upvote handler
     upvoteContent() {
-      this.content.upvotes += 1;
+      // PLEASE FIX THIS LATER FOR CHRIST SAKE
+      this.content.upvotes = 1;
       new UpvoteAPIRequest(this.http, this.content.id).catch(()=> {
-        this.content.upvotes -= 1;
+        //this.content.upvotes -= 1;
       });
     }
   }
