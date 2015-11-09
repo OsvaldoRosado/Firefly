@@ -75,10 +75,12 @@ Database.notifyOnReady((dbConnected)=>{
 	// If no matches, use the static files directory
 	// We do a special rewrite for .html
 	app.use((req, res, next) => {
-		fs.stat(Config.STATIC_DIR+req.url+Config.PAGE_SUFFIX, (err, stat) => {
+		var url = req.url.split("?")[0].replace("/","");
+		fs.stat(Config.STATIC_DIR+url+Config.PAGE_SUFFIX, (err, stat) => {
 			if(err == null) {
 				// The url exists as an .html file in our public directory
-				req.url += Config.PAGE_SUFFIX;
+				var comps = req.url.split("?");
+				req.url = comps[0] + ".html" + (comps.length > 1 ? "?"+comps[1] : "");
 			}
 			next();
 		});
