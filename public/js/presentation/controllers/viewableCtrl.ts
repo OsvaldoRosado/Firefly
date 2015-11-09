@@ -135,9 +135,9 @@ module PresentationApp.Controllers {
 		
 		// Show an overlay
 		showOverlay(url: string, isVideo: boolean) {
+			if (this.overlay && this.overlay.url == url) {return;}
+			
 			if (this.overlayActive) {
-				if (this.overlay && this.overlay.url == url) {return;}
-				
 				this.hideOverlay();
 				this.timeout(this.reallyShowOverlay.bind(this, url, isVideo), 800);
 			} else if (this.qaActive) {
@@ -192,6 +192,7 @@ module PresentationApp.Controllers {
 		
 		// Hide the overlay (pretty self-explanatory really)
 		hideOverlay(){
+			if (this.overlayActive == false) {return;}
 			this.overlayActive = false;
 						
 			// Clear the content after a short time

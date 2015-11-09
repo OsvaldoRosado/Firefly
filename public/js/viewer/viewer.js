@@ -505,10 +505,12 @@ var ViewerApp;
             LiveCtrl.prototype.managePresentationView = function () {
                 var _this = this;
                 new Shared.GetPresentationStateAPIRequest(this.http, this.instanceID).then(function (data, headers) {
-                    _this.presentationInstance = data.data;
-                    _this.windowManager.commandAll("changeSlide", _this.parentApp.presentation.slideUrls[_this.presentationInstance.currentSlide]);
-                    if (_this.presentationInstance.currentContentId && _this.presentationInstance.currentContentId != "") {
-                        _this.windowManager.postAll(_this.presentationInstance.currentContentId);
+                    if (JSON.stringify(data.data) != JSON.stringify(_this.presentationInstance)) {
+                        _this.presentationInstance = data.data;
+                        _this.windowManager.commandAll("changeSlide", _this.parentApp.presentation.slideUrls[_this.presentationInstance.currentSlide]);
+                        if (_this.presentationInstance.currentContentId && _this.presentationInstance.currentContentId != "") {
+                            _this.windowManager.postAll(_this.presentationInstance.currentContentId);
+                        }
                     }
                     window.setTimeout(_this.managePresentationView.bind(_this), 300);
                 });

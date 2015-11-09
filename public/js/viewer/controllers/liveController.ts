@@ -31,6 +31,7 @@ module ViewerApp.Controllers {
 
 			// Initialize the presentation view
 			var presPreview = <HTMLIFrameElement>document.getElementById("presPreview");
+			//presPreview.style.height = "200px";
 			this.windowManager = new Shared.LocalWindowManager([presPreview.contentWindow]);
 			
 			// Kick off this whole shebang once the parent has loaded the presentation
@@ -47,15 +48,17 @@ module ViewerApp.Controllers {
 		private managePresentationView(){
 			
 			new Shared.GetPresentationStateAPIRequest(this.http,this.instanceID).then((data:any, headers)=>{
-				this.presentationInstance = data.data;
-				
-				// Push changes to the view (in an iFrame)
-				this.windowManager.commandAll(
-					"changeSlide", this.parentApp.presentation.slideUrls[this.presentationInstance.currentSlide]
-				);
-				
-				if(this.presentationInstance.currentContentId && this.presentationInstance.currentContentId != "") {
-					this.windowManager.postAll(this.presentationInstance.currentContentId);
+				if (JSON.stringify(data.data) != JSON.stringify(this.presentationInstance)) {
+					this.presentationInstance = data.data;
+					
+					// Push changes to the view (in an iFrame)
+					this.windowManager.commandAll(
+						"changeSlide", this.parentApp.presentation.slideUrls[this.presentationInstance.currentSlide]
+					);
+					
+					if(this.presentationInstance.currentContentId && this.presentationInstance.currentContentId != "") {
+						this.windowManager.postAll(this.presentationInstance.currentContentId);
+					}
 				}
 				
 				// Make a new request
