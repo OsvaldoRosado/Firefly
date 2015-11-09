@@ -20,12 +20,22 @@
 			<div class="uploadPresentation">
 				<form enctype="multipart/form-data" id="uploadForm">
 					<div class="presentationUploader">
-						<input type="text" name="name" placeholder="Presentation Name">
-						<input type="file" name="presentation">
+						<input type="text" name="name" placeholder="Presentation Name" required>
+
+						<div class="presentationDropZone">
+							<div class="presentationDropZoneFilePicker">
+								<input type="file" name="presentation" required>
+							</div>
+							<div class="presentationDropZoneText">
+								<h1>Drop Presentation Here</h1>
+								<p>Click to show file picker</p>
+							</div>
+						</div>
 						<progress></progress>
+						<span class="upstart"></span>
 					</div>
 					<ul class="uploadOptions">
-						<li><input type="submit" value="Upload and Start Presentation" name="submit" class="nobox upstart"></li>
+						<li><input type="submit" value="Upload and Start Presentation" name="submit" class="nobox"></li>
 						<li><a href="/">Cancel</a></li>
 					</ul>
 				</form>
@@ -38,7 +48,7 @@
 			<li><a href="#">About</a></li>
 			<li><a href="#">Terms</a></li>
 			<li><a href="#">Help</a></li>
-			<li><a href="#" id="login">Login</a></li>
+			<li><a href="/api/logout" id="login">Logout</a></li>
 		</ul>
 	</footer>
 </body>

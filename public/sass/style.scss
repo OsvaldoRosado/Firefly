@@ -343,16 +343,51 @@ div.pastSubmissions {
 
 
 // Upload Page
+@-webkit-keyframes CandyBar {
+	from { background-position: 0 0; }
+	to { background-position: 60px 0; }
+}
 div.uploadPresentation {
 	border-left: 2px solid $primary-yellow-dark;
 	color: #FFFFFF;
+	div.presentationDropZone {
+		display: block;
+		position: relative;
+		margin: 1em 0 0 0;
+		width: 100%;
+		height: 180px;
+		border: 1px dashed $content-text-light;
+		&.highlight {
+			border: 1px dashed $primary-yellow-light;
+		}
+		div.presentationDropZoneFilePicker {
+			width: 100%;
+			position: absolute;
+			top: 0;	
+			z-index: 100;
+			input {
+				width: 100%;
+				height: 200px;
+				opacity: 0.001;
+				margin: 0;
+			}
+		}
+		div.presentationDropZoneText {
+			z-index: 1;
+			display: block;
+			position: absolute;
+			top: 0;
+			width: 100%;
+			margin-top: 50px;
+			h1, p {
+				font-style: normal;
+				text-align: center;
+				margin-bottom: 1em;
+			}
+		}
+	}
 	div.presentationUploader {
 		padding: 1em 0 0 1em;
-		h1 {
-			font-size: 16px;
-			font-style: italic;
-			margin-bottom: 1em;
-		}
 		input {
 			border-color: #FFFFFF;
 			margin-bottom: 1em;
@@ -370,9 +405,12 @@ div.uploadPresentation {
 			line-height: 14px;
 		}
 		progress {
-			display: none;
+			-webkit-appearance: none !important;
+			display: block;
 			background-color: $primary-yellow-light;
 			width: 100%;
+			position: relative;
+			margin: 2em 0 0 0;
 			&::-webkit-progress-bar {
 				background-color: $primary-yellow-light;
 			}
@@ -380,21 +418,39 @@ div.uploadPresentation {
 				background-color: $secondary-green;
 			}
 		}
+		progress.conversion[value]::after {
+			position: absolute;
+			top: 0;
+			content: "";
+			width: 100%;
+			height: 100%;
+			display: block;
+			background: linear-gradient(135deg, $secondary-green 25%, $primary-yellow-light 25%,
+				$primary-yellow-light 50%, $secondary-green 50%, $secondary-green 75%,
+				$primary-yellow-light 75%, $primary-yellow-light);
+			background-size: 60px 60px;
+			background-repeat: repeat;
+			animation: CandyBar 1s linear infinite;
+		}
+		span.upstart {
+			display: block;
+			margin: 0.5em 0;
+		}
 	}
 	ul.uploadOptions {
-		padding: 1em 0;
+		padding: 0 0 1em 0;
 		li {
 			margin-bottom: 1em;
 			&:last-child {
 				margin-bottom: 0;
 			}
-			a,input {
+			a, input {
 				width: 100%;
 				display: inline-block;
 				color: #FFFFFF;
 				text-decoration: none;
 				border-top: 1px solid $secondary-green;
-				padding: 1em 0 0 1em;
+				padding: 1em 0 0 16px;
 				font-style: italic;
 				&:hover {
 					color: $primary-yellow-light;

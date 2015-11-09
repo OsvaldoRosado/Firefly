@@ -1,14 +1,40 @@
 $(function() {
+
+	var filename;
+	$('progress').hide();
 	
 	$.get("/api/getCurrentUserInfo?rand="+(new Date().getTime()),function(data) {
 		data = JSON.parse(data);
 		if(!data.success){
 			window.location.replace("/");
-		}else{
+		} else{
 			$(".username").text(data.data.name);
 		}
 	});
 	
+	var dropzone = $(".presentationDropZone");
+	dropzone.on('dragenter', function(e) {
+		dropzone.toggleClass("highlight");
+	});
+	dropzone.on('dragleave', function(e) {
+		dropzone.toggleClass('highlight');
+	});
+	dropzone.on('drop', function(e) {
+		dropzone.addClass('highlight');
+	});
+
+	$("form#uploadForm input:file").change(function() {
+		if ($(this).val()) {
+			$(".presentationDropZoneText h1").html("Let's go!");
+			filename = $(this).val().split('\\').pop();
+			$(".presentationDropZoneText p").html(filename);
+		} else {
+			$(".presentationDropZoneText h1").html("Drop Presentation Here");
+			$(".presentationDropZoneText p").html("Click to show file picker");
+		}
+
+	})
+
 	$('form#uploadForm').submit(function(e) {
 		e.preventDefault();
 		var formData = new FormData($('form#uploadForm')[0]);
@@ -20,7 +46,7 @@ $(function() {
 				var presXhr = $.ajaxSettings.xhr();
 				if (presXhr.upload) {
 					presXhr.upload.addEventListener('progress', progressHandler, false);
-					$(".upstart").val("Please wait...");
+					$(".upstart").html("Uploading " + filename + "...");
 					$(".upstart").attr("disabled","disabled");
 				}
 				return presXhr;
@@ -52,6 +78,10 @@ $(function() {
 	function progressHandler(e) {
 		if (e.lengthComputable) {
 			$('progress').attr({value: e.loaded, max:e.total});
+			if (e.loaded == e.total) {
+				$("progress").addClass("conversion");
+				$(".upstart").html("Converting " + filename + "...");
+			}
 		}
 	}
 });
