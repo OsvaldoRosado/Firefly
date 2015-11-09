@@ -377,7 +377,8 @@ var PresentationApp;
             }
             ViewableCtrl.prototype.changeSlide = function (url, forwards) {
                 if (forwards === void 0) { forwards = true; }
-                if (this.slides[this.slides.length - 1].url == url) {
+                if (this.slides[this.slides.length - 1] !== undefined &&
+                    this.slides[this.slides.length - 1].url == url) {
                     return;
                 }
                 if (this.overlayActive) {
