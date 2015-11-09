@@ -377,6 +377,9 @@ var PresentationApp;
             }
             ViewableCtrl.prototype.changeSlide = function (url, forwards) {
                 if (forwards === void 0) { forwards = true; }
+                if (this.slides[this.slides.length - 1].url == url) {
+                    return;
+                }
                 if (this.overlayActive) {
                     this.hideOverlay();
                     this.timeout(this.reallyChangeSlide.bind(this, url, forwards), 800);
