@@ -37,7 +37,6 @@ module.exports = function(grunt) {
 			presentation: {
 				src: [
 					'public/directives/ff-content/*.html',
-					'public/directives/ff-content-box/*.html',
 					'public/directives/ff-question/*.html'
 				],
 				dest: 'public/js/presentation/templates.js',
@@ -57,7 +56,9 @@ module.exports = function(grunt) {
 			presentation: {
 				src: shared.concat([
 					"public/js/shared/*.ts",
-					"public/directives/**/*.ts",
+					"public/directives/ff-content/*.ts",
+					"public/directives/ff-question/*.ts",
+					"public/directives/floating-content/*.ts",
 					"public/js/presentation/controllers/*.ts",
 					"public/js/presentation/app.ts"
 				]),
@@ -143,6 +144,22 @@ module.exports = function(grunt) {
 				},
 				files: {
 					"public/css/component-playground.css" : "public/sass/component-playground.scss"
+				}
+			},
+			presentation: {
+				options: {
+					style: "compressed"
+				},
+				files: {
+					"public/css/presentation.css" : "public/sass/presentation.scss"
+				}
+			},
+			index: {
+				options: {
+					style: "compressed"
+				},
+				files: {
+					"public/css/index.css" : "public/sass/index.scss"
 				}
 			}
 		}
