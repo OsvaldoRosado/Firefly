@@ -46,7 +46,7 @@ $(function() {
 				var presXhr = $.ajaxSettings.xhr();
 				if (presXhr.upload) {
 					presXhr.upload.addEventListener('progress', progressHandler, false);
-					$(".upstart").val("Please wait...");
+					$(".upstart").html("Uploading " + filename + "...");
 					$(".upstart").attr("disabled","disabled");
 				}
 				return presXhr;
@@ -74,44 +74,6 @@ $(function() {
 		});
 		return false;
 	});
-
-
-	// function uploadPresentation(file, status) {
-	// 	// var formData = new FormData($('form#uploadForm')[0]);
-	// 	$.ajax({
-	// 		url: '/api/uploadPresentation',
-	// 		type: 'POST',
-	// 		xhr: function() {
-	// 			var presXhr = $.ajaxSettings.xhr();
-	// 			if (presXhr.upload) {
-	// 				presXhr.upload.addEventListener('progress', progressHandler, false);
-	// 				$(".upstart").html("Uploading " + filename + "...");
-	// 				$(".upstart").attr("disabled","disabled");
-	// 			}
-	// 			return presXhr;
-	// 		},
-	// 		beforeSend: function() {
-	// 			$('progress').show();
-	// 		},
-	// 		success: function(data, status,jqXHR) {
-	// 			data = JSON.parse(data);
-	// 			console.log("STATUS: " + data, status);
-	// 			if (data.success == true) {
-	// 				var presentationURL = "/presenter#" + data.data.id;
-	// 				window.location.replace(presentationURL);
-	// 			} else {
-	// 				alert("Failed to upload.");
-	// 			}
-	// 		},
-	// 		error: function(jqXHR, status, error) {
-	// 			alert("ERROR", status, error);
-	// 		},
-	// 		data: file,
-	// 		cache: false,
-	// 		contentType: false,
-	// 		processData: false
-	// 	});
-	// }
 
 	function progressHandler(e) {
 		if (e.lengthComputable) {
