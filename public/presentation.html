@@ -21,7 +21,7 @@
 			<div class="slides" ng-class="{background: vc.overlayActive, aside: vc.qaActive}">
 				<floating-content class="slide"
 					float-x="0.5" float-y="0.5" size="{{vc.accessLink ? 0.98 : 1.00}}" 
-					ng-repeat="slide in vc.slides | limitTo:2"
+					ng-repeat="slide in vc.slides | limitTo:-2"
 					content-width="{{slide.width}}" content-height="{{slide.height}}">
 					<img ng-src="{{ slide.url }}" alt="">
 				</floating-content>
