@@ -204,22 +204,19 @@ var Shared;
                     transclude.style.display = "block";
                     var getInnerHeight = function () {
                         var lastChild = transclude.children[transclude.children.length - 1];
-                        if (!lastChild) {
-                            return transclude.getBoundingClientRect().height;
+                        var marginBottom = 0;
+                        if (lastChild) {
+                            marginBottom = parseInt(window.getComputedStyle(lastChild).marginBottom);
                         }
-                        var marginBottom = parseInt(window.getComputedStyle(lastChild).marginBottom);
                         return transclude.getBoundingClientRect().height + marginBottom;
                     };
                     element.style.overflow = "hidden";
                     element.style.display = "block";
-                    if (!scope.expanded) {
-                        element.style.height = "0px";
+                    var lastHeight = 0;
+                    if (scope.expanded) {
+                        lastHeight = getInnerHeight();
                     }
-                    else {
-                        setTimeout(function () {
-                            element.style.height = getInnerHeight() + "px";
-                        }, 100);
-                    }
+                    element.style.height = lastHeight + "px";
                     scope.$watch("expanded", function (newValue, oldValue) {
                         if (newValue == oldValue) {
                             return;
@@ -237,6 +234,18 @@ var Shared;
                                 element.style.transition = "";
                             }, 100 + duration);
                         }, 100);
+                    });
+                    var heightWatch = setInterval(function () {
+                        var newHeight = getInnerHeight();
+                        if (newHeight != lastHeight) {
+                            lastHeight = newHeight;
+                            if (scope.expanded) {
+                                element.style.height = lastHeight + "px";
+                            }
+                        }
+                    }, 100);
+                    scope.$on("$destroy", function () {
+                        clearInterval(heightWatch);
                     });
                 }
             };

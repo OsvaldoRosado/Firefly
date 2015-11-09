@@ -36,8 +36,10 @@ module Shared.Directives {
         // Get the height of the inner element
         var getInnerHeight = function():number {
           var lastChild : HTMLElement = <HTMLElement>transclude.children[transclude.children.length - 1];
-          if (!lastChild) {return transclude.getBoundingClientRect().height;}
-          var marginBottom : number = parseInt(window.getComputedStyle(lastChild).marginBottom);
+          var marginBottom : number = 0;
+          if (lastChild) {
+            marginBottom = parseInt(window.getComputedStyle(lastChild).marginBottom);
+          }
           return transclude.getBoundingClientRect().height + marginBottom;
         }
 
@@ -46,13 +48,11 @@ module Shared.Directives {
         element.style.display = "block";
 
         // Start collapsed if requested
-        if (!scope.expanded) {
-          element.style.height = "0px";
-        } else {
-          setTimeout(function(){
-            element.style.height = getInnerHeight()+"px";
-          }, 100);
+        var lastHeight : number = 0;
+        if (scope.expanded) {
+          lastHeight = getInnerHeight();
         }
+        element.style.height = lastHeight+"px";
 
         // Wait for the collapsedness value to change
         scope.$watch("expanded", function(newValue: boolean, oldValue: boolean) {
@@ -76,6 +76,22 @@ module Shared.Directives {
             }, 100 + duration);
 
           }, 100);
+        });
+        
+        // Watch for the content height changing
+        var heightWatch = setInterval(()=>{
+          var newHeight : number = getInnerHeight();
+          if (newHeight != lastHeight) {
+            lastHeight = newHeight;
+            if (scope.expanded) {
+              element.style.height = lastHeight + "px";
+            }
+          }
+        }, 100);
+        
+        // Clear the interval when we're done
+        scope.$on("$destroy", ()=>{
+          clearInterval(heightWatch);
         });
       }
     };
