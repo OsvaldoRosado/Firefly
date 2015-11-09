@@ -124,6 +124,26 @@ var Shared;
         return GenerateShortInstanceURLAPIRequest;
     })(Shared.APIRequest);
     Shared.GenerateShortInstanceURLAPIRequest = GenerateShortInstanceURLAPIRequest;
+    var PostContentForPresentationInstance = (function (_super) {
+        __extends(PostContentForPresentationInstance, _super);
+        function PostContentForPresentationInstance($http, instanceId, content) {
+            var reqbody = {
+                instanceid: instanceId,
+                data: JSON.stringify(content)
+            };
+            _super.call(this, $http, "/postContentForPresentationInstance", reqbody, APIMethod.POST);
+        }
+        return PostContentForPresentationInstance;
+    })(Shared.APIRequest);
+    Shared.PostContentForPresentationInstance = PostContentForPresentationInstance;
+    var GetContentForPresentationInstance = (function (_super) {
+        __extends(GetContentForPresentationInstance, _super);
+        function GetContentForPresentationInstance($http, instanceId) {
+            _super.call(this, $http, "/getContentForPresentationInstance/" + instanceId, {});
+        }
+        return GetContentForPresentationInstance;
+    })(Shared.APIRequest);
+    Shared.GetContentForPresentationInstance = GetContentForPresentationInstance;
 })(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {
@@ -184,6 +204,9 @@ var Shared;
                     transclude.style.display = "block";
                     var getInnerHeight = function () {
                         var lastChild = transclude.children[transclude.children.length - 1];
+                        if (!lastChild) {
+                            return transclude.getBoundingClientRect().height;
+                        }
                         var marginBottom = parseInt(window.getComputedStyle(lastChild).marginBottom);
                         return transclude.getBoundingClientRect().height + marginBottom;
                     };

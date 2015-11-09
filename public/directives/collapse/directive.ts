@@ -36,6 +36,7 @@ module Shared.Directives {
         // Get the height of the inner element
         var getInnerHeight = function():number {
           var lastChild : HTMLElement = <HTMLElement>transclude.children[transclude.children.length - 1];
+          if (!lastChild) {return transclude.getBoundingClientRect().height;}
           var marginBottom : number = parseInt(window.getComputedStyle(lastChild).marginBottom);
           return transclude.getBoundingClientRect().height + marginBottom;
         }

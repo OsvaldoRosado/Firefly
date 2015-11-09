@@ -9,18 +9,23 @@ module ViewerApp {
 		scope: ng.IScope;
 		http: ng.IHttpService;
 		
+		// Navigation
 		pageName: string;
 		
+		// Presentation Stuff
 		instanceID: string;
-	
 		presentationInstance:FFPresentationInstance;
 		presentation:FFPresentation;
+		
+		// Content
+		content: FFGenericContent[];
 		
 		// Basically just create all sorts of dummy data
 		static $inject = ["$rootScope", "$scope", "$http"];
 		constructor($rootScope: ng.IScope, $scope: ng.IScope, $http:ng.IHttpService) {
 			this.scope = $scope;
 			this.http = $http;
+			this.content = []
 			
 			// Get current instanceID
 			var params = window.location.search;
@@ -33,12 +38,23 @@ module ViewerApp {
 					this.presentation = data.data;
 					window.dispatchEvent(new Event("ffPresentationLoaded"));
 				});
+				
+				// Load the submitted content
+				this.loadSubmittedContent();
 			});
 			
 			// Watch for page changes
 			this.pageName = "/";
 			$rootScope.$on('$routeChangeSuccess', (e, newVal)=> {
 				this.pageName = newVal.$$route.originalPath;
+			});
+		}
+		
+		private loadSubmittedContent(){
+			new Shared.GetContentForPresentationInstance(this.http, this.presentationInstance.id).then((data)=>{
+				this.content = (<any>data).data;
+				
+				//setTimeout(this.loadSubmittedContent.bind(this), 2000);
 			});
 		}
 	}
@@ -65,8 +81,8 @@ module ViewerApp {
 				})
 				.when('/ask', {
 					templateUrl: 'templates/viewer/ask.html',
-					controller: ViewerApp.Controllers.LiveCtrl,
-					controllerAs: "live"
+					controller: ViewerApp.Controllers.QuestionCtrl,
+					controllerAs: "qc"
 				})
 				.when('/submit', {
 					templateUrl: 'templates/viewer/submit.html',

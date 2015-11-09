@@ -58,12 +58,18 @@ module Shared {
 		}
 		catch(f: (error: Object) => void) {this.onfail = f; return this;}
 	}
+	
+	
+	// PRESENTATIONS =======================================================================
 
 	export class GetPresentationAPIRequest extends Shared.APIRequest<FFPresentation> {
 		constructor($http: ng.IHttpService, presentationId: string) {
 			super($http, "/getPresentationFromId/" + presentationId, {});
 		}
 	}
+	
+	
+	// PRESENTATION INSTANCES ==============================================================
 
 	export class GeneratePresentationInstanceAPIRequest extends Shared.APIRequest<FFPresentationInstance> {
 		constructor($http: ng.IHttpService, presentationId: string) {
@@ -94,6 +100,25 @@ module Shared {
 	export class GenerateShortInstanceURLAPIRequest extends Shared.APIRequest<string> {
 		constructor($http: ng.IHttpService, instanceId: string) {
 			super($http, "/GenerateShortInstanceURL/" + instanceId, {});
+		}
+	}
+	
+	
+	// PRESENTATION CONTENT ================================================================
+	
+	export class PostContentForPresentationInstance extends Shared.APIRequest<Object> {
+		constructor($http: ng.IHttpService, instanceId: string, content: FFGenericContent) {
+			var reqbody = {
+				instanceid: instanceId,
+				data: JSON.stringify(content)
+			};
+			super($http, "/postContentForPresentationInstance", reqbody, APIMethod.POST);
+		}
+	}
+	
+	export class GetContentForPresentationInstance extends Shared.APIRequest<FFGenericContent[]> {
+		constructor($http: ng.IHttpService, instanceId: string) {
+			super($http, "/getContentForPresentationInstance/" + instanceId, {});
 		}
 	}
 }

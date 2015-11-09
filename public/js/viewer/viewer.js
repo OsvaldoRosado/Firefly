@@ -124,6 +124,26 @@ var Shared;
         return GenerateShortInstanceURLAPIRequest;
     })(Shared.APIRequest);
     Shared.GenerateShortInstanceURLAPIRequest = GenerateShortInstanceURLAPIRequest;
+    var PostContentForPresentationInstance = (function (_super) {
+        __extends(PostContentForPresentationInstance, _super);
+        function PostContentForPresentationInstance($http, instanceId, content) {
+            var reqbody = {
+                instanceid: instanceId,
+                data: JSON.stringify(content)
+            };
+            _super.call(this, $http, "/postContentForPresentationInstance", reqbody, APIMethod.POST);
+        }
+        return PostContentForPresentationInstance;
+    })(Shared.APIRequest);
+    Shared.PostContentForPresentationInstance = PostContentForPresentationInstance;
+    var GetContentForPresentationInstance = (function (_super) {
+        __extends(GetContentForPresentationInstance, _super);
+        function GetContentForPresentationInstance($http, instanceId) {
+            _super.call(this, $http, "/getContentForPresentationInstance/" + instanceId, {});
+        }
+        return GetContentForPresentationInstance;
+    })(Shared.APIRequest);
+    Shared.GetContentForPresentationInstance = GetContentForPresentationInstance;
 })(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {
@@ -184,6 +204,9 @@ var Shared;
                     transclude.style.display = "block";
                     var getInnerHeight = function () {
                         var lastChild = transclude.children[transclude.children.length - 1];
+                        if (!lastChild) {
+                            return transclude.getBoundingClientRect().height;
+                        }
                         var marginBottom = parseInt(window.getComputedStyle(lastChild).marginBottom);
                         return transclude.getBoundingClientRect().height + marginBottom;
                     };
@@ -386,6 +409,7 @@ var ViewerApp;
             var _this = this;
             this.scope = $scope;
             this.http = $http;
+            this.content = [];
             var params = window.location.search;
             var id = this.instanceID = params.split("&")[0].split("=")[1];
             new Shared.GetPresentationStateAPIRequest($http, id).then(function (data, headers) {
@@ -394,12 +418,19 @@ var ViewerApp;
                     _this.presentation = data.data;
                     window.dispatchEvent(new Event("ffPresentationLoaded"));
                 });
+                _this.loadSubmittedContent();
             });
             this.pageName = "/";
             $rootScope.$on('$routeChangeSuccess', function (e, newVal) {
                 _this.pageName = newVal.$$route.originalPath;
             });
         }
+        AppController.prototype.loadSubmittedContent = function () {
+            var _this = this;
+            new Shared.GetContentForPresentationInstance(this.http, this.presentationInstance.id).then(function (data) {
+                _this.content = data.data;
+            });
+        };
         AppController.$inject = ["$rootScope", "$scope", "$http"];
         return AppController;
     })();
@@ -422,8 +453,8 @@ var ViewerApp;
             })
                 .when('/ask', {
                 templateUrl: 'templates/viewer/ask.html',
-                controller: ViewerApp.Controllers.LiveCtrl,
-                controllerAs: "live"
+                controller: ViewerApp.Controllers.QuestionCtrl,
+                controllerAs: "qc"
             })
                 .when('/submit', {
                 templateUrl: 'templates/viewer/submit.html',
@@ -474,5 +505,50 @@ var ViewerApp;
             return LiveCtrl;
         })();
         Controllers.LiveCtrl = LiveCtrl;
+    })(Controllers = ViewerApp.Controllers || (ViewerApp.Controllers = {}));
+})(ViewerApp || (ViewerApp = {}));
+/// <reference path="../../../../shared/data-types.ts" />
+/// <reference path="../../typings/angular/angular.d.ts" />
+/// <reference path="../../typings/firefly/firefly.d.ts" />
+/// <reference path="../../shared/config.ts" />
+/// <reference path="../viewer.ts" />
+var ViewerApp;
+(function (ViewerApp) {
+    var Controllers;
+    (function (Controllers) {
+        var QuestionCtrl = (function () {
+            function QuestionCtrl($scope, $http) {
+                this.scope = $scope;
+                this.http = $http;
+                this.expandedIndex = -1;
+                this.parentApp = $scope["app"];
+                this.instanceID = this.parentApp.instanceID;
+            }
+            QuestionCtrl.prototype.askQuestion = function () {
+                var _this = this;
+                var question = {
+                    text: this.questionText,
+                    timestamp: new Date().getTime(),
+                    presentationId: this.parentApp.presentationInstance.presentationId,
+                    submitter: { id: "-1", name: "Anonymous User" },
+                    type: FFContentType.Question,
+                    upvotes: 0,
+                    flagged: 0,
+                    replies: []
+                };
+                new Shared.PostContentForPresentationInstance(this.http, this.instanceID, question).then(function (data) {
+                    if (data.success) {
+                        _this.expandedIndex += 1;
+                        _this.parentApp.content.splice(0, 0, question);
+                    }
+                });
+            };
+            QuestionCtrl.prototype.expandItem = function (index) {
+                this.expandedIndex = index;
+            };
+            QuestionCtrl.$inject = ["$scope", "$http"];
+            return QuestionCtrl;
+        })();
+        Controllers.QuestionCtrl = QuestionCtrl;
     })(Controllers = ViewerApp.Controllers || (ViewerApp.Controllers = {}));
 })(ViewerApp || (ViewerApp = {}));
