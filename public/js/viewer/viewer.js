@@ -556,6 +556,10 @@ var ViewerApp;
                 });
             };
             QuestionCtrl.prototype.expandItem = function (index) {
+                if (this.expandedIndex == index) {
+                    return this.expandedIndex = -1;
+                }
+                ;
                 this.expandedIndex = index;
             };
             QuestionCtrl.$inject = ["$scope", "$http"];

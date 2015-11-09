@@ -64,6 +64,7 @@ module ViewerApp.Controllers {
 		 * Expands a question
 		 */
 		expandItem(index: number) {
+			if (this.expandedIndex == index) {return this.expandedIndex = -1};
 			this.expandedIndex = index;
 		}
 	}
