@@ -124,6 +124,26 @@ var Shared;
         return GenerateShortInstanceURLAPIRequest;
     })(Shared.APIRequest);
     Shared.GenerateShortInstanceURLAPIRequest = GenerateShortInstanceURLAPIRequest;
+    var PostContentForPresentationInstance = (function (_super) {
+        __extends(PostContentForPresentationInstance, _super);
+        function PostContentForPresentationInstance($http, instanceId, content) {
+            var reqbody = {
+                instanceid: instanceId,
+                data: JSON.stringify(content)
+            };
+            _super.call(this, $http, "/postContentForPresentationInstance", reqbody, APIMethod.POST);
+        }
+        return PostContentForPresentationInstance;
+    })(Shared.APIRequest);
+    Shared.PostContentForPresentationInstance = PostContentForPresentationInstance;
+    var GetContentForPresentationInstance = (function (_super) {
+        __extends(GetContentForPresentationInstance, _super);
+        function GetContentForPresentationInstance($http, instanceId) {
+            _super.call(this, $http, "/getContentForPresentationInstance/" + instanceId, {});
+        }
+        return GetContentForPresentationInstance;
+    })(Shared.APIRequest);
+    Shared.GetContentForPresentationInstance = GetContentForPresentationInstance;
 })(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {
@@ -412,6 +432,9 @@ var PresentationApp;
             };
             ViewableCtrl.prototype.showOverlay = function (url, isVideo) {
                 if (this.overlayActive) {
+                    if (this.overlay && this.overlay.url == url) {
+                        return;
+                    }
                     this.hideOverlay();
                     this.timeout(this.reallyShowOverlay.bind(this, url, isVideo), 800);
                 }
@@ -472,8 +495,7 @@ var PresentationApp;
                     this.timeout(this.reallyShowQA.bind(this, question), 800);
                 }
                 else if (this.qaActive) {
-                    this.qaActive = false;
-                    this.timeout(this.reallyShowQA.bind(this, question), 600);
+                    return;
                 }
                 else {
                     this.reallyShowQA(question);

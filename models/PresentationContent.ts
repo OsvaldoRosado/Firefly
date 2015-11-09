@@ -22,7 +22,7 @@ class PresentationContent extends Base.BaseModel implements FFGenericContent {
 		
 		// Append data - breaks PresentationContent type!
 		for(var key in data){
-			content[key] = data;
+			content[key] = data[key];
 		}
 		
 		// Fill standard fields
