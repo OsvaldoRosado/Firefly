@@ -69,6 +69,8 @@ Database.notifyOnReady((dbConnected)=>{
 	app.post("/api/postCurrentState", Controllers.PostCurrentState.asHandler());
 	app.get("/api/getCurrentState/:instanceid", Controllers.GetCurrentState.asHandler());
 	app.get("/api/generateShortInstanceURL/:instance", Controllers.GenerateShortInstanceURL.asHandler());
+	app.post("/api/postContentForPresentationInstance", Controllers.PostContentForPresentationInstance.asHandler());
+	app.get("/api/getContentForPresentationInstance/:instanceid", Controllers.GetContentForPresentationInstance.asHandler());
 	
 	// If no matches, use the static files directory
 	// We do a special rewrite for .html
