@@ -79,6 +79,7 @@ $(function() {
 		if (e.lengthComputable) {
 			$('progress').attr({value: e.loaded, max:e.total});
 			if (e.loaded == e.total) {
+				$("progress").addClass("conversion");
 				$(".upstart").html("Converting " + filename + "...");
 			}
 		}

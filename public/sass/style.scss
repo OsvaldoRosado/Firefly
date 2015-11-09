@@ -414,8 +414,11 @@ div.uploadPresentation {
 			&::-webkit-progress-bar {
 				background-color: $primary-yellow-light;
 			}
+			&::-webkit-progress-value {
+				background-color: $secondary-green;
+			}
 		}
-		progress[value]::after {
+		progress.conversion[value]::after {
 			position: absolute;
 			top: 0;
 			content: "";
