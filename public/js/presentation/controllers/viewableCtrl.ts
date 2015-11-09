@@ -99,6 +99,8 @@ module PresentationApp.Controllers {
 		
 		// Proceed to a new slide
 		changeSlide(url: string, forwards: boolean = true) {
+			if (this.slides[this.slides.length - 1].url == url) {return;}
+			
 			if (this.overlayActive) {
 				this.hideOverlay();
 				this.timeout(this.reallyChangeSlide.bind(this, url, forwards), 800);
