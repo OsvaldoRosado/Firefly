@@ -510,41 +510,53 @@ var PresenterApp;
                 };
                 this.content = [
                     {
-                        id: "1",
+                        id: "9",
                         presentationId: "1",
                         type: FFContentType.Image,
                         submitter: testUser1,
                         timestamp: new Date().getTime(),
-                        upvotes: 3,
+                        upvotes: 0,
                         flagged: 0,
-                        filename: "crcCards.png",
-                        text: "This CRC card application looks useful.",
-                        link: "/images/dummy/crcCards.jpg"
+                        filename: "presenter-mock.png",
+                        text: "Page from our doc detailing the presenter view",
+                        link: "/images/dummy/presenter-mock.png"
+                    },
+                    {
+                        id: "8",
+                        presentationId: "1",
+                        type: FFContentType.Image,
+                        submitter: testUser1,
+                        timestamp: new Date().getTime(),
+                        upvotes: 0,
+                        flagged: 0,
+                        filename: "mobile-upload.png",
+                        text: "This is what people should see when they submit content",
+                        link: "/images/dummy/mobile-upload.png"
                     },
                     {
                         id: "7",
                         presentationId: "1",
                         type: FFContentType.Image,
-                        submitter: testUser2,
+                        submitter: testUser1,
                         timestamp: new Date().getTime(),
                         upvotes: 0,
                         flagged: 0,
-                        filename: "complicatedClassDiagram.png",
-                        text: "This class diagram seems like an example of one that's too complicated.",
-                        link: "/images/dummy/complicatedClassDiagram.png"
+                        filename: "mobile-live.png",
+                        text: "Mockup of the main view the audience sees.",
+                        link: "/images/dummy/mobile-live.png"
                     },
                     {
-                        id: "3",
+                        id: "4",
                         presentationId: "1",
                         type: FFContentType.Video,
                         submitter: testUser2,
                         timestamp: new Date().getTime(),
                         upvotes: 0,
                         flagged: 0,
-                        title: "UML 2.0 Tutorial",
-                        youtubeId: "OkC7HKtiZC0",
-                        channelTitle: "Derek Banas"
-                    }
+                        title: "Bueller, Bueller",
+                        youtubeId: "f4zyjLyBp64",
+                        channelTitle: "blc3211"
+                    },
                 ];
                 this.questions = [
                     {
@@ -566,38 +578,6 @@ var PresenterApp;
                                 upvotes: 0,
                                 flagged: 0,
                                 text: "I think it might depend on how complicated your overall class structure is."
-                            },
-                            {
-                                id: "6",
-                                presentationId: "1",
-                                type: FFContentType.QuestionResponse,
-                                submitter: testUser2,
-                                timestamp: new Date().getTime(),
-                                upvotes: 0,
-                                flagged: 0,
-                                text: "It should fit on the card!"
-                            }
-                        ]
-                    },
-                    {
-                        id: "8",
-                        presentationId: "1",
-                        type: FFContentType.Question,
-                        submitter: testUser1,
-                        timestamp: new Date().getTime(),
-                        upvotes: 1,
-                        flagged: 0,
-                        text: "Is it okay if I can't fit the responsibilities of my class on one side of the card?",
-                        replies: [
-                            {
-                                id: "9",
-                                presentationId: "1",
-                                type: FFContentType.QuestionResponse,
-                                submitter: testUser2,
-                                timestamp: new Date().getTime(),
-                                upvotes: 0,
-                                flagged: 0,
-                                text: "That probably means your class is doing too much! It should only have a single responsibility."
                             }
                         ]
                     }
@@ -605,9 +585,15 @@ var PresenterApp;
             }
             ContentCtrl.prototype.checkForContentContinuously = function () {
                 var _this = this;
+                if (this.presInstance == undefined) {
+                    return window.setTimeout(this.checkForContentContinuously.bind(this), 1000);
+                }
                 new Shared.GetContentForPresentationInstance(this.http, this.presInstance.id)
                     .then(function (result) {
                     var _questions = [];
+                    if (!result.data) {
+                        return;
+                    }
                     result.data.forEach(function (submission) {
                         if (submission.type == FFContentType.Question) {
                             _questions.push(submission);
