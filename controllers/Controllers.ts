@@ -8,3 +8,5 @@ export import GeneratePresentationInstance = require("./GeneratePresentationInst
 export import PostCurrentState = require("./PostCurrentState");
 export import GetCurrentState = require("./GetCurrentState");
 export import GenerateShortInstanceURL = require("./GenerateShortInstanceURL");
+export import PostContentForPresentationInstance = require("./PostContentForPresentationInstance");
+export import GetContentForPresentationInstance = require("./GetContentForPresentationInstance");
