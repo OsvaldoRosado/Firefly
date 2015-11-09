@@ -461,6 +461,9 @@ var ViewerApp;
                 controller: ViewerApp.Controllers.LiveCtrl,
                 controllerAs: "live"
             })
+                .when('/notsupported', {
+                templateUrl: 'templates/viewer/nothing.html',
+            })
                 .otherwise({
                 redirectTo: '/'
             });

@@ -204,7 +204,7 @@ hr {
 	margin: 0 auto;
 	width: 10px;
 	height: 10px;
-	background-color: $content-text-darker;
+	background-color: $secondary-red;
 	border-radius: 5px;
 	-webkit-animation-name: darkPulse;
 	-webkit-animation-duration: 2s;
@@ -229,16 +229,16 @@ hr {
 
 @-webkit-keyframes darkPulse {
     from {
-        background-color: $content-text-dark;
-        -webkit-box-shadow: 0 0 9px $content-text-darker;
+        background-color: $secondary-red;
+        -webkit-box-shadow: 0 0 9px $secondary-red;
     }
     50% {
-        background-color: $content-text-dark;
-        -webkit-box-shadow: 0 0 18px $content-text-dark;
+        background-color: $secondary-red;
+        -webkit-box-shadow: 0 0 18px $secondary-red;
     }
     to {
-        background-color: $content-text-dark;
-        -webkit-box-shadow: 0 0 9px $content-text-darker;
+        background-color: $secondary-red;
+        -webkit-box-shadow: 0 0 9px $secondary-red;
     }
 }
 

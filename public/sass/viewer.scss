@@ -80,10 +80,21 @@ nav.viewer {
 
 // SHARED ==================================================================================
 
+h3, h4 {
+	font-family: $content-font-stack !important;
+    text-align: center;
+    color: black;
+}
+
+h3 {
+	font-size: 24px;
+}
+
 h4 {
 	color: $content-text-dark;
 	margin: 1em 0;
 }
+
 
 form {
 	textarea {
