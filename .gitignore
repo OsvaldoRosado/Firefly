@@ -4,3 +4,4 @@ node_modules/
 .tscache
 .sass-cache/
 db_connection.txt
+tscommand-*.tmp.txt
