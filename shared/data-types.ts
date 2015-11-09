@@ -37,6 +37,7 @@ interface FFGenericContent {
   timestamp: number;
   upvotes: number;
   flagged: number;
+  presentationId: string;
 }
 
 interface FFTextContent extends FFGenericContent {

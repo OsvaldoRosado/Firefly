@@ -32,6 +32,12 @@ export class BaseModel {
 		Database.pullModel(id,model,cb);
 	}
 	
+	/** Function to load model contents from database with a match object */
+	public static fromMatchObject<T extends BaseModel>(match:any, cb:(data:T[])=>void) {
+		var model = new this();
+		Database.pullModels(match,model,cb);
+	}
+	
 	/** Function to save model contents on database */
 	protected save(cb:(ok:boolean)=>void) {
 		Database.pushModel(this, cb);
