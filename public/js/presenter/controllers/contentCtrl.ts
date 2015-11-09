@@ -38,7 +38,7 @@ module PresenterApp.Controllers {
 
 			this.content = [
 				<FFGenericContent> {
-					id: "1",
+					presentationId: "1",
 					type: FFContentType.Image,
 					submitter: testUser1,
 					timestamp: new Date().getTime(),
@@ -49,7 +49,7 @@ module PresenterApp.Controllers {
 					link: "/images/dummy/crcCards.jpg"
 				},
 				<FFGenericContent> {
-					id: "7",
+					presentationId: "1",
 					type: FFContentType.Image,
 					submitter: testUser2,
 					timestamp: new Date().getTime(),
@@ -60,7 +60,7 @@ module PresenterApp.Controllers {
 					link: "/images/dummy/complicatedClassDiagram.png"
 				},
 				<FFGenericContent> {
-					id: "3",
+					presentationId: "1",
 					type: FFContentType.Video,
 					submitter: testUser2,
 					timestamp: new Date().getTime(),
@@ -75,7 +75,7 @@ module PresenterApp.Controllers {
 			// Test questions
 			this.questions = [
 				{
-					id: "4",
+					presentationId: "1",
 					type: FFContentType.Question,
 					submitter: testUser1,
 					timestamp: new Date().getTime(),
@@ -84,7 +84,7 @@ module PresenterApp.Controllers {
 					text: "What would be a good number of collaborators to have?",
 					replies: [
 						{
-							id: "5",
+							presentationId: "1",
 							type: FFContentType.QuestionResponse,
 							submitter: testUser2,
 							timestamp: new Date().getTime(),
@@ -93,7 +93,7 @@ module PresenterApp.Controllers {
 							text: "I think it might depend on how complicated your overall class structure is."
 						},
 						{
-							id: "6",
+							presentationId: "1",
 							type: FFContentType.QuestionResponse,
 							submitter: testUser2,
 							timestamp: new Date().getTime(),
@@ -104,7 +104,7 @@ module PresenterApp.Controllers {
 					]
 				},
 				{
-					id: "8",
+					presentationId: "1",
 					type: FFContentType.Question,
 					submitter: testUser1,
 					timestamp: new Date().getTime(),
@@ -113,7 +113,7 @@ module PresenterApp.Controllers {
 					text: "Is it okay if I can't fit the responsibilities of my class on one side of the card?",
 					replies: [
 						{
-							id: "9",
+							presentationId: "1",
 							type: FFContentType.QuestionResponse,
 							submitter: testUser2,
 							timestamp: new Date().getTime(),

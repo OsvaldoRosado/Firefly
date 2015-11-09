@@ -317,8 +317,6 @@ var Shared;
             };
             FFContentBoxController.prototype.upvoteContent = function () {
                 this.content.upvotes = 1;
-                new Shared.UpvoteAPIRequest(this.http, this.content.id).catch(function () {
-                });
             };
             FFContentBoxController.$inject = ["$scope", "$element", "$http"];
             return FFContentBoxController;
@@ -507,7 +505,7 @@ var PresenterApp;
                 };
                 this.content = [
                     {
-                        id: "1",
+                        presentationId: "1",
                         type: FFContentType.Image,
                         submitter: testUser1,
                         timestamp: new Date().getTime(),
@@ -518,7 +516,7 @@ var PresenterApp;
                         link: "/images/dummy/crcCards.jpg"
                     },
                     {
-                        id: "7",
+                        presentationId: "1",
                         type: FFContentType.Image,
                         submitter: testUser2,
                         timestamp: new Date().getTime(),
@@ -529,7 +527,7 @@ var PresenterApp;
                         link: "/images/dummy/complicatedClassDiagram.png"
                     },
                     {
-                        id: "3",
+                        presentationId: "1",
                         type: FFContentType.Video,
                         submitter: testUser2,
                         timestamp: new Date().getTime(),
@@ -542,7 +540,7 @@ var PresenterApp;
                 ];
                 this.questions = [
                     {
-                        id: "4",
+                        presentationId: "1",
                         type: FFContentType.Question,
                         submitter: testUser1,
                         timestamp: new Date().getTime(),
@@ -551,7 +549,7 @@ var PresenterApp;
                         text: "What would be a good number of collaborators to have?",
                         replies: [
                             {
-                                id: "5",
+                                presentationId: "1",
                                 type: FFContentType.QuestionResponse,
                                 submitter: testUser2,
                                 timestamp: new Date().getTime(),
@@ -560,7 +558,7 @@ var PresenterApp;
                                 text: "I think it might depend on how complicated your overall class structure is."
                             },
                             {
-                                id: "6",
+                                presentationId: "1",
                                 type: FFContentType.QuestionResponse,
                                 submitter: testUser2,
                                 timestamp: new Date().getTime(),
@@ -571,7 +569,7 @@ var PresenterApp;
                         ]
                     },
                     {
-                        id: "8",
+                        presentationId: "1",
                         type: FFContentType.Question,
                         submitter: testUser1,
                         timestamp: new Date().getTime(),
@@ -580,7 +578,7 @@ var PresenterApp;
                         text: "Is it okay if I can't fit the responsibilities of my class on one side of the card?",
                         replies: [
                             {
-                                id: "9",
+                                presentationId: "1",
                                 type: FFContentType.QuestionResponse,
                                 submitter: testUser2,
                                 timestamp: new Date().getTime(),
@@ -659,23 +657,34 @@ var PresenterApp;
                 this.presInstance.currentSlide++;
                 this.updateSlide();
             };
+            SlideCtrl.prototype.resetOverlay = function () {
+                this.currentOverlay = undefined;
+                this.changeInstanceContent("hideOverlay", "");
+            };
             SlideCtrl.prototype.toggleOverlay = function (content) {
-                if (!this.currentOverlay || content.id !== this.currentOverlay.id) {
-                    this.currentOverlay = content;
-                    if (content.type == FFContentType.Image) {
-                        var linkContent = content;
+                if (content.type == FFContentType.Image) {
+                    var linkContent = content;
+                    if (this.currentOverlay && this.currentOverlay.type == FFContentType.Image
+                        && this.currentOverlay.link === linkContent.link) {
+                        this.resetOverlay();
+                    }
+                    else {
+                        this.currentOverlay = content;
                         this.changeInstanceContent("showOverlay", linkContent.link);
                     }
-                    else if (content.type == FFContentType.Video) {
-                        var vidContent = content;
+                }
+                else if (content.type == FFContentType.Video) {
+                    var vidContent = content;
+                    if (this.currentOverlay && this.currentOverlay.type == FFContentType.Video
+                        && this.currentOverlay.embed === vidContent.embed) {
+                        this.resetOverlay();
+                    }
+                    else {
+                        this.currentOverlay = content;
                         this.presWindows.commandOne(0, "showOverlayVideo", vidContent.embed + "?autoplay=1");
                         this.presWindows.commandOne(1, "showOverlayVideo", vidContent.embed);
                         this.postPresentationState("showOverlayVideo", vidContent.embed);
                     }
-                }
-                else {
-                    this.currentOverlay = undefined;
-                    this.changeInstanceContent("hideOverlay", "");
                 }
             };
             SlideCtrl.prototype.toggleQASidebar = function (question) {

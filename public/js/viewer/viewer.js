@@ -376,8 +376,6 @@ var Shared;
             };
             FFContentBoxController.prototype.upvoteContent = function () {
                 this.content.upvotes = 1;
-                new Shared.UpvoteAPIRequest(this.http, this.content.id).catch(function () {
-                });
             };
             FFContentBoxController.$inject = ["$scope", "$element", "$http"];
             return FFContentBoxController;
