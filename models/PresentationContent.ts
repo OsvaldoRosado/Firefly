@@ -6,7 +6,7 @@ import Config = require("../config");
 import Presentation = require("./Presentation");
 
 class PresentationContent extends Base.BaseModel implements FFGenericContent {
-	protected static _modelIdentifier = "PresentationInstance";
+	protected static _modelIdentifier = "PresentationContent";
 		
 	// Follow FFPresentationInstance common public interface
 	public id: string = null;

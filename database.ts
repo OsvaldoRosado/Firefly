@@ -88,12 +88,18 @@ class Database {
 					}
 					var models : T[] = [];
 					res.forEach((item)=>{
-						var m = model.constructor();
+						// Trick Typescript into not complaining
+						var m:T = <T>{}
+						for(var key in model){
+							m[key] = model[key];
+						}
+						
 						for(var key in item){
 							m[key] = item[key];
 						}
 						models.push(m);
 					});
+					return cb(models);
 				});
 			} else {
 				return cb(null);
