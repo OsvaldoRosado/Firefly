@@ -36,6 +36,7 @@ module PresenterApp.Controllers {
 					new Shared.GeneratePresentationInstanceAPIRequest($http, id)
 						.then((result: ng.IHttpPromiseCallbackArg<FFPresentationInstance>) => {
 							this.presInstance = result.data;
+							this.scope.$broadcast("instanceCreated", this.presInstance);
 						});
 
 				}, () => this.error = "Your presentation was not found!");

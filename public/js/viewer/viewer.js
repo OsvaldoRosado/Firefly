@@ -537,6 +537,7 @@ var ViewerApp;
             QuestionCtrl.prototype.askQuestion = function () {
                 var _this = this;
                 var question = {
+                    id: undefined,
                     text: this.questionText,
                     timestamp: new Date().getTime(),
                     presentationId: this.parentApp.presentationInstance.presentationId,

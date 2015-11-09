@@ -41,6 +41,7 @@ module ViewerApp.Controllers {
 			// Build a whole FFQuestion
 			// This seems unsustainable but we'll see how it goes
 			var question:FFQuestion = {
+				id: undefined,
 				text: this.questionText,
 				timestamp: new Date().getTime(),
 				presentationId: this.parentApp.presentationInstance.presentationId,

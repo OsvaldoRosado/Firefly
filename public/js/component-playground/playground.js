@@ -415,6 +415,7 @@ var Playground;
                 name: "Keaton Brandt"
             };
             this.imageContent = {
+                id: "1",
                 presentationId: "1",
                 type: FFContentType.Image,
                 submitter: this.testUser1,
@@ -425,7 +426,8 @@ var Playground;
                 link: "/images/dummy/view.jpg"
             };
             this.imageContent2 = {
-                presentationId: "2",
+                id: "2",
+                presentationId: "1",
                 type: FFContentType.Image,
                 submitter: this.testUser1,
                 timestamp: new Date().getTime(),
@@ -436,7 +438,8 @@ var Playground;
                 link: "/images/dummy/montreal.jpg"
             };
             this.videoContent = {
-                presentationId: "3",
+                id: "3",
+                presentationId: "1",
                 type: FFContentType.Video,
                 submitter: this.testUser1,
                 timestamp: new Date().getTime(),
@@ -447,7 +450,8 @@ var Playground;
                 channelTitle: "Sub Pop"
             };
             this.questionContent = {
-                presentationId: "4",
+                id: "4",
+                presentationId: "1",
                 type: FFContentType.Question,
                 submitter: this.testUser1,
                 timestamp: new Date().getTime(),
@@ -456,7 +460,8 @@ var Playground;
                 text: "Is there any reason at all to use Model-View-Controller\n\t\t\t\t\tinstead of Model-View-ViewModel or whatever other sensible\n\t\t\t\t\talternative?\n\t\t\t\t",
                 replies: [
                     {
-                        presentationId: "5",
+                        id: "5",
+                        presentationId: "1",
                         type: FFContentType.QuestionResponse,
                         submitter: this.testUser1,
                         timestamp: new Date().getTime(),
@@ -465,7 +470,8 @@ var Playground;
                         text: "No. Why would the model directly update the view?\n\t\t\t\t\t\t\tThat makes no sense.\n\t\t\t\t\t\t"
                     },
                     {
-                        presentationId: "6",
+                        id: "6",
+                        presentationId: "1",
                         type: FFContentType.QuestionResponse,
                         submitter: this.testUser1,
                         timestamp: new Date().getTime(),

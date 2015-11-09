@@ -493,8 +493,13 @@ var PresenterApp;
     (function (Controllers) {
         var ContentCtrl = (function () {
             function ContentCtrl($scope, $http) {
+                var _this = this;
                 this.scope = $scope;
                 this.http = $http;
+                this.scope.$on("instanceCreated", function (event, value) {
+                    _this.presInstance = value;
+                    _this.checkForContentContinuously();
+                });
                 var testUser1 = {
                     id: "1",
                     name: "Keaton Brandt"
@@ -505,6 +510,7 @@ var PresenterApp;
                 };
                 this.content = [
                     {
+                        id: "1",
                         presentationId: "1",
                         type: FFContentType.Image,
                         submitter: testUser1,
@@ -516,6 +522,7 @@ var PresenterApp;
                         link: "/images/dummy/crcCards.jpg"
                     },
                     {
+                        id: "7",
                         presentationId: "1",
                         type: FFContentType.Image,
                         submitter: testUser2,
@@ -527,6 +534,7 @@ var PresenterApp;
                         link: "/images/dummy/complicatedClassDiagram.png"
                     },
                     {
+                        id: "3",
                         presentationId: "1",
                         type: FFContentType.Video,
                         submitter: testUser2,
@@ -540,6 +548,7 @@ var PresenterApp;
                 ];
                 this.questions = [
                     {
+                        id: "4",
                         presentationId: "1",
                         type: FFContentType.Question,
                         submitter: testUser1,
@@ -549,6 +558,7 @@ var PresenterApp;
                         text: "What would be a good number of collaborators to have?",
                         replies: [
                             {
+                                id: "5",
                                 presentationId: "1",
                                 type: FFContentType.QuestionResponse,
                                 submitter: testUser2,
@@ -558,6 +568,7 @@ var PresenterApp;
                                 text: "I think it might depend on how complicated your overall class structure is."
                             },
                             {
+                                id: "6",
                                 presentationId: "1",
                                 type: FFContentType.QuestionResponse,
                                 submitter: testUser2,
@@ -569,6 +580,7 @@ var PresenterApp;
                         ]
                     },
                     {
+                        id: "8",
                         presentationId: "1",
                         type: FFContentType.Question,
                         submitter: testUser1,
@@ -578,6 +590,7 @@ var PresenterApp;
                         text: "Is it okay if I can't fit the responsibilities of my class on one side of the card?",
                         replies: [
                             {
+                                id: "9",
                                 presentationId: "1",
                                 type: FFContentType.QuestionResponse,
                                 submitter: testUser2,
@@ -590,6 +603,22 @@ var PresenterApp;
                     }
                 ];
             }
+            ContentCtrl.prototype.checkForContentContinuously = function () {
+                var _this = this;
+                new Shared.GetContentForPresentationInstance(this.http, this.presInstance.id)
+                    .then(function (result) {
+                    var _questions = [];
+                    result.data.forEach(function (submission) {
+                        if (submission.type == FFContentType.Question) {
+                            _questions.push(submission);
+                        }
+                        else {
+                        }
+                    });
+                    _this.questions = _questions;
+                    window.setTimeout(_this.checkForContentContinuously.bind(_this), 1000);
+                });
+            };
             ContentCtrl.$inject = ["$scope", "$http"];
             return ContentCtrl;
         })();
@@ -616,6 +645,7 @@ var PresenterApp;
                     new Shared.GeneratePresentationInstanceAPIRequest($http, id)
                         .then(function (result) {
                         _this.presInstance = result.data;
+                        _this.scope.$broadcast("instanceCreated", _this.presInstance);
                     });
                 }, function () { return _this.error = "Your presentation was not found!"; });
             }

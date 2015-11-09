@@ -31,6 +31,7 @@ interface FFUser {
 }
 
 interface FFGenericContent {
+  id: string;
   type: FFContentType;
   submitter: FFUser;
   timestamp: number;
