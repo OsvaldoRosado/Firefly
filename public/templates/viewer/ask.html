@@ -1,0 +1,15 @@
+<div class="mainContent">
+	<form action="">
+		<textarea placeholder="Ask a question"></textarea>
+		<input type="submit" value="Ask" class="u-full-width">
+	</form>
+
+	<div class="pastSubmissions row">
+		<h4>Recently Asked</h4>
+
+		<ff-content-box 
+			display="0" content="app.questionContent"
+			expanded="app.expandedIndex | equals:3" on-toggle="app.expandItem($scope,3)"
+		></ff-content-box>
+	</div>
+</div>
