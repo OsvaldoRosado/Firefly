@@ -7,9 +7,10 @@ import PresentationContent = require("../models/PresentationContent");
 
 class PostContentForPresentationInstance extends Base.BaseController {
 	// Secure this endpoint
-	protected requireLogin = true;
+	protected requireLogin = false;
 	
 	protected process(req: Request, res: Response, cb:(data:Base.DataContract)=>void) {
+		
 		var instanceId = req.body.instanceid;
 		var contentData = JSON.parse(req.body.data);
 		

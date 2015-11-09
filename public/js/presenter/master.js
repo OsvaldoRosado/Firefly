@@ -124,6 +124,26 @@ var Shared;
         return GenerateShortInstanceURLAPIRequest;
     })(Shared.APIRequest);
     Shared.GenerateShortInstanceURLAPIRequest = GenerateShortInstanceURLAPIRequest;
+    var PostContentForPresentationInstance = (function (_super) {
+        __extends(PostContentForPresentationInstance, _super);
+        function PostContentForPresentationInstance($http, instanceId, content) {
+            var reqbody = {
+                instanceid: instanceId,
+                data: JSON.stringify(content)
+            };
+            _super.call(this, $http, "/postContentForPresentationInstance", reqbody, APIMethod.POST);
+        }
+        return PostContentForPresentationInstance;
+    })(Shared.APIRequest);
+    Shared.PostContentForPresentationInstance = PostContentForPresentationInstance;
+    var GetContentForPresentationInstance = (function (_super) {
+        __extends(GetContentForPresentationInstance, _super);
+        function GetContentForPresentationInstance($http, instanceId) {
+            _super.call(this, $http, "/getContentForPresentationInstance/" + instanceId, {});
+        }
+        return GetContentForPresentationInstance;
+    })(Shared.APIRequest);
+    Shared.GetContentForPresentationInstance = GetContentForPresentationInstance;
 })(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {
@@ -184,19 +204,19 @@ var Shared;
                     transclude.style.display = "block";
                     var getInnerHeight = function () {
                         var lastChild = transclude.children[transclude.children.length - 1];
-                        var marginBottom = parseInt(window.getComputedStyle(lastChild).marginBottom);
+                        var marginBottom = 0;
+                        if (lastChild) {
+                            marginBottom = parseInt(window.getComputedStyle(lastChild).marginBottom);
+                        }
                         return transclude.getBoundingClientRect().height + marginBottom;
                     };
                     element.style.overflow = "hidden";
                     element.style.display = "block";
-                    if (!scope.expanded) {
-                        element.style.height = "0px";
+                    var lastHeight = 0;
+                    if (scope.expanded) {
+                        lastHeight = getInnerHeight();
                     }
-                    else {
-                        setTimeout(function () {
-                            element.style.height = getInnerHeight() + "px";
-                        }, 100);
-                    }
+                    element.style.height = lastHeight + "px";
                     scope.$watch("expanded", function (newValue, oldValue) {
                         if (newValue == oldValue) {
                             return;
@@ -214,6 +234,18 @@ var Shared;
                                 element.style.transition = "";
                             }, 100 + duration);
                         }, 100);
+                    });
+                    var heightWatch = setInterval(function () {
+                        var newHeight = getInnerHeight();
+                        if (newHeight != lastHeight) {
+                            lastHeight = newHeight;
+                            if (scope.expanded) {
+                                element.style.height = lastHeight + "px";
+                            }
+                        }
+                    }, 100);
+                    scope.$on("$destroy", function () {
+                        clearInterval(heightWatch);
                     });
                 }
             };
@@ -284,10 +316,8 @@ var Shared;
                     this.content.type == FFContentType.Video) && width > 300;
             };
             FFContentBoxController.prototype.upvoteContent = function () {
-                var _this = this;
-                this.content.upvotes += 1;
+                this.content.upvotes = 1;
                 new Shared.UpvoteAPIRequest(this.http, this.content.id).catch(function () {
-                    _this.content.upvotes -= 1;
                 });
             };
             FFContentBoxController.$inject = ["$scope", "$element", "$http"];

@@ -1,71 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	
+	<!--
+		
+	|  ================================================   |
+	|  												   	  |
+	|  ███████╗██╗██████╗ ███████╗███████╗██╗  ██╗   ██╗  | 
+	|  ██╔════╝██║██╔══██╗██╔════╝██╔════╝██║  ╚██╗ ██╔╝  |
+	|  █████╗  ██║██████╔╝█████╗  █████╗  ██║   ╚████╔╝   |
+	|  ██╔══╝  ██║██╔══██╗██╔══╝  ██╔══╝  ██║    ╚██╔╝    |
+	|  ██║     ██║██║  ██║███████╗██║     ███████╗██║     |
+	|  ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝     ╚══════╝╚═╝     |
+	|  												  	  |
+	|  ================ Firefly - 2015 ================   |
+	
+	-->
+	
 	<meta charset="utf-8">
 	<title>Firefly</title>
 	<meta name="description" content="">
 	<meta name="author" content="">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/viewer.css">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, max-scale=1">
 
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
-	<script src="./js/component-playground/playground.js"></script>
-	<script src="./js/component-playground/templates.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-route.min.js"></script>
+		
+	<script src="/js/viewer/viewer.js"></script>
+	<script src="/js/viewer/templates.js"></script>
+	
 </head>
-<body class="audience" ng-app="playground" ng-controller="AppController as app">
+<body class="viewer" ng-app="viewer" ng-controller="AppController as app">
+	
+	<!-- Header -->
 	<div class="header">
-		<h2>Beginnings of Cubism</h2>
+		<h2 ng-bind="app.presentation.name"></h2>
 		<div class="darkPulse"></div>
 	</div>
-	<div class="mainContent container">
-		<div class="currentSlideViewer row">
-			<span>||| Get Current Slide |||</span>
-		</div>
-
-		<div class="pastSubmissions row">
-			<h4>User Submissions</h4>
-
-			    <ff-content-box 
-					display="0" content="app.imageContent"
-					expanded="app.expandedIndex | equals:0" on-toggle="app.expandItem($scope,0)"
-				></ff-content-box>
-				
-				<ff-content-box 
-					display="0" content="app.imageContent2" show-thumbnail="false"
-					expanded="app.expandedIndex | equals:1" on-toggle="app.expandItem($scope,1)"
-				></ff-content-box>
-				
-				<ff-content-box 
-					display="0" content="app.videoContent"
-					expanded="app.expandedIndex | equals:2" on-toggle="app.expandItem($scope,2)"
-				></ff-content-box>
-
-		</div>
-	</div>
+		
+	<!-- ngRoute Magic -->
+	<main ng-view></main>
+	
+	<!-- Single Page Navigation -->
 	<nav class="viewer">
 		<ul>
 			<li>
-				<a href="viewer.html" class="active">
-					<span>[||]</span>
-					<h1>Live</h1>
+				<a href="#/" class="active">
+					<img src="{{(app.pageName == '/') ? 'images/Live-Selected@3x.png' : 'images/Live-Normal@3x.png'}}" 
+						 alt="Live" class="icon">
 				</a>
 			</li>
 			<li>
-				<a href="ask.html">
-					<span>[||]</span>
-					<h1>Q &amp; A</h1>
+				<a href="#/ask">
+					<img src="{{(app.pageName == '/ask') ? 'images/QA-Selected@3x.png' : 'images/QA-Normal@3x.png'}}" 
+						 alt="QA" class="icon">
 				</a>
 			</li>
 			<li>
-				<a href="submit.html">
-					<span>[||]</span>
-					<h1>Submit</h1>
-				</a>
-			</li>
-			<li>
-				<a href="history.html">
-					<span>[||]</span>
-					<h1>History</h1>
+				<a href="#/submit">
+					<img src="{{(app.pageName == '/submit') ? 'images/Submit-Selected@3x.png' : 'images/Submit-Normal@3x.png'}}" 
+						 alt="Submit" class="icon">
 				</a>
 			</li>
 		</ul>

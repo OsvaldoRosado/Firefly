@@ -1,0 +1,291 @@
+@import "style.scss";
+
+body {
+	background: $background-light
+}
+
+// HEADER ==================================================================================
+
+div.header {
+	background: $background-light;
+	display: inline-block;
+	width: 100%;
+	box-shadow: 0 2px 2px rgba(0,0,0,0.15);
+	h2 {
+		color: $content-text-darker;
+		padding: 1em;
+		float: left;
+	}
+	div.darkPulse {
+		float: right;
+		margin: 1.25em 1.25em;
+	}
+}
+
+
+// NAV BAR =================================================================================
+
+nav.viewer {
+	background: $primary-brand;
+	width: 100%;
+	position: fixed;
+	bottom: 0;
+
+	ul {
+		display: flex;
+		flex-direction: row;
+	}
+	
+	li {
+		list-style: none;
+		flex-grow: 1;
+		text-align: center;
+		
+		a {
+			display: block;
+			text-decoration: none;
+			padding: 0;
+			
+			&.active {
+				h1, span {
+					color: $primary-yellow-light;
+				}
+			}
+			&:hover {
+				h1, span {
+					color: $primary-yellow-light;
+				}
+			}
+			span {
+				color: $content-text-light;
+				font-size: 12px;
+				img {
+					width: 60px;
+				}
+			}
+		}
+		
+		h1 {
+			font-family: $title-font-stack;
+			font-size: 10px;
+			text-transform: uppercase;
+		}
+		
+		img {
+			height: 52px;
+		}
+	}
+}
+
+
+// SHARED ==================================================================================
+
+h3, h4 {
+	font-family: $content-font-stack !important;
+    color: black;
+}
+
+h3 {
+	font-size: 24px;
+}
+
+h4 {
+	color: $content-text-dark;
+	margin: 1em 0;
+}
+
+
+form {
+	textarea {
+		font-size: 14px;
+		width: 100%;
+		min-height: 100px;
+		resize: none;
+	}
+}
+
+.mainContent {
+	max-width: none;
+	padding: 0 3vw;
+	padding-top: 20px;
+	
+	&.submitPage {
+		padding-top: 0px;
+	}
+}
+
+
+// LIVE PAGE ===============================================================================
+
+#presPreview {
+	width: 94vw;
+	height: calc(94vw * 0.75);
+	max-height: 60vh;
+	display: block;
+	border: 1px solid #ccc;
+	border-radius: 1px;
+	box-shadow: 0px 1px 1px rgba(0,0,0,0.1);
+	margin-bottom: 10px;
+}
+
+
+// QUESTIONS PAGE ==========================================================================
+
+.askSection {
+	.editor {
+		width: 100%;
+		height: 100px;
+		position: relative;
+		
+		textarea {
+			resize: none;
+			width: 100%;
+			height: 100%;
+			
+			padding: 8px;
+			font-size: 14px;
+		}
+		
+		// The Amazing Arrow!
+		// Copied from <ff-question>
+		&::before, &::after {
+			content: "";
+			position: absolute;
+			left: 25px;
+			border-width: 12px 9px 0;
+			border-style: solid;
+			display: block;
+			width: 0;
+		}
+		&::before {
+			bottom: -12px;
+			border-color: $content-border transparent;    
+		}
+		&::after {
+			bottom: -10.5px;
+			border-color: white transparent;    
+		}
+	}
+	
+	button {
+		margin-top: 20px;
+	}
+}
+
+.pastSubmissions {
+	margin-top: 40px;
+}
+
+.ffContentBox * {
+	font-family: $content-font-stack !important;
+	line-height: 135%;
+}
+
+
+// SUBMIT PAGE =============================================================================
+
+.submitContent {
+	
+	li {
+		background: $background-light;
+		border-bottom: 1px solid $content-border; 
+		padding: 1em 2em;
+	}
+	
+	a {
+		display: inline-block;
+		padding: 1em 0;
+	}
+	
+	i.submitContentIcon {
+		float: left;
+		width: 20%;
+		color: $content-text-dark;
+		img {
+			width: 35px;
+			padding: 1em 0 0 0;
+		}
+	}
+	
+	div.submitContentItem {
+		float: right;
+		width: 80%;
+		div.submitContentItemText {
+			float: left;
+			width: 85%;
+			h2, p {
+				color: $content-text-darkest;
+			}
+		}
+		i.arrow {
+			width: 15%;
+			float: right;
+			font-size: 36px;
+			color: $content-text-darker;
+			text-align: right;
+			margin-top: 12px;
+		}
+	}
+}
+
+
+// HISTORY PAGE ============================================================================
+// This page has been removed from the deliverable but we keep the CSS around, just in case
+
+.history {
+	div.currentClass {
+		margin-bottom: 1em;
+		display: block;
+		h2 {
+			color: $content-text-dark;
+			float: left;
+		}
+		a {
+			color: $primary-brand;
+			font-style: italic;
+			text-decoration: none;
+			float: right;
+		}
+	}
+	ul {
+		li {
+			margin-bottom: 1em;
+			a {
+				text-decoration: none;
+				border: 1px solid $content-border;
+				display: inline-block;
+				width: 100%;
+				div.historyItem {
+					display: inline-block;
+					padding: 1em;
+					&.live {
+						width: 80%;
+					}
+				}
+				div.historyTitle {
+					float: left;
+					h2 {
+						color: $content-text-darker;
+					}
+					p {
+						color: $content-text-dark;
+					}
+				}
+				div.historyPulse {
+					display: inline-block;
+					position: absolute;
+					right: 1em;
+					padding: 0.5em;
+				}
+			}
+		}
+	}
+}
+
+// ERROR PAGES =============================================================================
+
+.nothing {
+	h3, h4 {
+		text-align: center;
+	}
+}
