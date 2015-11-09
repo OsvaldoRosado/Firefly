@@ -1,0 +1,41 @@
+@import "style.scss";
+
+footer {
+	text-align: center;
+	color: $content-text-light;
+	font-size: 12px;
+	position: absolute;
+	bottom: 15px;
+	width: 100%;
+	
+	a {
+		color: $content-text-light;
+		text-decoration: none;
+		text-transform: uppercase;
+		padding: 10px;
+	}
+	
+	ul {
+		display: inline-block;
+		vertical-align: top;
+		li {
+			display: inline-block;
+			vertical-align: top;
+			a {
+				padding: 0.5em 1em;
+				:hover {
+					color: $primary-yellow-light;
+				}
+			}
+			&:after {
+				content: '\2022';
+			}
+			&:last-child {
+				font-weight: bold;
+				&:after {
+					content: none;
+				}
+			}
+		}
+	}
+}

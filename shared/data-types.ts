@@ -31,12 +31,12 @@ interface FFUser {
 }
 
 interface FFGenericContent {
-  id: string;
   type: FFContentType;
   submitter: FFUser;
   timestamp: number;
   upvotes: number;
   flagged: number;
+  presentationId: string;
 }
 
 interface FFTextContent extends FFGenericContent {

@@ -408,97 +408,159 @@ var Shared;
     })(Directives = Shared.Directives || (Shared.Directives = {}));
 })(Shared || (Shared = {}));
 /// <reference path="../../../shared/data-types.ts" />
+/// <reference path="../shared/api.ts" />
+/// <reference path="../shared/localWindow.ts" />
 /// <reference path="../../js/typings/angular/angular.d.ts" />
-var Playground;
-(function (Playground) {
+var ViewerApp;
+(function (ViewerApp) {
     var AppController = (function () {
-        function AppController($scope) {
-            this.expandedIndex = 1;
-            this.testUser1 = {
-                id: "1",
-                name: "Keaton Brandt"
-            };
-            this.imageContent = {
-                id: "1",
-                type: FFContentType.Image,
-                submitter: this.testUser1,
-                timestamp: new Date().getTime(),
-                upvotes: 3,
-                flagged: 0,
-                filename: "view.png",
-                link: "/images/dummy/view.jpg"
-            };
-            this.imageContent2 = {
-                id: "2",
-                type: FFContentType.Image,
-                submitter: this.testUser1,
-                timestamp: new Date().getTime(),
-                upvotes: 0,
-                flagged: 0,
-                filename: "montreal.png",
-                text: "Great view from the top of Mont Royal",
-                link: "/images/dummy/montreal.jpg"
-            };
-            this.videoContent = {
-                id: "3",
-                type: FFContentType.Video,
-                submitter: this.testUser1,
-                timestamp: new Date().getTime(),
-                upvotes: 0,
-                flagged: 0,
-                title: "Beach House - On The Sea",
-                youtubeId: "0qz0IJXQ720",
-                channelTitle: "Sub Pop"
-            };
-            this.questionContent = {
-                id: "4",
-                type: FFContentType.Question,
-                submitter: this.testUser1,
-                timestamp: new Date().getTime(),
-                upvotes: 0,
-                flagged: 0,
-                text: "Is there any reason at all to use Model-View-Controller\n\t\t\t\t\tinstead of Model-View-ViewModel or whatever other sensible\n\t\t\t\t\talternative?\n\t\t\t\t",
-                replies: [
-                    {
-                        id: "5",
-                        type: FFContentType.QuestionResponse,
-                        submitter: this.testUser1,
-                        timestamp: new Date().getTime(),
-                        upvotes: 0,
-                        flagged: 0,
-                        text: "No. Why would the model directly update the view?\n\t\t\t\t\t\t\tThat makes no sense.\n\t\t\t\t\t\t"
-                    },
-                    {
-                        id: "6",
-                        type: FFContentType.QuestionResponse,
-                        submitter: this.testUser1,
-                        timestamp: new Date().getTime(),
-                        upvotes: 0,
-                        flagged: 0,
-                        text: "I mean, seriously, it doesn't reduce glue code it\n\t\t\t\t\t\t\tjust makes sure every component has the same amount of glue.\n\t\t\t\t\t\t"
-                    }
-                ]
-            };
+        function AppController($rootScope, $scope, $http) {
+            var _this = this;
+            this.scope = $scope;
+            this.http = $http;
+            this.content = [];
+            var params = window.location.search;
+            var id = this.instanceID = params.split("&")[0].split("=")[1];
+            new Shared.GetPresentationStateAPIRequest($http, id).then(function (data, headers) {
+                _this.presentationInstance = data.data;
+                new Shared.GetPresentationAPIRequest($http, _this.presentationInstance.presentationId).then(function (data, headers) {
+                    _this.presentation = data.data;
+                    window.dispatchEvent(new Event("ffPresentationLoaded"));
+                });
+                _this.loadSubmittedContent();
+            });
+            this.pageName = "/";
+            $rootScope.$on('$routeChangeSuccess', function (e, newVal) {
+                _this.pageName = newVal.$$route.originalPath;
+            });
         }
-        AppController.prototype.expandItem = function ($scope, index) {
-            if (this.expandedIndex == index) {
-                this.expandedIndex = -1;
-            }
-            else {
-                this.expandedIndex = index;
-            }
+        AppController.prototype.loadSubmittedContent = function () {
+            var _this = this;
+            new Shared.GetContentForPresentationInstance(this.http, this.presentationInstance.id).then(function (data) {
+                _this.content = data.data;
+            });
         };
-        AppController.$inject = ["$scope"];
+        AppController.$inject = ["$rootScope", "$scope", "$http"];
         return AppController;
     })();
-    var app = angular.module("playground", [])
+    ViewerApp.AppController = AppController;
+    var app = angular.module("viewer", ["ngRoute"])
         .controller(Shared.Controllers)
+        .controller(ViewerApp.Controllers)
         .controller("AppController", AppController)
         .directive(Shared.Directives)
         .filter("equals", function () {
         return function (value, equals) { return value == equals; };
     })
-        .config(["$sceProvider", function ($sceProvider) {
+        .config(["$sceProvider", "$routeProvider", function ($sceProvider, $routeProvider) {
             $sceProvider.enabled(false);
+            $routeProvider
+                .when('/', {
+                templateUrl: 'templates/viewer/live.html',
+                controller: ViewerApp.Controllers.LiveCtrl,
+                controllerAs: "live"
+            })
+                .when('/ask', {
+                templateUrl: 'templates/viewer/ask.html',
+                controller: ViewerApp.Controllers.QuestionCtrl,
+                controllerAs: "qc"
+            })
+                .when('/submit', {
+                templateUrl: 'templates/viewer/submit.html',
+                controller: ViewerApp.Controllers.LiveCtrl,
+                controllerAs: "live"
+            })
+                .when('/notsupported', {
+                templateUrl: 'templates/viewer/nothing.html',
+            })
+                .otherwise({
+                redirectTo: '/'
+            });
         }]);
-})(Playground || (Playground = {}));
+})(ViewerApp || (ViewerApp = {}));
+/// <reference path="../../../../shared/data-types.ts" />
+/// <reference path="../../typings/angular/angular.d.ts" />
+/// <reference path="../../typings/firefly/firefly.d.ts" />
+/// <reference path="../../shared/config.ts" />
+/// <reference path="../viewer.ts" />
+var ViewerApp;
+(function (ViewerApp) {
+    var Controllers;
+    (function (Controllers) {
+        var LiveCtrl = (function () {
+            function LiveCtrl($scope, $http) {
+                this.scope = $scope;
+                this.http = $http;
+                this.parentApp = $scope["app"];
+                this.instanceID = this.parentApp.instanceID;
+                var presPreview = document.getElementById("presPreview");
+                this.windowManager = new Shared.LocalWindowManager([presPreview.contentWindow]);
+                if (this.parentApp.presentation !== undefined) {
+                    this.managePresentationView();
+                }
+                else {
+                    window.addEventListener("ffPresentationLoaded", this.managePresentationView.bind(this));
+                }
+            }
+            LiveCtrl.prototype.managePresentationView = function () {
+                var _this = this;
+                new Shared.GetPresentationStateAPIRequest(this.http, this.instanceID).then(function (data, headers) {
+                    _this.presentationInstance = data.data;
+                    _this.windowManager.commandAll("changeSlide", _this.parentApp.presentation.slideUrls[_this.presentationInstance.currentSlide]);
+                    if (_this.presentationInstance.currentContentId && _this.presentationInstance.currentContentId != "") {
+                        _this.windowManager.postAll(_this.presentationInstance.currentContentId);
+                    }
+                    window.setTimeout(_this.managePresentationView.bind(_this), 300);
+                });
+            };
+            LiveCtrl.$inject = ["$scope", "$http"];
+            return LiveCtrl;
+        })();
+        Controllers.LiveCtrl = LiveCtrl;
+    })(Controllers = ViewerApp.Controllers || (ViewerApp.Controllers = {}));
+})(ViewerApp || (ViewerApp = {}));
+/// <reference path="../../../../shared/data-types.ts" />
+/// <reference path="../../typings/angular/angular.d.ts" />
+/// <reference path="../../typings/firefly/firefly.d.ts" />
+/// <reference path="../../shared/config.ts" />
+/// <reference path="../viewer.ts" />
+var ViewerApp;
+(function (ViewerApp) {
+    var Controllers;
+    (function (Controllers) {
+        var QuestionCtrl = (function () {
+            function QuestionCtrl($scope, $http) {
+                this.scope = $scope;
+                this.http = $http;
+                this.expandedIndex = -1;
+                this.parentApp = $scope["app"];
+                this.instanceID = this.parentApp.instanceID;
+            }
+            QuestionCtrl.prototype.askQuestion = function () {
+                var _this = this;
+                var question = {
+                    text: this.questionText,
+                    timestamp: new Date().getTime(),
+                    presentationId: this.parentApp.presentationInstance.presentationId,
+                    submitter: { id: "-1", name: "Anonymous User" },
+                    type: FFContentType.Question,
+                    upvotes: 0,
+                    flagged: 0,
+                    replies: []
+                };
+                new Shared.PostContentForPresentationInstance(this.http, this.instanceID, question).then(function (data) {
+                    if (data.success) {
+                        _this.expandedIndex += 1;
+                        _this.parentApp.content.splice(0, 0, question);
+                    }
+                });
+            };
+            QuestionCtrl.prototype.expandItem = function (index) {
+                this.expandedIndex = index;
+            };
+            QuestionCtrl.$inject = ["$scope", "$http"];
+            return QuestionCtrl;
+        })();
+        Controllers.QuestionCtrl = QuestionCtrl;
+    })(Controllers = ViewerApp.Controllers || (ViewerApp.Controllers = {}));
+})(ViewerApp || (ViewerApp = {}));

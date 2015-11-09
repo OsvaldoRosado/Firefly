@@ -124,6 +124,26 @@ var Shared;
         return GenerateShortInstanceURLAPIRequest;
     })(Shared.APIRequest);
     Shared.GenerateShortInstanceURLAPIRequest = GenerateShortInstanceURLAPIRequest;
+    var PostContentForPresentationInstance = (function (_super) {
+        __extends(PostContentForPresentationInstance, _super);
+        function PostContentForPresentationInstance($http, instanceId, content) {
+            var reqbody = {
+                instanceid: instanceId,
+                data: JSON.stringify(content)
+            };
+            _super.call(this, $http, "/postContentForPresentationInstance", reqbody, APIMethod.POST);
+        }
+        return PostContentForPresentationInstance;
+    })(Shared.APIRequest);
+    Shared.PostContentForPresentationInstance = PostContentForPresentationInstance;
+    var GetContentForPresentationInstance = (function (_super) {
+        __extends(GetContentForPresentationInstance, _super);
+        function GetContentForPresentationInstance($http, instanceId) {
+            _super.call(this, $http, "/getContentForPresentationInstance/" + instanceId, {});
+        }
+        return GetContentForPresentationInstance;
+    })(Shared.APIRequest);
+    Shared.GetContentForPresentationInstance = GetContentForPresentationInstance;
 })(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {
@@ -184,19 +204,19 @@ var Shared;
                     transclude.style.display = "block";
                     var getInnerHeight = function () {
                         var lastChild = transclude.children[transclude.children.length - 1];
-                        var marginBottom = parseInt(window.getComputedStyle(lastChild).marginBottom);
+                        var marginBottom = 0;
+                        if (lastChild) {
+                            marginBottom = parseInt(window.getComputedStyle(lastChild).marginBottom);
+                        }
                         return transclude.getBoundingClientRect().height + marginBottom;
                     };
                     element.style.overflow = "hidden";
                     element.style.display = "block";
-                    if (!scope.expanded) {
-                        element.style.height = "0px";
+                    var lastHeight = 0;
+                    if (scope.expanded) {
+                        lastHeight = getInnerHeight();
                     }
-                    else {
-                        setTimeout(function () {
-                            element.style.height = getInnerHeight() + "px";
-                        }, 100);
-                    }
+                    element.style.height = lastHeight + "px";
                     scope.$watch("expanded", function (newValue, oldValue) {
                         if (newValue == oldValue) {
                             return;
@@ -214,6 +234,18 @@ var Shared;
                                 element.style.transition = "";
                             }, 100 + duration);
                         }, 100);
+                    });
+                    var heightWatch = setInterval(function () {
+                        var newHeight = getInnerHeight();
+                        if (newHeight != lastHeight) {
+                            lastHeight = newHeight;
+                            if (scope.expanded) {
+                                element.style.height = lastHeight + "px";
+                            }
+                        }
+                    }, 100);
+                    scope.$on("$destroy", function () {
+                        clearInterval(heightWatch);
                     });
                 }
             };
@@ -373,6 +405,86 @@ var Shared;
             };
         }
         Directives.ffQuestion = ffQuestion;
+    })(Directives = Shared.Directives || (Shared.Directives = {}));
+})(Shared || (Shared = {}));
+/// <reference path="../../../shared/data-types.ts" />
+/// <reference path="../../js/typings/angular/angular.d.ts" />
+/// <reference path="../../js/typings/angular/angular.d.ts" />
+var Shared;
+(function (Shared) {
+    var Directives;
+    (function (Directives) {
+        function floatingContent() {
+            return {
+                restrict: "E",
+                scope: {
+                    floatX: "@",
+                    floatY: "@",
+                    contentWidth: "@",
+                    contentHeight: "@",
+                    size: "@"
+                },
+                replace: false,
+                transclude: true,
+                template: "<ng-transclude></ng-transclude>",
+                link: function (scope, jq, attrs) {
+                    var container = scope['container'] = jq[0];
+                    var transclude = container.children[0];
+                    if (!transclude) {
+                        return;
+                    }
+                    var element = transclude.children[0];
+                    if (!element) {
+                        return;
+                    }
+                    scope['element'] = element;
+                    var parent = container.parentElement;
+                    if (!parent) {
+                        return;
+                    }
+                    function layout() {
+                        var floatX = parseFloat(scope['floatX']);
+                        if (floatX > 1) {
+                            floatX /= 100;
+                        }
+                        var floatY = parseFloat(scope['floatY']);
+                        if (floatY > 1) {
+                            floatY /= 100;
+                        }
+                        var elementWidth = parseInt(scope['contentWidth']);
+                        var elementHeight = parseInt(scope['contentHeight']);
+                        var parentSize = parent.getBoundingClientRect();
+                        if (scope['size']) {
+                            var scale = parseFloat(scope['size']);
+                            var elementAspect = elementWidth / elementHeight;
+                            var parentAspect = parentSize.width / parentSize.height;
+                            if (elementAspect > parentAspect) {
+                                elementWidth = parentSize.width * scale;
+                                elementHeight = elementWidth / elementAspect;
+                            }
+                            else {
+                                elementHeight = parentSize.height * scale;
+                                elementWidth = elementHeight * elementAspect;
+                            }
+                        }
+                        element.style.width = elementWidth + 'px';
+                        element.style.height = elementHeight + 'px';
+                        transclude.style.width = elementWidth + 'px';
+                        transclude.style.height = elementHeight + 'px';
+                        container.style.left = (parentSize.width - elementWidth) * floatX + "px";
+                        container.style.top = (parentSize.height - elementHeight) * floatY + "px";
+                    }
+                    window.addEventListener("resize", layout);
+                    window.addEventListener("updateFloatingContent", layout);
+                    scope.$watch("floatX", layout);
+                    scope.$watch("floatY", layout);
+                    scope.$watch("contentWidth", layout);
+                    scope.$watch("contentHeight", layout);
+                    scope.$watch("size", layout);
+                }
+            };
+        }
+        Directives.floatingContent = floatingContent;
     })(Directives = Shared.Directives || (Shared.Directives = {}));
 })(Shared || (Shared = {}));
 /// <reference path="../../../../shared/data-types.ts" />

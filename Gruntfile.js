@@ -37,19 +37,18 @@ module.exports = function(grunt) {
 			presentation: {
 				src: [
 					'public/directives/ff-content/*.html',
-					'public/directives/ff-content-box/*.html',
 					'public/directives/ff-question/*.html'
 				],
 				dest: 'public/js/presentation/templates.js',
 				options: ngtemplatesOpts
 			},
-			audience: {
+			viewer: {
 				src: [
 					'public/directives/ff-content/*.html',
 					'public/directives/ff-content-box/*.html',
 					'public/directives/ff-question/*.html'
 				],
-				dest: 'public/js/audience/templates.js',
+				dest: 'public/js/viewer/templates.js',
 				options: ngtemplatesOpts
 			}
 		},
@@ -57,7 +56,9 @@ module.exports = function(grunt) {
 			presentation: {
 				src: shared.concat([
 					"public/js/shared/*.ts",
-					"public/directives/**/*.ts",
+					"public/directives/ff-content/*.ts",
+					"public/directives/ff-question/*.ts",
+					"public/directives/floating-content/*.ts",
 					"public/js/presentation/controllers/*.ts",
 					"public/js/presentation/app.ts"
 				]),
@@ -93,16 +94,17 @@ module.exports = function(grunt) {
 					sourceMap: false
 				}
 			},
-			audience: {
+			viewer: {
 				src: shared.concat([
 					"shared/data-types.ts",
 					"public/directives/collapse/*.ts",
 					"public/directives/ff-content/*.ts",
 					"public/directives/ff-content-box/*.ts",
 					"public/directives/ff-question/*.ts",
-					"public/js/audience/audience.ts"
+					"public/js/viewer/controllers/*.ts",
+					"public/js/viewer/viewer.ts"
 				]),
-				dest: "public/js/audience/audience.js",
+				dest: "public/js/viewer/viewer.js",
 				options: {
 					sourceMap: false
 				}
@@ -137,12 +139,36 @@ module.exports = function(grunt) {
 					"public/css/style.css" : "public/sass/style.scss"
 				}
 			},
+			viewer: {
+				options: {
+					style: "compressed"
+				},
+				files: {
+					"public/css/viewer.css" : "public/sass/viewer.scss"
+				}
+			},
 			playground: {
 				options: {
 					style: "compressed"
 				},
 				files: {
 					"public/css/component-playground.css" : "public/sass/component-playground.scss"
+				}
+			},
+			presentation: {
+				options: {
+					style: "compressed"
+				},
+				files: {
+					"public/css/presentation.css" : "public/sass/presentation.scss"
+				}
+			},
+			index: {
+				options: {
+					style: "compressed"
+				},
+				files: {
+					"public/css/index.css" : "public/sass/index.scss"
 				}
 			}
 		}

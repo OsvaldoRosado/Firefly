@@ -1,0 +1,13 @@
+floating-content {
+	position: absolute;
+	
+	ng-transclude {
+		position: relative;
+		display: block;
+		box-shadow: 0px 0.4vh 2vh rgba(0,0,0,0.4);
+		
+		* {
+			display: block;
+		}
+	}
+}

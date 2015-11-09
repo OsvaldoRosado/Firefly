@@ -1,32 +1,60 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" ng-app="presentation" ng-controller="AppController as app">
 	<head>
 		<meta charset="utf-8">
 		<meta name="description" content="">
 		<meta name="author" content="">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Presentation</title>
+		
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.js"></script>
 		<script src="js/presentation/master.js"></script>
 		<script src="js/presentation/templates.js"></script>
-		<link rel="stylesheet" href="css/style.css">
+		
+		<link rel="stylesheet" href="css/presentation.css">
 	</head>
-	<body ng-app="presentation" ng-controller="ViewableCtrl as vc" class="presentation">
-		<div class="row">
-			<div style="background-image: url('{{ vc.slideUrl }}');" class="slide" ng-class="{'u-full-width': !vc.qaActive, 'ten columns': vc.qaActive}"/></div>
-			<div class="overlayContainer">
-				<img ng-if="!vc.overlayIsVideo" ng-src="{{ vc.overlayUrl }}" ng-show="vc.overlayActive" class="overlay"/>
-				<iframe ng-if="vc.overlayIsVideo" src="{{ vc.overlayUrl }}" ng-show="vc.overlayActive" class="overlay" frameborder="0"></iframe>
+	<body ng-controller="ViewableCtrl as vc" class="presentation">
+		<div class="row" ng-class="{hasFooter: vc.accessLink}">
+			
+			<!-- Display slides -->
+			<div class="slides" ng-class="{background: vc.overlayActive, aside: vc.qaActive}">
+				<floating-content class="slide"
+					float-x="0.5" float-y="0.5" size="{{vc.accessLink ? 0.98 : 1.00}}" 
+					ng-repeat="slide in vc.slides | limitTo:-2"
+					content-width="{{slide.width}}" content-height="{{slide.height}}">
+					<img ng-src="{{ slide.url }}" alt="">
+				</floating-content>
 			</div>
-			<aside ng-if="vc.qaActive" class="u-pull-right two columns">
+			
+			<!-- Display content overlays -->
+			<floating-content class="overlayContainer" ng-class="{visible: vc.overlayActive}"
+				float-x="0.5" float-y="0.5" size="{{vc.accessLink ? 0.98 : 1.00}}"
+				content-width="{{vc.overlay.width}}" content-height="{{vc.overlay.height}}">
+				<div class="overlayContent">
+					<!-- Image and Video content are currently supported -->
+					<img ng-if="!vc.overlay.isVideo" ng-src="{{ vc.overlay.url }}"/>
+					<iframe ng-if="vc.overlay.isVideo" ng-src="{{ vc.overlay.url }}" frameborder="0"></iframe>
+				</div>
+			</floating-content>
+			
+			<!-- Display questions & replies -->
+			<aside ng-show="vc.qaActive" class="u-pull-right">
 				<div class="contentBox">
-					<h1>A Question</h1>
-					<ff-content-box display="0" content="vc.question" expanded="1"></ff-content-box>
+					<h1>LIVE QUESTION</h1>
+					<ff-question content="vc.question"></ff-question>
+					<ff-question ng-repeat="reply in vc.question.replies | limitTo:2" 
+								 content="reply" is-reply="true"></ff-question>
 				</div>
 			</aside>
+			
 		</div>
+		
+		<!-- Only visible on the projected view, not on mobile -->
 		<footer ng-if="vc.accessLink" class="accessLink">
-			Join the presentation at {{ vc.accessLink }}
+			<a ng-href="{{vc.accessLink}}">Join the conversation at <b>{{ vc.accessLink }}</b></a>
+			<img ng-show="vc.isLoading" src="./images/Pres-Loader.gif" alt="Loading" class="loader">
+			<img ng-show="!vc.isLoading" src="./images/Logo.png" alt="Logo" class="logo">
 		</footer>
 	</body>
 </html>
