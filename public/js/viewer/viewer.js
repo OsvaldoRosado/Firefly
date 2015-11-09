@@ -376,8 +376,6 @@ var Shared;
             };
             FFContentBoxController.prototype.upvoteContent = function () {
                 this.content.upvotes = 1;
-                new Shared.UpvoteAPIRequest(this.http, this.content.id).catch(function () {
-                });
             };
             FFContentBoxController.$inject = ["$scope", "$element", "$http"];
             return FFContentBoxController;
@@ -539,6 +537,7 @@ var ViewerApp;
             QuestionCtrl.prototype.askQuestion = function () {
                 var _this = this;
                 var question = {
+                    id: undefined,
                     text: this.questionText,
                     timestamp: new Date().getTime(),
                     presentationId: this.parentApp.presentationInstance.presentationId,

@@ -317,8 +317,6 @@ var Shared;
             };
             FFContentBoxController.prototype.upvoteContent = function () {
                 this.content.upvotes = 1;
-                new Shared.UpvoteAPIRequest(this.http, this.content.id).catch(function () {
-                });
             };
             FFContentBoxController.$inject = ["$scope", "$element", "$http"];
             return FFContentBoxController;
@@ -495,8 +493,13 @@ var PresenterApp;
     (function (Controllers) {
         var ContentCtrl = (function () {
             function ContentCtrl($scope, $http) {
+                var _this = this;
                 this.scope = $scope;
                 this.http = $http;
+                this.scope.$on("instanceCreated", function (event, value) {
+                    _this.presInstance = value;
+                    _this.checkForContentContinuously();
+                });
                 var testUser1 = {
                     id: "1",
                     name: "Keaton Brandt"
@@ -507,42 +510,58 @@ var PresenterApp;
                 };
                 this.content = [
                     {
-                        id: "1",
+                        id: "9",
+                        presentationId: "1",
                         type: FFContentType.Image,
                         submitter: testUser1,
                         timestamp: new Date().getTime(),
-                        upvotes: 3,
+                        upvotes: 0,
                         flagged: 0,
-                        filename: "crcCards.png",
-                        text: "This CRC card application looks useful.",
-                        link: "/images/dummy/crcCards.jpg"
+                        filename: "presenter-mock.png",
+                        text: "Page from our doc detailing the presenter view",
+                        link: "/images/dummy/presenter-mock.png"
                     },
                     {
-                        id: "7",
+                        id: "8",
+                        presentationId: "1",
                         type: FFContentType.Image,
-                        submitter: testUser2,
+                        submitter: testUser1,
                         timestamp: new Date().getTime(),
                         upvotes: 0,
                         flagged: 0,
-                        filename: "complicatedClassDiagram.png",
-                        text: "This class diagram seems like an example of one that's too complicated.",
-                        link: "/images/dummy/complicatedClassDiagram.png"
+                        filename: "mobile-upload.png",
+                        text: "This is what people should see when they submit content",
+                        link: "/images/dummy/mobile-upload.png"
                     },
                     {
-                        id: "3",
+                        id: "7",
+                        presentationId: "1",
+                        type: FFContentType.Image,
+                        submitter: testUser1,
+                        timestamp: new Date().getTime(),
+                        upvotes: 0,
+                        flagged: 0,
+                        filename: "mobile-live.png",
+                        text: "Mockup of the main view the audience sees.",
+                        link: "/images/dummy/mobile-live.png"
+                    },
+                    {
+                        id: "4",
+                        presentationId: "1",
                         type: FFContentType.Video,
                         submitter: testUser2,
                         timestamp: new Date().getTime(),
                         upvotes: 0,
                         flagged: 0,
-                        title: "UML 2.0 Tutorial",
-                        youtubeId: "OkC7HKtiZC0",
-                        channelTitle: "Derek Banas"
-                    }
+                        title: "Bueller, Bueller",
+                        youtubeId: "f4zyjLyBp64",
+                        channelTitle: "blc3211"
+                    },
                 ];
                 this.questions = [
                     {
                         id: "4",
+                        presentationId: "1",
                         type: FFContentType.Question,
                         submitter: testUser1,
                         timestamp: new Date().getTime(),
@@ -552,46 +571,40 @@ var PresenterApp;
                         replies: [
                             {
                                 id: "5",
+                                presentationId: "1",
                                 type: FFContentType.QuestionResponse,
                                 submitter: testUser2,
                                 timestamp: new Date().getTime(),
                                 upvotes: 0,
                                 flagged: 0,
                                 text: "I think it might depend on how complicated your overall class structure is."
-                            },
-                            {
-                                id: "6",
-                                type: FFContentType.QuestionResponse,
-                                submitter: testUser2,
-                                timestamp: new Date().getTime(),
-                                upvotes: 0,
-                                flagged: 0,
-                                text: "It should fit on the card!"
-                            }
-                        ]
-                    },
-                    {
-                        id: "8",
-                        type: FFContentType.Question,
-                        submitter: testUser1,
-                        timestamp: new Date().getTime(),
-                        upvotes: 1,
-                        flagged: 0,
-                        text: "Is it okay if I can't fit the responsibilities of my class on one side of the card?",
-                        replies: [
-                            {
-                                id: "9",
-                                type: FFContentType.QuestionResponse,
-                                submitter: testUser2,
-                                timestamp: new Date().getTime(),
-                                upvotes: 0,
-                                flagged: 0,
-                                text: "That probably means your class is doing too much! It should only have a single responsibility."
                             }
                         ]
                     }
                 ];
             }
+            ContentCtrl.prototype.checkForContentContinuously = function () {
+                var _this = this;
+                if (this.presInstance == undefined) {
+                    return window.setTimeout(this.checkForContentContinuously.bind(this), 1000);
+                }
+                new Shared.GetContentForPresentationInstance(this.http, this.presInstance.id)
+                    .then(function (result) {
+                    var _questions = [];
+                    if (!result.data) {
+                        return;
+                    }
+                    result.data.forEach(function (submission) {
+                        if (submission.type == FFContentType.Question) {
+                            _questions.push(submission);
+                        }
+                        else {
+                        }
+                    });
+                    _this.questions = _questions;
+                    window.setTimeout(_this.checkForContentContinuously.bind(_this), 1000);
+                });
+            };
             ContentCtrl.$inject = ["$scope", "$http"];
             return ContentCtrl;
         })();
@@ -618,6 +631,7 @@ var PresenterApp;
                     new Shared.GeneratePresentationInstanceAPIRequest($http, id)
                         .then(function (result) {
                         _this.presInstance = result.data;
+                        _this.scope.$broadcast("instanceCreated", _this.presInstance);
                     });
                 }, function () { return _this.error = "Your presentation was not found!"; });
             }
@@ -659,23 +673,34 @@ var PresenterApp;
                 this.presInstance.currentSlide++;
                 this.updateSlide();
             };
+            SlideCtrl.prototype.resetOverlay = function () {
+                this.currentOverlay = undefined;
+                this.changeInstanceContent("hideOverlay", "");
+            };
             SlideCtrl.prototype.toggleOverlay = function (content) {
-                if (!this.currentOverlay || content.id !== this.currentOverlay.id) {
-                    this.currentOverlay = content;
-                    if (content.type == FFContentType.Image) {
-                        var linkContent = content;
+                if (content.type == FFContentType.Image) {
+                    var linkContent = content;
+                    if (this.currentOverlay && this.currentOverlay.type == FFContentType.Image
+                        && this.currentOverlay.link === linkContent.link) {
+                        this.resetOverlay();
+                    }
+                    else {
+                        this.currentOverlay = content;
                         this.changeInstanceContent("showOverlay", linkContent.link);
                     }
-                    else if (content.type == FFContentType.Video) {
-                        var vidContent = content;
+                }
+                else if (content.type == FFContentType.Video) {
+                    var vidContent = content;
+                    if (this.currentOverlay && this.currentOverlay.type == FFContentType.Video
+                        && this.currentOverlay.embed === vidContent.embed) {
+                        this.resetOverlay();
+                    }
+                    else {
+                        this.currentOverlay = content;
                         this.presWindows.commandOne(0, "showOverlayVideo", vidContent.embed + "?autoplay=1");
                         this.presWindows.commandOne(1, "showOverlayVideo", vidContent.embed);
                         this.postPresentationState("showOverlayVideo", vidContent.embed);
                     }
-                }
-                else {
-                    this.currentOverlay = undefined;
-                    this.changeInstanceContent("hideOverlay", "");
                 }
             };
             SlideCtrl.prototype.toggleQASidebar = function (question) {

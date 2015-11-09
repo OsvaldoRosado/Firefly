@@ -566,7 +566,6 @@ var PresentationApp;
             var command = {
                 action: "showQASidebar",
                 data: JSON.stringify({
-                    id: "4",
                     type: FFContentType.Question,
                     submitter: { id: "1", name: "Keaton Brandt" },
                     timestamp: new Date().getTime(),
@@ -575,7 +574,6 @@ var PresentationApp;
                     text: "Is there any reason at all to use Model-View-Controller\n\t\t\t\t\t\tinstead of Model-View-ViewModel or whatever other sensible\n\t\t\t\t\t\talternative?\n\t\t\t\t\t",
                     replies: [
                         {
-                            id: "5",
                             type: FFContentType.QuestionResponse,
                             submitter: { id: "2", name: "Another Person" },
                             timestamp: new Date().getTime(),

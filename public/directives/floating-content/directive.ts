@@ -35,8 +35,8 @@ module Shared.Directives {
       // The only thing is does is expand or contract
       link: function(scope: ng.IScope, jq: ng.IAugmentedJQuery, attrs: Object) {
         var container : HTMLElement = scope['container'] = jq[0];
-        var transclude = container.children[0]; if (!transclude) {return;}
-        var element = transclude.children[0]; if (!element) {return;}
+        var transclude : HTMLElement = <HTMLElement> container.children[0]; if (!transclude) {return;}
+        var element : HTMLElement = <HTMLElement> transclude.children[0]; if (!element) {return;}
         scope['element'] = element;
         
         var parent = container.parentElement;

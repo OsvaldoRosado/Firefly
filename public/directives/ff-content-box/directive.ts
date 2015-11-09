@@ -82,9 +82,9 @@ module Shared.Controllers {
     upvoteContent() {
       // PLEASE FIX THIS LATER FOR CHRIST SAKE
       this.content.upvotes = 1;
-      new UpvoteAPIRequest(this.http, this.content.id).catch(()=> {
+      //new UpvoteAPIRequest(this.http, this.content.id).catch(()=> {
         //this.content.upvotes -= 1;
-      });
+      //});
     }
   }
 }

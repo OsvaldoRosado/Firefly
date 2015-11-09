@@ -36,6 +36,7 @@ module PresenterApp.Controllers {
 					new Shared.GeneratePresentationInstanceAPIRequest($http, id)
 						.then((result: ng.IHttpPromiseCallbackArg<FFPresentationInstance>) => {
 							this.presInstance = result.data;
+							this.scope.$broadcast("instanceCreated", this.presInstance);
 						});
 
 				}, () => this.error = "Your presentation was not found!");
@@ -100,22 +101,35 @@ module PresenterApp.Controllers {
 			this.updateSlide();
 		}
 
+		resetOverlay(){
+			this.currentOverlay = undefined;
+			this.changeInstanceContent("hideOverlay", "");
+		}
+		
 		toggleOverlay(content: FFGenericContent){
-			if (!this.currentOverlay || content.id !== this.currentOverlay.id) {
-				this.currentOverlay = content;
-				if(content.type == FFContentType.Image){
-					var linkContent = <FFLinkContent> content;
+			if(content.type == FFContentType.Image){
+				var linkContent = <FFLinkContent> content;
+				if (this.currentOverlay && this.currentOverlay.type == FFContentType.Image
+					&& (<FFLinkContent>this.currentOverlay).link === linkContent.link) {
+					this.resetOverlay();
+				}
+				else {
+					this.currentOverlay = content;
 					this.changeInstanceContent("showOverlay", linkContent.link);
 				}
-				else if(content.type == FFContentType.Video){
-					var vidContent = <FFYoutubeContent> content;
+			}
+			else if(content.type == FFContentType.Video){
+				var vidContent = <FFYoutubeContent> content;
+				if (this.currentOverlay && this.currentOverlay.type == FFContentType.Video
+					&& (<FFYoutubeContent>this.currentOverlay).embed === vidContent.embed) {
+					this.resetOverlay();
+				}
+				else {
+					this.currentOverlay = content;
 					this.presWindows.commandOne(0, "showOverlayVideo", vidContent.embed + "?autoplay=1");
 					this.presWindows.commandOne(1, "showOverlayVideo", vidContent.embed);
 					this.postPresentationState("showOverlayVideo", vidContent.embed);
 				}
-			} else {
-				this.currentOverlay = undefined;
-				this.changeInstanceContent("hideOverlay", "");
 			}
 		}
 
