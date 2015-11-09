@@ -1,6 +1,7 @@
 $(function() {
 
 	var filename;
+	$('progress').hide();
 	
 	$.get("/api/getCurrentUserInfo?rand="+(new Date().getTime()),function(data) {
 		data = JSON.parse(data);
@@ -13,29 +14,31 @@ $(function() {
 	
 	var dropzone = $(".presentationDropZone");
 	dropzone.on('dragenter', function(e) {
-		e.stopPropagation();
-		e.preventDefault();
 		dropzone.toggleClass("highlight");
 	});
 	dropzone.on('dragleave', function(e) {
 		dropzone.toggleClass('highlight');
-		$(".presentationDropZone h1").html("Drop Presentation Here");
-	});
-	dropzone.on('dragover', function(e) {
-		e.stopPropagation();
-		e.preventDefault();
-		$(".presentationDropZone h1").html("Let's go!");
 	});
 	dropzone.on('drop', function(e) {
 		dropzone.addClass('highlight');
-		e.preventDefault();
-		var file = e.originalEvent.dataTransfer.file;
-		filename = e.originalEvent.dataTransfer.files[0].name;
-		uploadPresentation(file, dropzone);
 	});
 
-	function uploadPresentation(file, status) {
+	$("form#uploadForm input:file").change(function() {
+		if ($(this).val()) {
+			$(".presentationDropZoneText h1").html("Let's go!");
+			filename = $(this).val().split('\\').pop();
+			$(".presentationDropZoneText p").html(filename);
+		} else {
+			$(".presentationDropZoneText h1").html("Drop Presentation Here");
+			$(".presentationDropZoneText p").html("Click to show file picker");
+		}
+
+	})
+
+	$('form#uploadForm').submit(function(e) {
+		e.preventDefault();
 		var formData = new FormData($('form#uploadForm')[0]);
+
 		$.ajax({
 			url: '/api/uploadPresentation',
 			type: 'POST',
@@ -43,7 +46,7 @@ $(function() {
 				var presXhr = $.ajaxSettings.xhr();
 				if (presXhr.upload) {
 					presXhr.upload.addEventListener('progress', progressHandler, false);
-					$(".upstart").html("Uploading " + filename + "...");
+					$(".upstart").val("Please wait...");
 					$(".upstart").attr("disabled","disabled");
 				}
 				return presXhr;
@@ -69,7 +72,46 @@ $(function() {
 			contentType: false,
 			processData: false
 		});
-	}
+		return false;
+	});
+
+
+	// function uploadPresentation(file, status) {
+	// 	// var formData = new FormData($('form#uploadForm')[0]);
+	// 	$.ajax({
+	// 		url: '/api/uploadPresentation',
+	// 		type: 'POST',
+	// 		xhr: function() {
+	// 			var presXhr = $.ajaxSettings.xhr();
+	// 			if (presXhr.upload) {
+	// 				presXhr.upload.addEventListener('progress', progressHandler, false);
+	// 				$(".upstart").html("Uploading " + filename + "...");
+	// 				$(".upstart").attr("disabled","disabled");
+	// 			}
+	// 			return presXhr;
+	// 		},
+	// 		beforeSend: function() {
+	// 			$('progress').show();
+	// 		},
+	// 		success: function(data, status,jqXHR) {
+	// 			data = JSON.parse(data);
+	// 			console.log("STATUS: " + data, status);
+	// 			if (data.success == true) {
+	// 				var presentationURL = "/presenter#" + data.data.id;
+	// 				window.location.replace(presentationURL);
+	// 			} else {
+	// 				alert("Failed to upload.");
+	// 			}
+	// 		},
+	// 		error: function(jqXHR, status, error) {
+	// 			alert("ERROR", status, error);
+	// 		},
+	// 		data: file,
+	// 		cache: false,
+	// 		contentType: false,
+	// 		processData: false
+	// 	});
+	// }
 
 	function progressHandler(e) {
 		if (e.lengthComputable) {
