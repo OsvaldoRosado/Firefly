@@ -1,0 +1,90 @@
+@import "style.scss";
+
+html#presenter{
+	height: 100%;
+	min-height: initial;
+}
+
+body.presenter {
+	background: $background-dark;
+	height: 100%;
+	margin: 0;
+
+	header {
+		background: $primary-brand;
+		padding: 10px;
+
+		h2 {
+			display: inline-block;
+
+			&.presName{
+				font-family: $content-font-stack;
+				color: #fff;
+			}
+
+			&.mainTitle {
+				text-transform: uppercase;
+				color: $primary-yellow-light;
+
+				&:first-letter {
+					font-size: 115%;
+				}
+			}
+		}
+	}
+
+	div.mainConsole {
+		height: 93%;
+
+		div.livePresentation {
+			margin: 10px;
+
+			iframe#presPreview {
+				display: block;
+				margin-bottom: 10px;
+			}
+
+			button.endPresentation{
+				background-color: #fff;
+				float: right;
+			}
+		}
+
+		div.contentBoxColumn {
+			height: 100%;
+
+			div.contentBox {
+				background: $background-light;
+				color: $content-text-darkest;
+				height: 99%;
+
+				div.noContent {
+					text-align: center;
+					font-size: 15px;
+					color: $content-text-dark;
+					padding-top: 200px;
+				}
+
+				div.contentBoxContentContainer {
+					padding: 10px 10px 0;
+					height: calc(100% - 40px);
+					overflow-y: auto;
+
+					div.ffContentBox {
+						margin-bottom: 10px;
+					}
+				}
+
+				h2, h3, h5, p {
+					color: $content-text-darkest;
+					margin-bottom: 10px;
+				}
+
+				h2 {
+					margin: 10px 10px 0;
+					padding-top: 10px;
+				}
+			}
+		}
+	}
+}
