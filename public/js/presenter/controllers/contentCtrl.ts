@@ -131,7 +131,7 @@ module PresenterApp.Controllers {
 					var _questions = [];
 					// content not handled yet
 					// var _content = [];
-					if (!result.data) {return;}
+					if (!result.data || !result.data.length) { return; }
 					result.data.forEach((submission) => {
 						if (submission.type == FFContentType.Question) {
 							_questions.push(submission);

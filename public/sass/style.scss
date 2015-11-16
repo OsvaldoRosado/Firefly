@@ -299,18 +299,33 @@ body.presenter {
 			div.contentBox {
 				background: $background-light;
 				color: $content-text-darkest;
-				margin: 10px 10px 0;
-				padding: 10px 10px 0;
-				max-height: 99%;
-				overflow-y: auto;
+				height: 99%;
 
-				div.ffContentBox {
-					margin-bottom: 10px;
+				div.noContent {
+					text-align: center;
+					font-size: 15px;
+					color: $content-text-dark;
+					padding-top: 200px;
+				}
+
+				div.contentBoxContentContainer {
+					padding: 10px 10px 0;
+					height: calc(100% - 40px);
+					overflow-y: auto;
+
+					div.ffContentBox {
+						margin-bottom: 10px;
+					}
 				}
 
 				h2, h3, h5, p {
 					color: $content-text-darkest;
 					margin-bottom: 10px;
+				}
+
+				h2 {
+					margin: 10px 10px 0;
+					padding-top: 10px;
 				}
 			}
 		}

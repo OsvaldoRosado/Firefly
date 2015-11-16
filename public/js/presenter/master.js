@@ -591,7 +591,7 @@ var PresenterApp;
                 new Shared.GetContentForPresentationInstance(this.http, this.presInstance.id)
                     .then(function (result) {
                     var _questions = [];
-                    if (!result.data) {
+                    if (!result.data || !result.data.length) {
                         return;
                     }
                     result.data.forEach(function (submission) {
