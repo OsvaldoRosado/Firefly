@@ -48,6 +48,24 @@ body.presenter {
 				background-color: #fff;
 				float: right;
 			}
+
+			button.button-primary{
+				width: 185px;
+			}
+
+			button:disabled{
+				background-color: #aaa;
+				border-color: #aaa;
+				cursor: not-allowed;
+			}
+
+			div.nextSlidePreviewContainer{
+				margin-top: 10px;
+
+				img.nextSlidePreview{
+					height: 200px;
+				}
+			}
 		}
 
 		div.contentBoxColumn {

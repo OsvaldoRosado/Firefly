@@ -88,6 +88,7 @@ module PresenterApp.Controllers {
 				// manually instead
 				presPreview.style.height = 
 					Math.round(presPreview.offsetWidth * 9 / 16) + "px";
+
 			}, 1000);
 		}
 
