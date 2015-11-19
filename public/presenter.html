@@ -20,7 +20,12 @@
 			<div class="six columns">
 				<div class="livePresentation">
 					<iframe ng-show="sc.presRunning" src="presentation.html" class="u-full-width" id="presPreview"></iframe>
-					<button ng-click="sc.startPresentation()" ng-show="!sc.presRunning" class="button-primary">Start presentation!</button>
+					<div class="fakePreviewContain" ng-if="!sc.presRunning" 
+						style="background-image: url('{{ sc.presentation.slideUrls[0] }}');">
+						<div class="fakePreview">
+							<button ng-click="sc.startPresentation()" class="button startPresentation">Start presentation!</button>
+						</div>
+					</div>
 					<button ng-show="sc.presRunning" ng-click="sc.prevSlide()" class="button-primary" ng-disabled="sc.presInstance.currentSlide === 0">Previous</button>
 					<button ng-show="sc.presRunning" ng-click="sc.nextSlide()" class="button-primary" ng-disabled="sc.presInstance.currentSlide >= sc.presentation.slideUrls.length-1">Next</button>
 					<button ng-show="sc.presRunning" ng-click="sc.endPresentation()" class="button endPresentation">End Presentation</button>
