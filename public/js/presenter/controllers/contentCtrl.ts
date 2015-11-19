@@ -121,7 +121,10 @@ module PresenterApp.Controllers {
 			];
 		}
 
-		// Horribly inefficient
+		/**
+		 * Query the database every second for new content and questions to update
+		 * the feed.
+		 */
 		checkForContentContinuously(){
 			if (this.presInstance == undefined){
 				return window.setTimeout(this.checkForContentContinuously.bind(this), 1000);
@@ -129,20 +132,18 @@ module PresenterApp.Controllers {
 			new Shared.GetContentForPresentationInstance(this.http, this.presInstance.id)
 				.then((result: ng.IHttpPromiseCallbackArg<Array<FFGenericContent>>) => {
 					var _questions = [];
-					// content not handled yet
-					// var _content = [];
-					if (!result.data) {return;}
+					var _content = [];
+					if (!result.data || !result.data.length) { return; }
 					result.data.forEach((submission) => {
 						if (submission.type == FFContentType.Question) {
 							_questions.push(submission);
 						}
 						else {
-							//_content.push(submission);
+							_content.push(submission);
 						}
 					});
 					this.questions = _questions;
-					//this.content = _content;
-
+					this.content = _content;
 					window.setTimeout(this.checkForContentContinuously.bind(this), 1000);
 				});
 		}

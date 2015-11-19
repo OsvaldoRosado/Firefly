@@ -591,7 +591,8 @@ var PresenterApp;
                 new Shared.GetContentForPresentationInstance(this.http, this.presInstance.id)
                     .then(function (result) {
                     var _questions = [];
-                    if (!result.data) {
+                    var _content = [];
+                    if (!result.data || !result.data.length) {
                         return;
                     }
                     result.data.forEach(function (submission) {
@@ -599,9 +600,11 @@ var PresenterApp;
                             _questions.push(submission);
                         }
                         else {
+                            _content.push(submission);
                         }
                     });
                     _this.questions = _questions;
+                    _this.content = _content;
                     window.setTimeout(_this.checkForContentContinuously.bind(_this), 1000);
                 });
             };

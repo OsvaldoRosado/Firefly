@@ -155,6 +155,14 @@ module.exports = function(grunt) {
 					"public/css/component-playground.css" : "public/sass/component-playground.scss"
 				}
 			},
+			presenter: {
+				options: {
+					style: "compressed"
+				},
+				files: {
+					"public/css/presenter.css" : "public/sass/presenter.scss"
+				}
+			},
 			presentation: {
 				options: {
 					style: "compressed"
