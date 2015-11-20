@@ -361,10 +361,15 @@ var PresentationApp;
                 this.timeout = $timeout;
                 this.slides = [];
                 this.isLoading = false;
+                this.lastData = "";
                 window.addEventListener("message", function (event) {
                     if (event.origin !== Config.HOST) {
                         return;
                     }
+                    if (event.data == _this.lastData) {
+                        return;
+                    }
+                    _this.lastData = event.data;
                     var order = JSON.parse(event.data);
                     switch (order.action) {
                         case "changeSlide":

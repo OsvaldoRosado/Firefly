@@ -498,9 +498,7 @@ var ViewerApp;
                 controllerAs: "qc"
             })
                 .when('/submit', {
-                templateUrl: 'templates/viewer/submit.html',
-                controller: ViewerApp.Controllers.LiveCtrl,
-                controllerAs: "live"
+                templateUrl: 'templates/viewer/submit.html'
             })
                 .when('/notsupported', {
                 templateUrl: 'templates/viewer/nothing.html',
@@ -521,8 +519,10 @@ var ViewerApp;
     (function (Controllers) {
         var LiveCtrl = (function () {
             function LiveCtrl($scope, $http) {
+                var _this = this;
                 this.scope = $scope;
                 this.http = $http;
+                this.active = true;
                 this.parentApp = $scope["app"];
                 this.instanceID = this.parentApp.instanceID;
                 var presPreview = document.getElementById("presPreview");
@@ -533,16 +533,20 @@ var ViewerApp;
                 else {
                     window.addEventListener("ffPresentationLoaded", this.managePresentationView.bind(this));
                 }
+                $scope.$on("$destroy", function () {
+                    _this.active = false;
+                });
             }
             LiveCtrl.prototype.managePresentationView = function () {
                 var _this = this;
                 new Shared.GetPresentationStateAPIRequest(this.http, this.instanceID).then(function (data, headers) {
-                    if (JSON.stringify(data.data) != JSON.stringify(_this.presentationInstance)) {
-                        _this.presentationInstance = data.data;
-                        _this.windowManager.commandAll("changeSlide", _this.parentApp.presentation.slideUrls[_this.presentationInstance.currentSlide]);
-                        if (_this.presentationInstance.currentContentId && _this.presentationInstance.currentContentId != "") {
-                            _this.windowManager.postAll(_this.presentationInstance.currentContentId);
-                        }
+                    _this.presentationInstance = data.data;
+                    _this.windowManager.commandAll("changeSlide", _this.parentApp.presentation.slideUrls[_this.presentationInstance.currentSlide]);
+                    if (_this.presentationInstance.currentContentId && _this.presentationInstance.currentContentId != "") {
+                        _this.windowManager.postAll(_this.presentationInstance.currentContentId);
+                    }
+                    if (_this.active == false) {
+                        return;
                     }
                     window.setTimeout(_this.managePresentationView.bind(_this), 300);
                 });
