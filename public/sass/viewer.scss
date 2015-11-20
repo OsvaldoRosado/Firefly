@@ -165,6 +165,15 @@ form {
 			bottom: -10.5px;
 			border-color: white transparent;
 		}
+
+		&.invalid {
+			textarea {
+				border-color: $secondary-red;
+			}
+			&::before {
+				border-color: $secondary-red transparent;
+			}
+		}
 	}
 
 	button {

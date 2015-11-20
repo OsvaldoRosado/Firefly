@@ -531,11 +531,17 @@ var ViewerApp;
                 this.scope = $scope;
                 this.http = $http;
                 this.expandedIndex = -1;
+                this.questionText = "";
+                this.questionValid = true;
                 this.parentApp = $scope["app"];
                 this.instanceID = this.parentApp.instanceID;
             }
             QuestionCtrl.prototype.askQuestion = function () {
                 var _this = this;
+                if (this.questionText.length < 1) {
+                    return this.questionValid = false;
+                }
+                this.questionValid = true;
                 var question = {
                     id: undefined,
                     text: this.questionText,
@@ -550,6 +556,7 @@ var ViewerApp;
                 new Shared.PostContentForPresentationInstance(this.http, this.instanceID, question).then(function (data) {
                     if (data.success) {
                         _this.expandedIndex += 1;
+                        _this.questionText = "";
                         _this.parentApp.content.splice(0, 0, question);
                     }
                 });
