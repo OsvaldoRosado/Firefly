@@ -3,11 +3,17 @@
 /// <reference path="../../js/typings/angular/angular.d.ts" />
 
 module Shared {
-	
+
 	export class UpvoteAPIRequest extends APIRequest<boolean> {
 		constructor($http: ng.IHttpService, contentId: string) {
 			super($http, "/UpvotePresContent", {id: contentId}, APIMethod.GET);
 		}
 	}
-		
+
+	export class FlagAPIRequest extends APIRequest<boolean> {
+		constructor($http: ng.IHttpService, contentId: string) {
+			super($http, "/FlagPresContent", {id: contentId}, APIMethod.GET);
+		}
+	}
+
 }
