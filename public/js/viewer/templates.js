@@ -15,4 +15,35 @@ angular.module('viewer').run(['$templateCache', function($templateCache) {
     "<div class=ffQuestion ng-class=\"{reply: isReply}\"><h3 ng-bind=content.text></h3><p><span ng-bind=content.upvotes></span> Upvotes</p><cite>- <span ng-bind=content.submitter.name></span></cite></div>"
   );
 
+
+  $templateCache.put('public/templates/viewer/ask.html',
+    "<div class=mainContent><div class=askSection><div class=editor ng-class=\"{invalid: !qc.questionValid}\"><textarea placeholder=\"Ask a question\" ng-model=qc.questionText></textarea></div><button class=u-full-width ng-click=qc.askQuestion()>ASK</button></div><div class=\"pastSubmissions row\"><h4>Recently Asked</h4><ff-content-box ng-repeat=\"question in app.content | filter:{type:3}\" display=0 content=question expanded=\"qc.expandedIndex | equals:$index\" on-toggle=qc.expandItem($index)></ff-content-box></div></div>"
+  );
+
+
+  $templateCache.put('public/templates/viewer/history.html',
+    "<div class=\"mainContent container\"><div class=history><div class=\"currentClass row\"><h2>Art History 1010</h2><a href=#>Other Classes</a></div><ul class=row><li><a href=#><div class=historyItem><div class=\"historyTitle live\"><h2>Beginnings of Cubism</h2><p>November 4th, 2015</p></div><div class=historyPulse><div class=darkPulse></div></div></div></a></li><li><a href=#><div class=historyItem><div class=historyTitle><h2>Advaanced Expressionism</h2><p>October 30th, 2015</p></div></div></a></li><li><a href=#><div class=historyItem><div class=\"historyTitle live\"><h2>The Spark of Expressionism</h2><p>October 23rd, 2015</p></div><div class=historyPulse><div class=darkPulse></div></div></div></a></li><li><a href=#><div class=historyItem><div class=historyTitle><h2>Post-Expressionism</h2><p>October 18th, 2015</p></div></div></a></li><li><a href=#><div class=historyItem><div class=historyTitle><h2>My 'Impressions' of Monet</h2><p>October 12th, 2015</p></div></div></a></li><li><a href=#><div class=\"historyItem live\"><div class=historyTitle><h2>The Original Renaissance Mannn</h2><p>October 5th, 2015</p></div><div class=historyPulse><div class=darkPulse></div></div></div></a></li></ul></div></div>"
+  );
+
+
+  $templateCache.put('public/templates/viewer/live.html',
+    "<div class=mainContent><div class=\"currentSlideViewer row\"><iframe src=presentation.html id=presPreview scrolling=no></iframe></div><div class=\"pastSubmissions row\"><h4>User Submissions</h4></div></div>"
+  );
+
+
+  $templateCache.put('public/templates/viewer/nothing.html',
+    "<div class=\"mainContent nothing\"><h3>Sorry</h3><h4>Submitting content is not yet supported</h4></div>"
+  );
+
+
+  $templateCache.put('public/templates/viewer/submit.html',
+    "<div class=\"mainContent submitPage\"><div class=submitContent><ul class=row><li><a href=#/submit/link><i class=submitContentIcon><img src=\"images/dummy/clipboard.png\"></i><div class=submitContentItem><div class=submitContentItemText><h2>Paste Link</h2><p>Copy a link to a website, image or YouTube video and paste it here to share.</p></div></div><i class=arrow>&rsaquo;</i></a></li><li><a href=#/notsupported><i class=\"submitContentIcon upload\"><img src=\"images/dummy/upload.png\"></i><div class=submitContentItem><div class=submitContentItemText><h2>Upload Image</h2><p>Choose a photo from your phone’s camera roll to upload.</p></div></div><i class=arrow>&rsaquo;</i></a></li><li><a href=#/notsupported><i class=submitContentIcon><img src=\"images/dummy/browser.png\"></i><div class=submitContentItem><div class=submitContentItemText><h2>Browse the Web</h2><p>Use our in-app browser to find the web link or YouTube video you’re looking for.</p></div></div><i class=arrow>&rsaquo;</i></a></li></ul></div></div>"
+  );
+
+
+  $templateCache.put('public/templates/viewer/submitlink.html',
+    "<div class=\"mainContent submitlink\"><label for=link_url>Paste a URL here</label><input name=link_url ng-model=link.link ng-model-options={debounce:1000} ng-change=\"link.changed()\"><label for=link_url ng-bind=\"link.preview.title || 'Preview'\"></label><ff-content class=preview ng-class=\"{loading: link.loading, loaded: link.loaded}\" content=link.preview thumbnail=false></ff-content><div ng-show=link.loaded><textarea placeholder=\"Add a note (optional)\" id=link_note ng-model=link.preview.text>\n" +
+    "    </textarea><div class=buttonrow><button type=button class=secondary ng-click=link.cancel()>CANCEL</button> <button type=button class=primary ng-click=link.post()>POST</button></div></div></div>"
+  );
+
 }]);

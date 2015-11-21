@@ -59,7 +59,7 @@ module ViewerApp {
 		}
 	}
 
-	var app = angular.module("viewer", ["ngRoute"])
+	var app = angular.module("viewer", ["ngRoute", "ngAnimate"])
 		.controller(Shared.Controllers)
 		.controller(ViewerApp.Controllers)
 		.controller("AppController", AppController)
@@ -68,27 +68,32 @@ module ViewerApp {
 			return function(value, equals) : boolean {return value == equals;}
 		})
 		.config(["$sceProvider","$routeProvider", function($sceProvider, $routeProvider) {
-		
+
 			// Completely disable SCE so Youtube embeds will work.
 			$sceProvider.enabled(false);
 
 			// Set up routes
 			$routeProvider
 				.when('/', {
-					templateUrl: 'templates/viewer/live.html',
+					templateUrl: 'public/templates/viewer/live.html',
 					controller: ViewerApp.Controllers.LiveCtrl,
 					controllerAs: "live"
 				})
 				.when('/ask', {
-					templateUrl: 'templates/viewer/ask.html',
+					templateUrl: 'public/templates/viewer/ask.html',
 					controller: ViewerApp.Controllers.QuestionCtrl,
 					controllerAs: "qc"
 				})
 				.when('/submit', {
-					templateUrl: 'templates/viewer/submit.html'
+					templateUrl: 'public/templates/viewer/submit.html'
+				})
+				.when('/submit/link', {
+					templateUrl: 'public/templates/viewer/submitlink.html',
+					controller: ViewerApp.Controllers.SubmitLinkController,
+					controllerAs: "link"
 				})
 				.when('/notsupported', {
-					templateUrl: 'templates/viewer/nothing.html',
+					templateUrl: 'public/templates/viewer/nothing.html',
 				})
 				.otherwise({
 					redirectTo: '/'

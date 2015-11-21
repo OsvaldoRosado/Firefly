@@ -124,26 +124,6 @@ var Shared;
         return GenerateShortInstanceURLAPIRequest;
     })(Shared.APIRequest);
     Shared.GenerateShortInstanceURLAPIRequest = GenerateShortInstanceURLAPIRequest;
-    var PostContentForPresentationInstance = (function (_super) {
-        __extends(PostContentForPresentationInstance, _super);
-        function PostContentForPresentationInstance($http, instanceId, content) {
-            var reqbody = {
-                instanceid: instanceId,
-                data: JSON.stringify(content)
-            };
-            _super.call(this, $http, "/postContentForPresentationInstance", reqbody, APIMethod.POST);
-        }
-        return PostContentForPresentationInstance;
-    })(Shared.APIRequest);
-    Shared.PostContentForPresentationInstance = PostContentForPresentationInstance;
-    var GetContentForPresentationInstance = (function (_super) {
-        __extends(GetContentForPresentationInstance, _super);
-        function GetContentForPresentationInstance($http, instanceId) {
-            _super.call(this, $http, "/getContentForPresentationInstance/" + instanceId, {});
-        }
-        return GetContentForPresentationInstance;
-    })(Shared.APIRequest);
-    Shared.GetContentForPresentationInstance = GetContentForPresentationInstance;
 })(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {
@@ -204,19 +184,19 @@ var Shared;
                     transclude.style.display = "block";
                     var getInnerHeight = function () {
                         var lastChild = transclude.children[transclude.children.length - 1];
-                        var marginBottom = 0;
-                        if (lastChild) {
-                            marginBottom = parseInt(window.getComputedStyle(lastChild).marginBottom);
-                        }
+                        var marginBottom = parseInt(window.getComputedStyle(lastChild).marginBottom);
                         return transclude.getBoundingClientRect().height + marginBottom;
                     };
                     element.style.overflow = "hidden";
                     element.style.display = "block";
-                    var lastHeight = 0;
-                    if (scope.expanded) {
-                        lastHeight = getInnerHeight();
+                    if (!scope.expanded) {
+                        element.style.height = "0px";
                     }
-                    element.style.height = lastHeight + "px";
+                    else {
+                        setTimeout(function () {
+                            element.style.height = getInnerHeight() + "px";
+                        }, 100);
+                    }
                     scope.$watch("expanded", function (newValue, oldValue) {
                         if (newValue == oldValue) {
                             return;
@@ -234,18 +214,6 @@ var Shared;
                                 element.style.transition = "";
                             }, 100 + duration);
                         }, 100);
-                    });
-                    var heightWatch = setInterval(function () {
-                        var newHeight = getInnerHeight();
-                        if (newHeight != lastHeight) {
-                            lastHeight = newHeight;
-                            if (scope.expanded) {
-                                element.style.height = lastHeight + "px";
-                            }
-                        }
-                    }, 100);
-                    scope.$on("$destroy", function () {
-                        clearInterval(heightWatch);
                     });
                 }
             };
@@ -283,10 +251,8 @@ var Shared;
         var FFContentViewController = (function () {
             function FFContentViewController($scope) {
                 this.thumbnailCutoffWidth = 150;
-                if (this.content) {
-                    this.updateRenderDetails();
-                }
-                $scope.$watch(function () { return this.content && this.content['timestamp']; }.bind(this), this.updateRenderDetails.bind(this));
+                this.updateRenderDetails();
+                $scope.$watch(function () { return this.content; }, this.updateRenderDetails.bind(this));
             }
             FFContentViewController.prototype.getThumbnail = function () {
                 return "http://img.youtube.com/vi/" + this.content.youtubeId + "/0.jpg";
@@ -327,14 +293,6 @@ var Shared;
         return UpvoteAPIRequest;
     })(Shared.APIRequest);
     Shared.UpvoteAPIRequest = UpvoteAPIRequest;
-    var FlagAPIRequest = (function (_super) {
-        __extends(FlagAPIRequest, _super);
-        function FlagAPIRequest($http, contentId) {
-            _super.call(this, $http, "/FlagPresContent", { id: contentId }, Shared.APIMethod.GET);
-        }
-        return FlagAPIRequest;
-    })(Shared.APIRequest);
-    Shared.FlagAPIRequest = FlagAPIRequest;
 })(Shared || (Shared = {}));
 /// <reference path="../../../shared/data-types.ts" />
 /// <reference path="../../js/typings/angular/angular.d.ts" />
@@ -370,7 +328,6 @@ var Shared;
             function FFContentBoxController($scope, $element, $http) {
                 this.scope = $scope;
                 this.http = $http;
-                this.isFlagged = false;
                 this.isQuestion = (this.content.type == FFContentType.Question);
                 if (this.showThumbnail !== undefined) {
                     return;
@@ -391,29 +348,6 @@ var Shared;
                 new Shared.UpvoteAPIRequest(this.http, this.content.id).catch(function () {
                     _this.content.upvotes -= 1;
                 });
-            };
-            FFContentBoxController.prototype.flagContent = function () {
-                var _this = this;
-                new Shared.FlagAPIRequest(this.http, this.content.id).catch(function () {
-                    alert("ERROR: Could not flag content. It may already be deleted");
-                }).then(function () {
-                    _this.isFlagged = true;
-                });
-            };
-            FFContentBoxController.prototype.shareContent = function () {
-                var link = "";
-                if (this.content.youtubeId !== undefined) {
-                    link = "https://www.youtube.com/watch?v=" + this.content.youtubeId;
-                }
-                else if (this.content.link !== undefined) {
-                    link = this.content.link;
-                }
-                else if (this.content.text !== undefined) {
-                    var w = window.open("", "_blank");
-                    w.document.write(this.content.text);
-                    return;
-                }
-                window.open(link, "_blank");
             };
             FFContentBoxController.$inject = ["$scope", "$element", "$http"];
             return FFContentBoxController;
@@ -441,260 +375,3 @@ var Shared;
         Directives.ffQuestion = ffQuestion;
     })(Directives = Shared.Directives || (Shared.Directives = {}));
 })(Shared || (Shared = {}));
-/// <reference path="../../../shared/data-types.ts" />
-/// <reference path="../shared/api.ts" />
-/// <reference path="../shared/localWindow.ts" />
-/// <reference path="../../js/typings/angular/angular.d.ts" />
-var ViewerApp;
-(function (ViewerApp) {
-    var AppController = (function () {
-        function AppController($rootScope, $scope, $http) {
-            var _this = this;
-            this.scope = $scope;
-            this.http = $http;
-            this.content = [];
-            var params = window.location.search;
-            var id = this.instanceID = params.split("&")[0].split("=")[1];
-            new Shared.GetPresentationStateAPIRequest($http, id).then(function (data, headers) {
-                _this.presentationInstance = data.data;
-                new Shared.GetPresentationAPIRequest($http, _this.presentationInstance.presentationId).then(function (data, headers) {
-                    _this.presentation = data.data;
-                    window.dispatchEvent(new Event("ffPresentationLoaded"));
-                });
-                _this.loadSubmittedContent();
-            });
-            this.pageName = "/";
-            $rootScope.$on('$routeChangeSuccess', function (e, newVal) {
-                _this.pageName = newVal.$$route.originalPath;
-            });
-        }
-        AppController.prototype.loadSubmittedContent = function () {
-            var _this = this;
-            new Shared.GetContentForPresentationInstance(this.http, this.presentationInstance.id).then(function (data) {
-                _this.content = data.data;
-            });
-        };
-        AppController.$inject = ["$rootScope", "$scope", "$http"];
-        return AppController;
-    })();
-    ViewerApp.AppController = AppController;
-    var app = angular.module("viewer", ["ngRoute", "ngAnimate"])
-        .controller(Shared.Controllers)
-        .controller(ViewerApp.Controllers)
-        .controller("AppController", AppController)
-        .directive(Shared.Directives)
-        .filter("equals", function () {
-        return function (value, equals) { return value == equals; };
-    })
-        .config(["$sceProvider", "$routeProvider", function ($sceProvider, $routeProvider) {
-            $sceProvider.enabled(false);
-            $routeProvider
-                .when('/', {
-                templateUrl: 'public/templates/viewer/live.html',
-                controller: ViewerApp.Controllers.LiveCtrl,
-                controllerAs: "live"
-            })
-                .when('/ask', {
-                templateUrl: 'public/templates/viewer/ask.html',
-                controller: ViewerApp.Controllers.QuestionCtrl,
-                controllerAs: "qc"
-            })
-                .when('/submit', {
-                templateUrl: 'public/templates/viewer/submit.html'
-            })
-                .when('/submit/link', {
-                templateUrl: 'public/templates/viewer/submitlink.html',
-                controller: ViewerApp.Controllers.SubmitLinkController,
-                controllerAs: "link"
-            })
-                .when('/notsupported', {
-                templateUrl: 'public/templates/viewer/nothing.html',
-            })
-                .otherwise({
-                redirectTo: '/'
-            });
-        }]);
-})(ViewerApp || (ViewerApp = {}));
-/// <reference path="../../../../shared/data-types.ts" />
-/// <reference path="../../typings/angular/angular.d.ts" />
-/// <reference path="../../typings/firefly/firefly.d.ts" />
-/// <reference path="../../shared/config.ts" />
-/// <reference path="../viewer.ts" />
-var ViewerApp;
-(function (ViewerApp) {
-    var Controllers;
-    (function (Controllers) {
-        var LiveCtrl = (function () {
-            function LiveCtrl($scope, $http) {
-                var _this = this;
-                this.scope = $scope;
-                this.http = $http;
-                this.active = true;
-                this.parentApp = $scope["app"];
-                this.instanceID = this.parentApp.instanceID;
-                var presPreview = document.getElementById("presPreview");
-                this.windowManager = new Shared.LocalWindowManager([presPreview.contentWindow]);
-                if (this.parentApp.presentation !== undefined) {
-                    this.managePresentationView();
-                }
-                else {
-                    window.addEventListener("ffPresentationLoaded", this.managePresentationView.bind(this));
-                }
-                $scope.$on("$destroy", function () {
-                    _this.active = false;
-                });
-            }
-            LiveCtrl.prototype.managePresentationView = function () {
-                var _this = this;
-                new Shared.GetPresentationStateAPIRequest(this.http, this.instanceID).then(function (data, headers) {
-                    _this.presentationInstance = data.data;
-                    _this.windowManager.commandAll("changeSlide", _this.parentApp.presentation.slideUrls[_this.presentationInstance.currentSlide]);
-                    if (_this.presentationInstance.currentContentId && _this.presentationInstance.currentContentId != "") {
-                        _this.windowManager.postAll(_this.presentationInstance.currentContentId);
-                    }
-                    if (_this.active == false) {
-                        return;
-                    }
-                    window.setTimeout(_this.managePresentationView.bind(_this), 300);
-                });
-            };
-            LiveCtrl.$inject = ["$scope", "$http"];
-            return LiveCtrl;
-        })();
-        Controllers.LiveCtrl = LiveCtrl;
-    })(Controllers = ViewerApp.Controllers || (ViewerApp.Controllers = {}));
-})(ViewerApp || (ViewerApp = {}));
-/// <reference path="../../../../shared/data-types.ts" />
-/// <reference path="../../typings/angular/angular.d.ts" />
-/// <reference path="../../typings/firefly/firefly.d.ts" />
-/// <reference path="../../shared/config.ts" />
-/// <reference path="../viewer.ts" />
-var ViewerApp;
-(function (ViewerApp) {
-    var Controllers;
-    (function (Controllers) {
-        var QuestionCtrl = (function () {
-            function QuestionCtrl($scope, $http) {
-                this.scope = $scope;
-                this.http = $http;
-                this.expandedIndex = -1;
-                this.questionText = "";
-                this.questionValid = true;
-                this.parentApp = $scope["app"];
-                this.instanceID = this.parentApp.instanceID;
-            }
-            QuestionCtrl.prototype.askQuestion = function () {
-                var _this = this;
-                if (this.questionText.length < 1) {
-                    return this.questionValid = false;
-                }
-                this.questionValid = true;
-                var question = {
-                    id: undefined,
-                    text: this.questionText,
-                    timestamp: new Date().getTime(),
-                    presentationId: this.parentApp.presentationInstance.presentationId,
-                    submitter: { id: "-1", name: "Anonymous User" },
-                    type: FFContentType.Question,
-                    upvotes: 0,
-                    flagged: 0,
-                    replies: []
-                };
-                new Shared.PostContentForPresentationInstance(this.http, this.instanceID, question).then(function (data) {
-                    if (data.success) {
-                        _this.expandedIndex += 1;
-                        _this.questionText = "";
-                        _this.parentApp.content.splice(0, 0, question);
-                    }
-                });
-            };
-            QuestionCtrl.prototype.expandItem = function (index) {
-                if (this.expandedIndex == index) {
-                    return this.expandedIndex = -1;
-                }
-                ;
-                this.expandedIndex = index;
-            };
-            QuestionCtrl.$inject = ["$scope", "$http"];
-            return QuestionCtrl;
-        })();
-        Controllers.QuestionCtrl = QuestionCtrl;
-    })(Controllers = ViewerApp.Controllers || (ViewerApp.Controllers = {}));
-})(ViewerApp || (ViewerApp = {}));
-/// <reference path="../../../../shared/data-types.ts" />
-/// <reference path="../../typings/angular/angular.d.ts" />
-/// <reference path="../../typings/firefly/firefly.d.ts" />
-/// <reference path="../../shared/config.ts" />
-/// <reference path="../viewer.ts" />
-var ViewerApp;
-(function (ViewerApp) {
-    var Controllers;
-    (function (Controllers) {
-        var SubmitLinkController = (function () {
-            function SubmitLinkController($scope, $http) {
-                this.scope = $scope;
-                this.http = $http;
-                this.loading = false;
-                this.loaded = false;
-                var parentApp = $scope["app"];
-                this.instanceID = parentApp.instanceID;
-            }
-            SubmitLinkController.prototype.changed = function () {
-                var _this = this;
-                this.loading = true;
-                if (this.link.match(/^.{0,12}[:\.]youtube\..{2,4}/) != null) {
-                    var ids = this.link.match(/\?v=(.{11,15})/);
-                    if (ids.length < 2) {
-                        ids = this.link.match(/\/(.{11,15})$/);
-                    }
-                    if (ids.length < 2) {
-                        alert("Could not identify valid video ID in YouTube link: " + this.link);
-                        return;
-                    }
-                    var id = ids[1];
-                    var url = "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + id + "&key=AIzaSyB_w83v18rHCYGklMFjUhqLMTzmB9JgjuY";
-                    this.http.get(url).then(function (data) {
-                        _this.loading = false;
-                        _this.loaded = true;
-                        var snippet;
-                        try {
-                            snippet = data.data.items[0].snippet;
-                        }
-                        catch (e) {
-                            alert("YouTube API provided invalid data. The video may have been deleted.");
-                            return;
-                        }
-                        _this.preview = {
-                            id: undefined,
-                            presentationId: undefined,
-                            type: FFContentType.Video,
-                            submitter: undefined,
-                            timestamp: new Date().getTime(),
-                            upvotes: 0,
-                            flagged: 0,
-                            title: snippet["title"],
-                            youtubeId: id,
-                            channelTitle: snippet["channelTitle"],
-                            text: ""
-                        };
-                    });
-                }
-            };
-            SubmitLinkController.prototype.post = function () {
-                new Shared.PostContentForPresentationInstance(this.http, this.instanceID, this.preview).then(function (ret) {
-                    if (!ret.success) {
-                        return alert("Could not post content. Please try again later.");
-                    }
-                    var newId = ret.data.id;
-                    window.location.hash = "/content/" + newId;
-                });
-            };
-            SubmitLinkController.prototype.cancel = function () {
-                window.location.hash = "/";
-            };
-            SubmitLinkController.$inject = ["$scope", "$http"];
-            return SubmitLinkController;
-        })();
-        Controllers.SubmitLinkController = SubmitLinkController;
-    })(Controllers = ViewerApp.Controllers || (ViewerApp.Controllers = {}));
-})(ViewerApp || (ViewerApp = {}));

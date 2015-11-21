@@ -46,7 +46,8 @@ module.exports = function(grunt) {
 				src: [
 					'public/directives/ff-content/*.html',
 					'public/directives/ff-content-box/*.html',
-					'public/directives/ff-question/*.html'
+					'public/directives/ff-question/*.html',
+					'public/templates/viewer/*.html'
 				],
 				dest: 'public/js/viewer/templates.js',
 				options: ngtemplatesOpts

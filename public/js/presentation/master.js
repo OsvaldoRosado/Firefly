@@ -213,8 +213,10 @@ var Shared;
         var FFContentViewController = (function () {
             function FFContentViewController($scope) {
                 this.thumbnailCutoffWidth = 150;
-                this.updateRenderDetails();
-                $scope.$watch(function () { return this.content; }, this.updateRenderDetails.bind(this));
+                if (this.content) {
+                    this.updateRenderDetails();
+                }
+                $scope.$watch(function () { return this.content && this.content['timestamp']; }.bind(this), this.updateRenderDetails.bind(this));
             }
             FFContentViewController.prototype.getThumbnail = function () {
                 return "http://img.youtube.com/vi/" + this.content.youtubeId + "/0.jpg";
