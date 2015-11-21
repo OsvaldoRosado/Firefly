@@ -213,8 +213,10 @@ var Shared;
         var FFContentViewController = (function () {
             function FFContentViewController($scope) {
                 this.thumbnailCutoffWidth = 150;
-                this.updateRenderDetails();
-                $scope.$watch(function () { return this.content; }, this.updateRenderDetails.bind(this));
+                if (this.content) {
+                    this.updateRenderDetails();
+                }
+                $scope.$watch(function () { return this.content && this.content['timestamp']; }.bind(this), this.updateRenderDetails.bind(this));
             }
             FFContentViewController.prototype.getThumbnail = function () {
                 return "http://img.youtube.com/vi/" + this.content.youtubeId + "/0.jpg";
@@ -361,10 +363,15 @@ var PresentationApp;
                 this.timeout = $timeout;
                 this.slides = [];
                 this.isLoading = false;
+                this.lastData = "";
                 window.addEventListener("message", function (event) {
                     if (event.origin !== Config.HOST) {
                         return;
                     }
+                    if (event.data == _this.lastData) {
+                        return;
+                    }
+                    _this.lastData = event.data;
                     var order = JSON.parse(event.data);
                     switch (order.action) {
                         case "changeSlide":

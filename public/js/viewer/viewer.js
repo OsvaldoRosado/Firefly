@@ -283,8 +283,10 @@ var Shared;
         var FFContentViewController = (function () {
             function FFContentViewController($scope) {
                 this.thumbnailCutoffWidth = 150;
-                this.updateRenderDetails();
-                $scope.$watch(function () { return this.content; }, this.updateRenderDetails.bind(this));
+                if (this.content) {
+                    this.updateRenderDetails();
+                }
+                $scope.$watch(function () { return this.content && this.content['timestamp']; }.bind(this), this.updateRenderDetails.bind(this));
             }
             FFContentViewController.prototype.getThumbnail = function () {
                 return "http://img.youtube.com/vi/" + this.content.youtubeId + "/0.jpg";
@@ -325,6 +327,14 @@ var Shared;
         return UpvoteAPIRequest;
     })(Shared.APIRequest);
     Shared.UpvoteAPIRequest = UpvoteAPIRequest;
+    var FlagAPIRequest = (function (_super) {
+        __extends(FlagAPIRequest, _super);
+        function FlagAPIRequest($http, contentId) {
+            _super.call(this, $http, "/FlagPresContent", { id: contentId }, Shared.APIMethod.GET);
+        }
+        return FlagAPIRequest;
+    })(Shared.APIRequest);
+    Shared.FlagAPIRequest = FlagAPIRequest;
 })(Shared || (Shared = {}));
 /// <reference path="../../../shared/data-types.ts" />
 /// <reference path="../../js/typings/angular/angular.d.ts" />
@@ -360,6 +370,7 @@ var Shared;
             function FFContentBoxController($scope, $element, $http) {
                 this.scope = $scope;
                 this.http = $http;
+                this.isFlagged = false;
                 this.isQuestion = (this.content.type == FFContentType.Question);
                 if (this.showThumbnail !== undefined) {
                     return;
@@ -375,7 +386,34 @@ var Shared;
                     this.content.type == FFContentType.Video) && width > 300;
             };
             FFContentBoxController.prototype.upvoteContent = function () {
-                this.content.upvotes = 1;
+                var _this = this;
+                this.content.upvotes += 1;
+                new Shared.UpvoteAPIRequest(this.http, this.content.id).catch(function () {
+                    _this.content.upvotes -= 1;
+                });
+            };
+            FFContentBoxController.prototype.flagContent = function () {
+                var _this = this;
+                new Shared.FlagAPIRequest(this.http, this.content.id).catch(function () {
+                    alert("ERROR: Could not flag content. It may already be deleted");
+                }).then(function () {
+                    _this.isFlagged = true;
+                });
+            };
+            FFContentBoxController.prototype.shareContent = function () {
+                var link = "";
+                if (this.content.youtubeId !== undefined) {
+                    link = "https://www.youtube.com/watch?v=" + this.content.youtubeId;
+                }
+                else if (this.content.link !== undefined) {
+                    link = this.content.link;
+                }
+                else if (this.content.text !== undefined) {
+                    var w = window.open("", "_blank");
+                    w.document.write(this.content.text);
+                    return;
+                }
+                window.open(link, "_blank");
             };
             FFContentBoxController.$inject = ["$scope", "$element", "$http"];
             return FFContentBoxController;
@@ -440,7 +478,7 @@ var ViewerApp;
         return AppController;
     })();
     ViewerApp.AppController = AppController;
-    var app = angular.module("viewer", ["ngRoute"])
+    var app = angular.module("viewer", ["ngRoute", "ngAnimate"])
         .controller(Shared.Controllers)
         .controller(ViewerApp.Controllers)
         .controller("AppController", AppController)
@@ -452,22 +490,25 @@ var ViewerApp;
             $sceProvider.enabled(false);
             $routeProvider
                 .when('/', {
-                templateUrl: 'templates/viewer/live.html',
+                templateUrl: 'public/templates/viewer/live.html',
                 controller: ViewerApp.Controllers.LiveCtrl,
                 controllerAs: "live"
             })
                 .when('/ask', {
-                templateUrl: 'templates/viewer/ask.html',
+                templateUrl: 'public/templates/viewer/ask.html',
                 controller: ViewerApp.Controllers.QuestionCtrl,
                 controllerAs: "qc"
             })
                 .when('/submit', {
-                templateUrl: 'templates/viewer/submit.html',
-                controller: ViewerApp.Controllers.LiveCtrl,
-                controllerAs: "live"
+                templateUrl: 'public/templates/viewer/submit.html'
+            })
+                .when('/submit/link', {
+                templateUrl: 'public/templates/viewer/submitlink.html',
+                controller: ViewerApp.Controllers.SubmitLinkController,
+                controllerAs: "link"
             })
                 .when('/notsupported', {
-                templateUrl: 'templates/viewer/nothing.html',
+                templateUrl: 'public/templates/viewer/nothing.html',
             })
                 .otherwise({
                 redirectTo: '/'
@@ -485,8 +526,10 @@ var ViewerApp;
     (function (Controllers) {
         var LiveCtrl = (function () {
             function LiveCtrl($scope, $http) {
+                var _this = this;
                 this.scope = $scope;
                 this.http = $http;
+                this.active = true;
                 this.parentApp = $scope["app"];
                 this.instanceID = this.parentApp.instanceID;
                 var presPreview = document.getElementById("presPreview");
@@ -497,16 +540,20 @@ var ViewerApp;
                 else {
                     window.addEventListener("ffPresentationLoaded", this.managePresentationView.bind(this));
                 }
+                $scope.$on("$destroy", function () {
+                    _this.active = false;
+                });
             }
             LiveCtrl.prototype.managePresentationView = function () {
                 var _this = this;
                 new Shared.GetPresentationStateAPIRequest(this.http, this.instanceID).then(function (data, headers) {
-                    if (JSON.stringify(data.data) != JSON.stringify(_this.presentationInstance)) {
-                        _this.presentationInstance = data.data;
-                        _this.windowManager.commandAll("changeSlide", _this.parentApp.presentation.slideUrls[_this.presentationInstance.currentSlide]);
-                        if (_this.presentationInstance.currentContentId && _this.presentationInstance.currentContentId != "") {
-                            _this.windowManager.postAll(_this.presentationInstance.currentContentId);
-                        }
+                    _this.presentationInstance = data.data;
+                    _this.windowManager.commandAll("changeSlide", _this.parentApp.presentation.slideUrls[_this.presentationInstance.currentSlide]);
+                    if (_this.presentationInstance.currentContentId && _this.presentationInstance.currentContentId != "") {
+                        _this.windowManager.postAll(_this.presentationInstance.currentContentId);
+                    }
+                    if (_this.active == false) {
+                        return;
                     }
                     window.setTimeout(_this.managePresentationView.bind(_this), 300);
                 });
@@ -531,11 +578,17 @@ var ViewerApp;
                 this.scope = $scope;
                 this.http = $http;
                 this.expandedIndex = -1;
+                this.questionText = "";
+                this.questionValid = true;
                 this.parentApp = $scope["app"];
                 this.instanceID = this.parentApp.instanceID;
             }
             QuestionCtrl.prototype.askQuestion = function () {
                 var _this = this;
+                if (this.questionText.length < 1) {
+                    return this.questionValid = false;
+                }
+                this.questionValid = true;
                 var question = {
                     id: undefined,
                     text: this.questionText,
@@ -550,6 +603,7 @@ var ViewerApp;
                 new Shared.PostContentForPresentationInstance(this.http, this.instanceID, question).then(function (data) {
                     if (data.success) {
                         _this.expandedIndex += 1;
+                        _this.questionText = "";
                         _this.parentApp.content.splice(0, 0, question);
                     }
                 });
@@ -565,5 +619,106 @@ var ViewerApp;
             return QuestionCtrl;
         })();
         Controllers.QuestionCtrl = QuestionCtrl;
+    })(Controllers = ViewerApp.Controllers || (ViewerApp.Controllers = {}));
+})(ViewerApp || (ViewerApp = {}));
+/// <reference path="../../../../shared/data-types.ts" />
+/// <reference path="../../typings/angular/angular.d.ts" />
+/// <reference path="../../typings/firefly/firefly.d.ts" />
+/// <reference path="../../shared/config.ts" />
+/// <reference path="../viewer.ts" />
+var ViewerApp;
+(function (ViewerApp) {
+    var Controllers;
+    (function (Controllers) {
+        var SubmitLinkController = (function () {
+            function SubmitLinkController($scope, $http) {
+                this.scope = $scope;
+                this.http = $http;
+                this.loading = false;
+                this.loaded = false;
+                var parentApp = $scope["app"];
+                this.instanceID = parentApp.instanceID;
+            }
+            SubmitLinkController.prototype.changed = function () {
+                var _this = this;
+                this.loading = true;
+                if (this.link.match(/^.{0,12}[:\.]youtube\..{2,4}/) != null) {
+                    var ids = this.link.match(/\?v=(.{11,15})/);
+                    if (ids.length < 2) {
+                        ids = this.link.match(/\/(.{11,15})$/);
+                    }
+                    if (ids.length < 2) {
+                        alert("Could not identify valid video ID in YouTube link: " + this.link);
+                        return;
+                    }
+                    var id = ids[1];
+                    var url = "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + id + "&key=AIzaSyB_w83v18rHCYGklMFjUhqLMTzmB9JgjuY";
+                    this.http.get(url).then(function (data) {
+                        _this.loading = false;
+                        _this.loaded = true;
+                        var snippet;
+                        try {
+                            snippet = data.data.items[0].snippet;
+                        }
+                        catch (e) {
+                            alert("YouTube API provided invalid data. The video may have been deleted.");
+                            return;
+                        }
+                        _this.preview = {
+                            id: undefined,
+                            presentationId: undefined,
+                            type: FFContentType.Video,
+                            submitter: undefined,
+                            timestamp: new Date().getTime(),
+                            upvotes: 0,
+                            flagged: 0,
+                            title: snippet["title"],
+                            youtubeId: id,
+                            channelTitle: snippet["channelTitle"],
+                            text: ""
+                        };
+                    });
+                }
+                else {
+                    var img = new Image();
+                    img.onerror = function () {
+                        alert("Sorry, web pages aren't supported at this time. Please link directly to an image");
+                    };
+                    img.onload = function () {
+                        _this.scope.$apply(function () {
+                            _this.loading = false;
+                            _this.loaded = true;
+                            _this.preview = {
+                                id: undefined,
+                                presentationId: undefined,
+                                type: FFContentType.Image,
+                                submitter: undefined,
+                                timestamp: new Date().getTime(),
+                                upvotes: 0,
+                                flagged: 0,
+                                link: _this.link,
+                                text: ""
+                            };
+                        });
+                    };
+                    img.src = this.link;
+                }
+            };
+            SubmitLinkController.prototype.post = function () {
+                new Shared.PostContentForPresentationInstance(this.http, this.instanceID, this.preview).then(function (ret) {
+                    if (!ret.success) {
+                        return alert("Could not post content. Please try again later.");
+                    }
+                    var newId = ret.data.id;
+                    window.location.hash = "/content/" + newId;
+                });
+            };
+            SubmitLinkController.prototype.cancel = function () {
+                window.location.hash = "/";
+            };
+            SubmitLinkController.$inject = ["$scope", "$http"];
+            return SubmitLinkController;
+        })();
+        Controllers.SubmitLinkController = SubmitLinkController;
     })(Controllers = ViewerApp.Controllers || (ViewerApp.Controllers = {}));
 })(ViewerApp || (ViewerApp = {}));

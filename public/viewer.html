@@ -1,66 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	
+
 	<!--
-		
+
 	|  ================================================   |
-	|  												   	  |
-	|  ███████╗██╗██████╗ ███████╗███████╗██╗  ██╗   ██╗  | 
+	|  												   	  											|
+	|  ███████╗██╗██████╗ ███████╗███████╗██╗  ██╗   ██╗  |
 	|  ██╔════╝██║██╔══██╗██╔════╝██╔════╝██║  ╚██╗ ██╔╝  |
 	|  █████╗  ██║██████╔╝█████╗  █████╗  ██║   ╚████╔╝   |
 	|  ██╔══╝  ██║██╔══██╗██╔══╝  ██╔══╝  ██║    ╚██╔╝    |
 	|  ██║     ██║██║  ██║███████╗██║     ███████╗██║     |
 	|  ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝     ╚══════╝╚═╝     |
-	|  												  	  |
+	|  												  	  											|
 	|  ================ Firefly - 2015 ================   |
-	
+
 	-->
-	
-	<meta charset="utf-8">
+
+	<!-- About -->
 	<title>Firefly</title>
-	<meta name="description" content="">
-	<meta name="author" content="">
-	<link rel="stylesheet" href="css/viewer.css">
-	
+	<meta name="description" content="The next generation of presentation software">
+	<meta name="author" content="Osvaldo Rosado, Devin Nguyen, Jonathan Goodnow, Keaton Brandt">
+
+	<!-- Make mobile not suck -->
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, max-scale=1">
 
+	<!-- Make everything not suck -->
+	<link rel="stylesheet" href="css/viewer.css">
+
+	<!-- Angular FTW -->
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-route.min.js"></script>
-		
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.min.js"></script>
+
+	<!-- Make it go -->
 	<script src="/js/viewer/viewer.js"></script>
 	<script src="/js/viewer/templates.js"></script>
-	
+
 </head>
 <body class="viewer" ng-app="viewer" ng-controller="AppController as app">
-	
+
 	<!-- Header -->
 	<div class="header">
 		<h2 ng-bind="app.presentation.name"></h2>
 		<div class="darkPulse"></div>
 	</div>
-		
+
 	<!-- ngRoute Magic -->
 	<main ng-view></main>
-	
+
 	<!-- Single Page Navigation -->
 	<nav class="viewer">
 		<ul>
 			<li>
 				<a href="#/" class="active">
-					<img src="{{(app.pageName == '/') ? 'images/Live-Selected@3x.png' : 'images/Live-Normal@3x.png'}}" 
+					<img ng-src="{{(app.pageName == '/') ? 'images/Live-Selected@3x.png' : 'images/Live-Normal@3x.png'}}"
 						 alt="Live" class="icon">
 				</a>
 			</li>
 			<li>
 				<a href="#/ask">
-					<img src="{{(app.pageName == '/ask') ? 'images/QA-Selected@3x.png' : 'images/QA-Normal@3x.png'}}" 
+					<img ng-src="{{(app.pageName == '/ask') ? 'images/QA-Selected@3x.png' : 'images/QA-Normal@3x.png'}}"
 						 alt="QA" class="icon">
 				</a>
 			</li>
 			<li>
 				<a href="#/submit">
-					<img src="{{(app.pageName == '/submit') ? 'images/Submit-Selected@3x.png' : 'images/Submit-Normal@3x.png'}}" 
+					<img ng-src="{{(app.pageName == '/submit') ? 'images/Submit-Selected@3x.png' : 'images/Submit-Normal@3x.png'}}"
 						 alt="Submit" class="icon">
 				</a>
 			</li>

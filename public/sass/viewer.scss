@@ -35,17 +35,17 @@ nav.viewer {
 		display: flex;
 		flex-direction: row;
 	}
-	
+
 	li {
 		list-style: none;
 		flex-grow: 1;
 		text-align: center;
-		
+
 		a {
 			display: block;
 			text-decoration: none;
 			padding: 0;
-			
+
 			&.active {
 				h1, span {
 					color: $primary-yellow-light;
@@ -64,13 +64,13 @@ nav.viewer {
 				}
 			}
 		}
-		
+
 		h1 {
 			font-family: $title-font-stack;
 			font-size: 10px;
 			text-transform: uppercase;
 		}
-		
+
 		img {
 			height: 52px;
 		}
@@ -108,10 +108,42 @@ form {
 	max-width: none;
 	padding: 0 3vw;
 	padding-top: 20px;
-	
+
 	&.submitPage {
 		padding-top: 0px;
 	}
+}
+
+label {
+	color: $content-text-dark;
+	font-weight: 400;
+	font-size: 11pt;
+	margin-bottom: 12px;
+	line-height: 150%;
+}
+
+.buttonrow {
+	* {
+		width: calc(50% - 6px);
+	}
+
+	:first-child {
+		margin-right: 8px;
+	}
+}
+
+button.primary, button.secondary {
+  border-radius: 0;
+}
+
+button.primary {
+	background-color: $primary-brand;
+  color: white;
+	border: 1px solid $primary-brand;
+}
+
+button.secondary {
+  background-color: $callout-light;
 }
 
 
@@ -136,16 +168,16 @@ form {
 		width: 100%;
 		height: 100px;
 		position: relative;
-		
+
 		textarea {
 			resize: none;
 			width: 100%;
 			height: 100%;
-			
+
 			padding: 8px;
 			font-size: 14px;
 		}
-		
+
 		// The Amazing Arrow!
 		// Copied from <ff-question>
 		&::before, &::after {
@@ -159,14 +191,23 @@ form {
 		}
 		&::before {
 			bottom: -12px;
-			border-color: $content-border transparent;    
+			border-color: $content-border transparent;
 		}
 		&::after {
 			bottom: -10.5px;
-			border-color: white transparent;    
+			border-color: white transparent;
+		}
+
+		&.invalid {
+			textarea {
+				border-color: $secondary-red;
+			}
+			&::before {
+				border-color: $secondary-red transparent;
+			}
 		}
 	}
-	
+
 	button {
 		margin-top: 20px;
 	}
@@ -185,46 +226,138 @@ form {
 // SUBMIT PAGE =============================================================================
 
 .submitContent {
-	
+
 	li {
 		background: $background-light;
-		border-bottom: 1px solid $content-border; 
-		padding: 1em 2em;
+		border-bottom: 1px solid $content-border;
+		padding: 1.5em 1em;
+		position: relative;
+		min-height: 80px;
+		display: flex;
+		display: -webkit-flex;
+		-webkit-align-items: center;
+		align-items: center;
 	}
-	
+
 	a {
-		display: inline-block;
-		padding: 1em 0;
+		display: flex;
+		display: -webkit-flex;
+		-webkit-align-items: center;
+		align-items: center;
+		-webkit-justify-content: left;
+		justify-content: left;
 	}
-	
-	i.submitContentIcon {
-		float: left;
-		width: 20%;
-		color: $content-text-dark;
+
+	.submitContentIcon {
+		width: 70px;
+		flex-shrink: 0;
+		-webkit-flex-shrink: 0;
+
 		img {
 			width: 35px;
-			padding: 1em 0 0 0;
+			margin-left: 4px;
+		}
+
+		&.upload img {
+			width: 39px;
+			margin-left: 2px;
 		}
 	}
-	
+
 	div.submitContentItem {
-		float: right;
-		width: 80%;
+		float: left;
+		max-width: 400px;
+		flex-grow: 1;
+		-webkit-flex-grow: 1;
+		margin-bottom: 3px;
+
 		div.submitContentItemText {
 			float: left;
 			width: 85%;
 			h2, p {
 				color: $content-text-darkest;
 			}
+			h2 {
+				padding-bottom: 5px;
+			}
 		}
-		i.arrow {
-			width: 15%;
-			float: right;
-			font-size: 36px;
-			color: $content-text-darker;
-			text-align: right;
-			margin-top: 12px;
+	}
+
+	i.arrow {
+		position: absolute;
+		right: 15px;
+		top: calc(50% - 23px);
+		font-size: 36px;
+		color: $content-text-darker;
+	}
+}
+
+
+// SUBMIT LINK PAGE ========================================================================
+
+.submitlink {
+	  margin-bottom: 80px;
+
+		input, ff-content, textarea {
+	    width: 100%;
+	    box-sizing: border-box;
+	    height: 40px;
+	    border-radius: 2px;
+	    border: 1px solid $content-border;
+	    padding: 0 10px;
+	    font-size: 12pt;
+	    box-shadow: 0px 1px 2px rgba(0,0,0,0.1);
+			margin-bottom: 30px;
+	}
+
+	textarea {
+		resize: none;
+		padding: 10px;
+		font-size: 11pt;
+	}
+
+	ff-content {
+		display: block;
+		min-height: calc(100vw * 0.75);
+		background: $callout-lighter;
+		position: relative;
+		overflow: hidden;
+
+		// Totally fake loading bar (shh)
+		&.loading::before {
+			content: '';
+			position: absolute;
+			bottom: 0px;
+			left: 0px;
+			width: 100%;
+			height: 5px;
+			background-color: $secondary-red;
+			transition: width 2s linear;
 		}
+
+		&.loading-add::before {
+			width: 0px;
+			position: absolute;
+			transition: width 2s linear;
+		}
+
+		// All bets are off once the content is loaded
+		&.loaded {
+			padding: 0;
+			min-height: min-content; // Magical
+			min-height: -webkit-min-content; // Magical
+			min-height: -moz-min-content; // Magical
+		}
+
+		display: flex;
+		display: -webkit-flex;
+		-webkit-align-items: center;
+		align-items: center;
+
+		* {
+			width: 100%;
+		}
+
 	}
 }
 
