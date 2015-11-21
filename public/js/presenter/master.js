@@ -538,88 +538,8 @@ var PresenterApp;
                     _this.presInstance = value;
                     _this.checkForContentContinuously();
                 });
-                var testUser1 = {
-                    id: "1",
-                    name: "Keaton Brandt"
-                };
-                var testUser2 = {
-                    id: "2",
-                    name: "Liam Jones"
-                };
-                this.content = [
-                    {
-                        id: "9",
-                        presentationId: "1",
-                        type: FFContentType.Image,
-                        submitter: testUser1,
-                        timestamp: new Date().getTime(),
-                        upvotes: 0,
-                        flagged: 0,
-                        filename: "presenter-mock.png",
-                        text: "Page from our doc detailing the presenter view",
-                        link: "/images/dummy/presenter-mock.png"
-                    },
-                    {
-                        id: "8",
-                        presentationId: "1",
-                        type: FFContentType.Image,
-                        submitter: testUser1,
-                        timestamp: new Date().getTime(),
-                        upvotes: 0,
-                        flagged: 0,
-                        filename: "mobile-upload.png",
-                        text: "This is what people should see when they submit content",
-                        link: "/images/dummy/mobile-upload.png"
-                    },
-                    {
-                        id: "7",
-                        presentationId: "1",
-                        type: FFContentType.Image,
-                        submitter: testUser1,
-                        timestamp: new Date().getTime(),
-                        upvotes: 0,
-                        flagged: 0,
-                        filename: "mobile-live.png",
-                        text: "Mockup of the main view the audience sees.",
-                        link: "/images/dummy/mobile-live.png"
-                    },
-                    {
-                        id: "4",
-                        presentationId: "1",
-                        type: FFContentType.Video,
-                        submitter: testUser2,
-                        timestamp: new Date().getTime(),
-                        upvotes: 0,
-                        flagged: 0,
-                        title: "Bueller, Bueller",
-                        youtubeId: "f4zyjLyBp64",
-                        channelTitle: "blc3211"
-                    },
-                ];
-                this.questions = [
-                    {
-                        id: "4",
-                        presentationId: "1",
-                        type: FFContentType.Question,
-                        submitter: testUser1,
-                        timestamp: new Date().getTime(),
-                        upvotes: 3,
-                        flagged: 0,
-                        text: "What would be a good number of collaborators to have?",
-                        replies: [
-                            {
-                                id: "5",
-                                presentationId: "1",
-                                type: FFContentType.QuestionResponse,
-                                submitter: testUser2,
-                                timestamp: new Date().getTime(),
-                                upvotes: 0,
-                                flagged: 0,
-                                text: "I think it might depend on how complicated your overall class structure is."
-                            }
-                        ]
-                    }
-                ];
+                this.content = [];
+                this.questions = [];
             }
             ContentCtrl.prototype.checkForContentContinuously = function () {
                 var _this = this;
@@ -628,21 +548,33 @@ var PresenterApp;
                 }
                 new Shared.GetContentForPresentationInstance(this.http, this.presInstance.id)
                     .then(function (result) {
-                    var _questions = [];
-                    var _content = [];
-                    if (!result.data || !result.data.length) {
+                    var submissions = result.data;
+                    if (!submissions || !submissions.length) {
                         return;
                     }
-                    result.data.forEach(function (submission) {
-                        if (submission.type == FFContentType.Question) {
-                            _questions.push(submission);
+                    var qInc = 0;
+                    var cInc = 0;
+                    for (var sInc = 0; sInc < submissions.length; sInc++) {
+                        var sub = submissions[sInc];
+                        if (sub.type == FFContentType.Question) {
+                            var qsub = sub;
+                            if (_this.questions.length <= qInc) {
+                                _this.questions.push(qsub);
+                            }
+                            else {
+                                if (_this.questions[qInc].replies.length < qsub.replies.length) {
+                                    _this.questions[qInc].replies = qsub.replies;
+                                }
+                            }
+                            qInc++;
                         }
                         else {
-                            _content.push(submission);
+                            if (_this.content.length <= cInc) {
+                                _this.content.push(sub);
+                            }
+                            cInc++;
                         }
-                    });
-                    _this.questions = _questions;
-                    _this.content = _content;
+                    }
                     window.setTimeout(_this.checkForContentContinuously.bind(_this), 1000);
                 });
             };
