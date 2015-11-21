@@ -679,6 +679,30 @@ var ViewerApp;
                         };
                     });
                 }
+                else {
+                    var img = new Image();
+                    img.onerror = function () {
+                        alert("Sorry, web pages aren't supported at this time. Please link directly to an image");
+                    };
+                    img.onload = function () {
+                        _this.scope.$apply(function () {
+                            _this.loading = false;
+                            _this.loaded = true;
+                            _this.preview = {
+                                id: undefined,
+                                presentationId: undefined,
+                                type: FFContentType.Image,
+                                submitter: undefined,
+                                timestamp: new Date().getTime(),
+                                upvotes: 0,
+                                flagged: 0,
+                                link: _this.link,
+                                text: ""
+                            };
+                        });
+                    };
+                    img.src = this.link;
+                }
             };
             SubmitLinkController.prototype.post = function () {
                 new Shared.PostContentForPresentationInstance(this.http, this.instanceID, this.preview).then(function (ret) {

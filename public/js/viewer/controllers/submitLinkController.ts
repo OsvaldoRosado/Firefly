@@ -40,7 +40,8 @@ module ViewerApp.Controllers {
 		changed(){
 			this.loading = true;
 
-			// Figure out what type of URL the user entered
+			// YOUTUBE LINKS =====================================================================
+
 			if (this.link.match(/^.{0,12}[:\.]youtube\..{2,4}/) != null) {
 				var ids = this.link.match(/\?v=(.{11,15})/);
 				if (ids.length < 2) {
@@ -83,6 +84,37 @@ module ViewerApp.Controllers {
 					};
 				});
 
+			// IMAGE LINKS =======================================================================
+
+			} else {
+				var img = new Image();
+
+				// If this is not a valid image, warn the user
+		    img.onerror = ()=> {
+					alert("Sorry, web pages aren't supported at this time. Please link directly to an image");
+				}
+
+				// Otherwise, we're good to go
+		    img.onload = ()=> {
+					this.scope.$apply(()=>{
+						this.loading = false;
+						this.loaded = true;
+
+						this.preview = <FFLinkContent>{
+							id: undefined,
+							presentationId: undefined,
+							type: FFContentType.Image,
+							submitter: undefined,
+							timestamp: new Date().getTime(),
+							upvotes: 0,
+							flagged: 0,
+							link: this.link,
+							text: ""
+						};
+					});
+				}
+
+		    img.src = this.link
 			}
 		}
 
