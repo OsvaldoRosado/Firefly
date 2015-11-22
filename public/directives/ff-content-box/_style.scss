@@ -1,139 +1,139 @@
 @import "../ff-content/_style.scss";
 
 .ffContentBox {
-  display: block;
-  overflow: hidden;
+	display: block;
+	overflow: hidden;
 
-  border: 1px solid $content-border;
-  border-radius: 2px;
-  background-color: $callout-light;
+	border: 1px solid $content-border;
+	border-radius: 2px;
+	background-color: $callout-light;
 
-  transition: box-shadow 200ms ease-out, background-color 200ms ease-out;
-  box-shadow: $standard-shadow;
-  &.expanded {
-    background-color: $callout-lightest;
-    box-shadow: $highlight-shadow;
-    
-    &.isQuestion {
-      background-color: $callout-light;
-    }
-  }
+	transition: box-shadow 200ms ease-out, background-color 200ms ease-out;
+	box-shadow: $standard-shadow;
+	&.expanded {
+		background-color: $callout-lightest;
+		box-shadow: $highlight-shadow;
+		
+		&.isQuestion {
+			background-color: $callout-light;
+		}
+	}
 
-  // Top Content
-  ff-content.full {
-    max-width: 100%;
-    border-bottom: 1px solid $content-border;
-    
-    iframe {
-      width: 100%;
-      height: 200px;
-    }
-  }
+	// Top Content
+	ff-content.full {
+		max-width: 100%;
+		border-bottom: 1px solid $content-border;
+		
+		iframe {
+			width: 100%;
+			height: 200px;
+		}
+	}
 
-  // Description Block
-  .desc {
-    padding: 2%;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
+	// Description Block
+	.desc {
+		padding: 2%;
+		display: flex;
+		align-items: center;
+		cursor: pointer;
 
-    > * {
-      padding: 0;
-      margin: 0
-    }
+		> * {
+			padding: 0;
+			margin: 0
+		}
 
-    ff-content {
-      width: 30%;
-    }
+		ff-content {
+			width: 30%;
+		}
 
-    .meta {
-      width: 62%;
-      margin-left: 6%;
-    }
-    
-    &.nothumb {
-      display: block;
-      
-      .meta {
-        width: 94%;
-        margin: 0 3%;
-      }
-    }
-  }
+		.meta {
+			width: 62%;
+			margin-left: 6%;
+		}
+		
+		&.nothumb {
+			display: block;
+			
+			.meta {
+				width: 94%;
+				margin: 0 3%;
+			}
+		}
+	}
 
 
-  h3 {
-    margin-top: 5px;
-    margin-bottom: 7px;
-    font-size: 11pt;
-    
-    &::before, &::after {
-      content: "\"";
-    }
-  }
-  
-  h5 {
-    font-size: 10pt;
-    font-weight: lighter;
-    margin-top: -4px;
-    margin-bottom: 4px;
-  }
+	h3 {
+		margin-top: 5px;
+		margin-bottom: 7px;
+		font-size: 11pt;
+		
+		&::before, &::after {
+			content: "\"";
+		}
+	}
+	
+	h5 {
+		font-size: 10pt;
+		font-weight: lighter;
+		margin-top: -4px;
+		margin-bottom: 4px;
+	}
 
-  .bottomrow {
-    position: relative;
-    font-size: 10pt;
-    margin-bottom: 5px;
+	.bottomrow {
+		position: relative;
+		font-size: 10pt;
+		margin-bottom: 5px;
 
-    display: flex;
-    flex-wrap: wrap;
+		display: flex;
+		flex-wrap: wrap;
 
-    * {
-      padding: 3px 0;
-      margin: 0;
-      flex-grow: 1;
-    }
-    
-    p {
-      text-align: left;
-      
-      &.filename {
-        font-weight: bold;
-      }
-    }
-    
-    cite {
-      text-align: right;
-    }
-  }
-  
-  // Question replies
-  .replies ng-transclude {
-    > *:first-child {
-      margin-top: 15px;
-    }
-    > *:last-child {
-      margin-bottom: 35px;
-    }
-  }
+		* {
+			padding: 3px 0;
+			margin: 0;
+			flex-grow: 1;
+		}
+		
+		p {
+			text-align: left;
+			
+			&.filename {
+				font-weight: bold;
+			}
+		}
+		
+		cite {
+			text-align: right;
+		}
+	}
+	
+	// Question replies
+	.replies ng-transclude {
+		> *:first-child {
+			margin-top: 15px;
+		}
+		> *:last-child {
+			margin-bottom: 35px;
+		}
+	}
 
-  // Actions Row
-  .commands {
-    background-color: $callout-lighter;
-    padding: 10px 0 12px 0;
-    display: flex;
-    border-top: 1px solid $content-border;
-    
-    & > * {
-      flex-grow: 1;
-      flex-basis: 0;
-      cursor: pointer;
-      text-align: center;
-      
-      p {
-        margin: 0;
-        font-size: 10pt;
-      }
-    }
-  }
+	// Actions Row
+	.commands {
+		background-color: $callout-lighter;
+		padding: 10px 0 12px 0;
+		display: flex;
+		border-top: 1px solid $content-border;
+		
+		& > * {
+			flex-grow: 1;
+			flex-basis: 0;
+			cursor: pointer;
+			text-align: center;
+			
+			p {
+				margin: 0;
+				font-size: 10pt;
+			}
+		}
+	}
 
 }
