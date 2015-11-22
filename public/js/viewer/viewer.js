@@ -624,7 +624,7 @@ var ViewerApp;
                     }
                 });
             };
-            QuestionCtrl.prototype.reply = function (data, index) {
+            QuestionCtrl.prototype.reply = function (data, questionId) {
                 var _this = this;
                 if (data.length < 1) {
                     return;
@@ -639,8 +639,13 @@ var ViewerApp;
                     upvotes: 0,
                     flagged: 0
                 };
-                new Shared.ReplyQuestionForPresentationInstance(this.http, this.instanceID, this.parentApp.content[index].id, replyObj).then(function (data) {
-                    _this.parentApp.content[index] = data.data;
+                new Shared.ReplyQuestionForPresentationInstance(this.http, this.instanceID, questionId, replyObj).then(function (data) {
+                    for (var i = 0; i < _this.parentApp.content.length; i++) {
+                        if (_this.parentApp.content[i].id === questionId) {
+                            _this.parentApp.content[i] = data.data;
+                            break;
+                        }
+                    }
                 });
             };
             QuestionCtrl.prototype.expandItem = function (index) {

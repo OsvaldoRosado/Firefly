@@ -47,7 +47,7 @@ class PresentationContent extends Base.BaseModel implements FFGenericContent {
 	// applies to questions only
 	public addReply(reply: FFTextContent, user:FFUser, cb:(PresentationContent)=>void) {
 
-		reply.submitter = user;
+		if (user) { reply.submitter = user; }
 
 		if(!this.replies) {
 			this.replies = [reply];

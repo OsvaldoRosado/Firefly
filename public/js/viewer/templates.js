@@ -17,7 +17,7 @@ angular.module('viewer').run(['$templateCache', function($templateCache) {
 
 
   $templateCache.put('public/templates/viewer/ask.html',
-    "<div class=mainContent><div class=askSection><div class=editor ng-class=\"{invalid: !qc.questionValid}\"><textarea placeholder=\"Ask a question\" ng-model=qc.questionText></textarea></div><button class=u-full-width ng-click=qc.askQuestion()>ASK</button></div><div class=\"pastSubmissions row\"><h4>Recently Asked</h4><ff-content-box ng-repeat=\"question in app.content | filter:{type:3}\" display=0 content=question expanded=\"qc.expandedIndex | equals:$index\" on-toggle=qc.expandItem($index) is-form=1 on-reply=\"qc.reply(data, $index)\"></ff-content-box></div></div>"
+    "<div class=mainContent><div class=askSection><div class=editor ng-class=\"{invalid: !qc.questionValid}\"><textarea placeholder=\"Ask a question\" ng-model=qc.questionText></textarea></div><button class=u-full-width ng-click=qc.askQuestion()>ASK</button></div><div class=\"pastSubmissions row\"><h4>Recently Asked</h4><ff-content-box ng-repeat=\"question in app.content | filter:{type:3}\" display=0 content=question expanded=\"qc.expandedIndex | equals:$index\" on-toggle=qc.expandItem($index) is-form=1 on-reply=\"qc.reply(data, question.id)\"></ff-content-box></div></div>"
   );
 
 

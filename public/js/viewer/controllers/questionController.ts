@@ -74,7 +74,7 @@ module ViewerApp.Controllers {
 		/**
 		 * Posts a reply to a question
 		 */
-		reply(data: string, index: number){
+		reply(data: string, questionId: string){
 			if (data.length < 1) { return; }
 
 			var replyObj: FFTextContent = {
@@ -89,9 +89,16 @@ module ViewerApp.Controllers {
 			};
 
 			new Shared.ReplyQuestionForPresentationInstance(
-				this.http, this.instanceID, this.parentApp.content[index].id, replyObj
+				this.http, this.instanceID, questionId, replyObj
 			).then((data) => {
-				this.parentApp.content[index] = (<any>data).data;
+				// not a great practice for searching, but given the expected
+				// scale of the app, this'll do
+				for (var i = 0; i < this.parentApp.content.length; i++){
+					if(this.parentApp.content[i].id === questionId){
+						this.parentApp.content[i] = (<any>data).data;
+						break
+					}
+				}
 			});
 		}
 
