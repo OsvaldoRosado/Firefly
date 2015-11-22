@@ -1,9 +1,9 @@
 // Common Firefly Mocks
 
 class Mocks {
-	static Request(args:{withUser?:boolean,withParams?:Object,withQuery?:Object,logoutCB?:()=>any}) {
+	static Request(args:{withUser?:Object,withParams?:Object,withQuery?:Object,logoutCB?:()=>any}) {
 		return {
-			user:args.withUser || false,
+			user:args.withUser || null,
 			params:args.withParams || {},
 			query:args.withQuery || {},
 			logout:args.logoutCB||(()=>null)

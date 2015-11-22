@@ -29,7 +29,7 @@ class BaseTest {
 		} catch (e) {
 			failed = true;
 			reason = e.toString();
-			console.log(e.stack);
+			//console.log(e.stack);
 		}
 		
 		test.recoverStubbedFunctions();
