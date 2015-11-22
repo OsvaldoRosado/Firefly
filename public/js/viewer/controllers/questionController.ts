@@ -72,6 +72,24 @@ module ViewerApp.Controllers {
 		}
 
 		/**
+		 * Posts a reply to a question
+		 */
+		reply(data: string, index: number){
+			if (data.length < 1) { return; }
+
+			(<FFQuestion>this.parentApp.content[index]).replies.push({
+				id: undefined,
+				text: data,
+				timestamp: new Date().getTime(),
+				presentationId: this.parentApp.presentationInstance.presentationId,
+				submitter: <FFUser>{id: "-1", name: "Anonymous User"},
+				type: FFContentType.Question,
+				upvotes: 0,
+				flagged: 0,
+			});
+		}
+
+		/**
 		 * Expands a question
 		 */
 		expandItem(index: number) {

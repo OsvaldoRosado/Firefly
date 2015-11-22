@@ -40,7 +40,7 @@
 				<div class="editor u-full-width" ng-class="{invalid: !cc.replyValid}">
 					<textarea class="u-full-width" placeholder="Reply to this question" ng-model="cc.replyContent"></textarea>
 				</div>
-				<button class="u-full-width" ng-click="cc.onReply({data: cc.replyContent})">REPLY</button>
+				<button class="u-full-width" ng-click="cc.onReply({data: cc.replyContent}); cc.replyContent = '';">REPLY</button>
 			</div>
 		</collapse>
 	</div>

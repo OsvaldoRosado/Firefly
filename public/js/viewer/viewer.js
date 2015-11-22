@@ -611,6 +611,21 @@ var ViewerApp;
                     }
                 });
             };
+            QuestionCtrl.prototype.reply = function (data, index) {
+                if (data.length < 1) {
+                    return;
+                }
+                this.parentApp.content[index].replies.push({
+                    id: undefined,
+                    text: data,
+                    timestamp: new Date().getTime(),
+                    presentationId: this.parentApp.presentationInstance.presentationId,
+                    submitter: { id: "-1", name: "Anonymous User" },
+                    type: FFContentType.Question,
+                    upvotes: 0,
+                    flagged: 0,
+                });
+            };
             QuestionCtrl.prototype.expandItem = function (index) {
                 if (this.expandedIndex == index) {
                     return this.expandedIndex = -1;

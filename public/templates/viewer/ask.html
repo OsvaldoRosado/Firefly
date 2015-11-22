@@ -13,6 +13,7 @@
 			ng-repeat="question in app.content | filter:{type:3}"
 			display="0" content="question"
 			expanded="qc.expandedIndex | equals:$index" on-toggle="qc.expandItem($index)"
+			is-form="1" on-reply="qc.reply(data, $index)"
 		></ff-content-box>
 	</div>
 </div>
