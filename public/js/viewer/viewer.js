@@ -146,9 +146,8 @@ var Shared;
     Shared.GetContentForPresentationInstance = GetContentForPresentationInstance;
     var ReplyQuestionForPresentationInstance = (function (_super) {
         __extends(ReplyQuestionForPresentationInstance, _super);
-        function ReplyQuestionForPresentationInstance($http, instanceId, contentId, content) {
+        function ReplyQuestionForPresentationInstance($http, contentId, content) {
             var reqbody = {
-                instanceid: instanceId,
                 contentid: contentId,
                 data: JSON.stringify(content)
             };
@@ -639,7 +638,7 @@ var ViewerApp;
                     upvotes: 0,
                     flagged: 0
                 };
-                new Shared.ReplyQuestionForPresentationInstance(this.http, this.instanceID, questionId, replyObj).then(function (data) {
+                new Shared.ReplyQuestionForPresentationInstance(this.http, questionId, replyObj).then(function (data) {
                     for (var i = 0; i < _this.parentApp.content.length; i++) {
                         if (_this.parentApp.content[i].id === questionId) {
                             _this.parentApp.content[i] = data.data;

@@ -89,7 +89,7 @@ module ViewerApp.Controllers {
 			};
 
 			new Shared.ReplyQuestionForPresentationInstance(
-				this.http, this.instanceID, questionId, replyObj
+				this.http, questionId, replyObj
 			).then((data) => {
 				// not a great practice for searching, but given the expected
 				// scale of the app, this'll do

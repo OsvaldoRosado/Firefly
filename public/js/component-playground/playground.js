@@ -146,9 +146,8 @@ var Shared;
     Shared.GetContentForPresentationInstance = GetContentForPresentationInstance;
     var ReplyQuestionForPresentationInstance = (function (_super) {
         __extends(ReplyQuestionForPresentationInstance, _super);
-        function ReplyQuestionForPresentationInstance($http, instanceId, contentId, content) {
+        function ReplyQuestionForPresentationInstance($http, contentId, content) {
             var reqbody = {
-                instanceid: instanceId,
                 contentid: contentId,
                 data: JSON.stringify(content)
             };

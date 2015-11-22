@@ -123,9 +123,8 @@ module Shared {
 	}
 
 	export class ReplyQuestionForPresentationInstance extends Shared.APIRequest<Object> {
-		constructor($http: ng.IHttpService, instanceId: string, contentId: string, content: FFTextContent) {
+		constructor($http: ng.IHttpService, contentId: string, content: FFTextContent) {
 			var reqbody = {
-				instanceid: instanceId,
 				contentid: contentId,
 				data: JSON.stringify(content)
 			};

@@ -11,34 +11,19 @@ class ReplyQuestionForPresentationInstance extends Base.BaseController {
 
 	protected process(req: Request, res: Response, cb: (data: Base.DataContract) => void) {
 
-		var instanceId = req.body.instanceid;
 		var contentId = req.body.contentid;
 		var contentData = JSON.parse(req.body.data);
-		
-		// Try to lookup presentation instance
-		PresentationInstance.fromID(instanceId, (instance: PresentationInstance) => {
-			if (!instance) {
-				return cb({ success: false, data: "Presentation instance not found" });
-			}
-			
-			// Lookup presentation
-			Presentation.fromID(instance.presentationId, (pres: Presentation) => {
-				if (!pres) {
-					return cb({ success: false, data: "Presentation not found" });
-				}
 				
-				// Lookup question
-				PresentationContent.fromID(contentId, (content: PresentationContent) => {
+		// Lookup question
+		PresentationContent.fromID(contentId, (content: PresentationContent) => {
 
-					// Add reply to question
-					content.addReply(contentData, req.user, (content: PresentationContent) =>{
-						if (!content) {
-							return cb({success:false, data:"Could not add reply to content"});
-						} else {
-							return cb({success:true, data:content});
-						}
-					})
-				});
+			// Add reply to question
+			content.addReply(contentData, req.user, (content: PresentationContent) => {
+				if (!content) {
+					return cb({ success: false, data: "Could not add reply to content" });
+				} else {
+					return cb({ success: true, data: content });
+				}
 			});
 
 		});
