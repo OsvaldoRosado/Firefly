@@ -47,8 +47,10 @@ require('recursive-readdir')('./tests/',
 		console.log("Testing complete. "+files.length+" test classes run. "+failed+" test classes failed.");
 		
 		// Give error code for npm
-		if(failed != 0) {
+		if (failed != 0) {
 			process.exit(1);
+		} else {
+			process.exit(0)
 		}
 	}
 );
