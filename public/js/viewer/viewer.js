@@ -144,6 +144,19 @@ var Shared;
         return GetContentForPresentationInstance;
     })(Shared.APIRequest);
     Shared.GetContentForPresentationInstance = GetContentForPresentationInstance;
+    var ReplyQuestionForPresentationInstance = (function (_super) {
+        __extends(ReplyQuestionForPresentationInstance, _super);
+        function ReplyQuestionForPresentationInstance($http, instanceId, contentId, content) {
+            var reqbody = {
+                instanceid: instanceId,
+                contentid: contentId,
+                data: JSON.stringify(content)
+            };
+            _super.call(this, $http, "/replyQuestionForPresentationInstance", reqbody, APIMethod.POST);
+        }
+        return ReplyQuestionForPresentationInstance;
+    })(Shared.APIRequest);
+    Shared.ReplyQuestionForPresentationInstance = ReplyQuestionForPresentationInstance;
 })(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {
@@ -612,10 +625,11 @@ var ViewerApp;
                 });
             };
             QuestionCtrl.prototype.reply = function (data, index) {
+                var _this = this;
                 if (data.length < 1) {
                     return;
                 }
-                this.parentApp.content[index].replies.push({
+                var replyObj = {
                     id: undefined,
                     text: data,
                     timestamp: new Date().getTime(),
@@ -623,7 +637,10 @@ var ViewerApp;
                     submitter: { id: "-1", name: "Anonymous User" },
                     type: FFContentType.Question,
                     upvotes: 0,
-                    flagged: 0,
+                    flagged: 0
+                };
+                new Shared.ReplyQuestionForPresentationInstance(this.http, this.instanceID, this.parentApp.content[index].id, replyObj).then(function (data) {
+                    _this.parentApp.content[index] = data.data;
                 });
             };
             QuestionCtrl.prototype.expandItem = function (index) {

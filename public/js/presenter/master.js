@@ -144,6 +144,19 @@ var Shared;
         return GetContentForPresentationInstance;
     })(Shared.APIRequest);
     Shared.GetContentForPresentationInstance = GetContentForPresentationInstance;
+    var ReplyQuestionForPresentationInstance = (function (_super) {
+        __extends(ReplyQuestionForPresentationInstance, _super);
+        function ReplyQuestionForPresentationInstance($http, instanceId, contentId, content) {
+            var reqbody = {
+                instanceid: instanceId,
+                contentid: contentId,
+                data: JSON.stringify(content)
+            };
+            _super.call(this, $http, "/replyQuestionForPresentationInstance", reqbody, APIMethod.POST);
+        }
+        return ReplyQuestionForPresentationInstance;
+    })(Shared.APIRequest);
+    Shared.ReplyQuestionForPresentationInstance = ReplyQuestionForPresentationInstance;
 })(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {

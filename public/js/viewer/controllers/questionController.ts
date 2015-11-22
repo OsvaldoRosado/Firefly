@@ -77,15 +77,21 @@ module ViewerApp.Controllers {
 		reply(data: string, index: number){
 			if (data.length < 1) { return; }
 
-			(<FFQuestion>this.parentApp.content[index]).replies.push({
+			var replyObj: FFTextContent = {
 				id: undefined,
 				text: data,
 				timestamp: new Date().getTime(),
 				presentationId: this.parentApp.presentationInstance.presentationId,
-				submitter: <FFUser>{id: "-1", name: "Anonymous User"},
+				submitter: <FFUser>{ id: "-1", name: "Anonymous User" },
 				type: FFContentType.Question,
 				upvotes: 0,
-				flagged: 0,
+				flagged: 0
+			};
+
+			new Shared.ReplyQuestionForPresentationInstance(
+				this.http, this.instanceID, this.parentApp.content[index].id, replyObj
+			).then((data) => {
+				this.parentApp.content[index] = (<any>data).data;
 			});
 		}
 

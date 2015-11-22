@@ -121,4 +121,15 @@ module Shared {
 			super($http, "/getContentForPresentationInstance/" + instanceId, {});
 		}
 	}
+
+	export class ReplyQuestionForPresentationInstance extends Shared.APIRequest<Object> {
+		constructor($http: ng.IHttpService, instanceId: string, contentId: string, content: FFTextContent) {
+			var reqbody = {
+				instanceid: instanceId,
+				contentid: contentId,
+				data: JSON.stringify(content)
+			};
+			super($http, "/replyQuestionForPresentationInstance", reqbody, APIMethod.POST);
+		}
+	}
 }
