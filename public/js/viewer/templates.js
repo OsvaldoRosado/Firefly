@@ -42,7 +42,8 @@ angular.module('viewer').run(['$templateCache', function($templateCache) {
 
 
   $templateCache.put('public/templates/viewer/submitlink.html',
-    "<div class=\"mainContent submitlink\"><label for=link_url>Paste a URL here</label><input name=link_url ng-model=link.link ng-model-options={debounce:1000} ng-change=\"link.changed()\"><label for=link_url ng-bind=\"link.preview.title || 'Preview'\"></label><ff-content class=preview ng-class=\"{loading: link.loading, loaded: link.loaded}\" content=link.preview thumbnail=false></ff-content><div ng-show=link.loaded><textarea placeholder=\"Add a note (optional)\" id=link_note ng-model=link.preview.text>\n" +
+    "<div class=\"mainContent submitlink\"><label for=link_url>Paste a URL here</label><input name=link_url ng-model=link.link ng-model-options={debounce:1000} ng-change=\"link.changed()\"><label for=link_url ng-bind=\"link.preview.title || 'Preview'\"></label><ff-content class=preview ng-class=\"{loading: link.loading, loaded: link.loaded}\" content=link.preview thumbnail=false></ff-content><div ng-show=link.loaded><textarea placeholder=\"Add a note (optional)\" id=link_note ng-model=link.preview.text>\r" +
+    "\n" +
     "    </textarea><div class=buttonrow><button type=button class=secondary ng-click=link.cancel()>CANCEL</button> <button type=button class=primary ng-click=link.post()>POST</button></div></div></div>"
   );
 
