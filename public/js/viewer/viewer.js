@@ -351,7 +351,10 @@ var Shared;
                     content: "=",
                     showThumbnail: "=",
                     expanded: "=",
-                    onToggle: "&"
+                    isForm: "=",
+                    replyValid: "=",
+                    onToggle: "&",
+                    onReply: "&"
                 },
                 controller: Shared.Controllers.FFContentBoxController,
                 controllerAs: "cc",

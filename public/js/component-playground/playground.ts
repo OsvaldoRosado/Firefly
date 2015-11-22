@@ -12,6 +12,8 @@ module Playground {
 		imageContent2: FFLinkContent;
 		videoContent: FFYoutubeContent;
 		questionContent: FFQuestion;
+		replyValid: boolean;
+		replyContent: string;
 			
 		// Store the index of the currently expanded content item
 		expandedIndex: number;
@@ -103,6 +105,7 @@ module Playground {
 					}
 				]
 			}
+			this.replyValid = true;
 		}
 		
 		// Select a new item
@@ -112,6 +115,14 @@ module Playground {
 			} else {
 				this.expandedIndex = index;
 			}
+		}
+
+		reply(data: string, questionId: number){
+			if (data.length < 1) {
+				return this.replyValid = false;
+			}
+			this.replyValid = true;
+			alert("Replied to " + questionId + " with " + data);
 		}
 	}
 

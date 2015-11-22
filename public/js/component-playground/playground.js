@@ -351,7 +351,10 @@ var Shared;
                     content: "=",
                     showThumbnail: "=",
                     expanded: "=",
-                    onToggle: "&"
+                    isForm: "=",
+                    replyValid: "=",
+                    onToggle: "&",
+                    onReply: "&"
                 },
                 controller: Shared.Controllers.FFContentBoxController,
                 controllerAs: "cc",
@@ -519,6 +522,7 @@ var Playground;
                     }
                 ]
             };
+            this.replyValid = true;
         }
         AppController.prototype.expandItem = function ($scope, index) {
             if (this.expandedIndex == index) {
@@ -527,6 +531,13 @@ var Playground;
             else {
                 this.expandedIndex = index;
             }
+        };
+        AppController.prototype.reply = function (data, questionId) {
+            if (data.length < 1) {
+                return this.replyValid = false;
+            }
+            this.replyValid = true;
+            alert("Replied to " + questionId + " with " + data);
         };
         AppController.$inject = ["$scope"];
         return AppController;

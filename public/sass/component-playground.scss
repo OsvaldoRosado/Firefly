@@ -7,6 +7,7 @@
 // Import components
 @import '../directives/ff-content-box/_style.scss';
 @import '../directives/ff-question/_style.scss';
+@import 'viewer.scss';
 
 body {
 	background-color: $background-light;
