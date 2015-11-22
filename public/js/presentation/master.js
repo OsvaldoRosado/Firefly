@@ -505,7 +505,8 @@ var PresentationApp;
                     this.timeout(this.reallyShowQA.bind(this, question), 800);
                 }
                 else if (this.qaActive) {
-                    return;
+                    this.qaActive = false;
+                    this.timeout(this.reallyShowQA.bind(this, question), 800);
                 }
                 else {
                     this.reallyShowQA(question);
