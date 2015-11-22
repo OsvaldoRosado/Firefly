@@ -27,14 +27,13 @@ module PresenterApp.Controllers {
 		constructor($scope: ng.IScope, $http: ng.IHttpService) {
 			this.scope = $scope;
 			this.http = $http;
+			this.content = [];
+			this.questions = [];
 
 			this.scope.$on("instanceCreated", (event, value) => {
 				this.presInstance = value;
 				this.checkForContentContinuously();
 			});
-
-			this.content = [];
-			this.questions = [];
 		}
 
 		/**
@@ -52,24 +51,35 @@ module PresenterApp.Controllers {
 					var submissions = result.data;
 					if (!submissions || !submissions.length) { return; }
 
-					var qInc = 0; // question iteration
 					var cInc = 0; // content iteration
 					for (var sInc = 0; sInc < submissions.length; sInc++){
 						var sub = submissions[sInc];
 						if( sub.type == FFContentType.Question){
+							
 							var qsub = <FFQuestion>sub;
-							if (this.questions.length <= qInc){
+							if(this.questions.length === 0){
 								this.questions.push(qsub);
+								continue;
 							}
-							else {
-								if (this.questions[qInc].replies.length < qsub.replies.length){
-									this.questions[qInc].replies = qsub.replies;
+
+							// I'm not proud of this, but it's the only way to edit
+							// the replies of a question without resetting the whole object
+							var found = false;
+							for (var qInc = 0; qInc < this.questions.length; qInc++){
+								var q = this.questions[qInc];
+								if(q.id === qsub.id){
+									if (q.replies.length < qsub.replies.length){
+										q.replies = qsub.replies;
+									}
+									found = true;
 								}
 							}
-							qInc++;
+							if(!found){
+								this.questions.push(qsub);
+							}
 						}
 						else {
-							// content doesn't have replies
+							// content doesn't have replies (thank goodness)
 							if (this.content.length <= cInc){
 								this.content.push(sub)
 							}

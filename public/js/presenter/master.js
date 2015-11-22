@@ -144,6 +144,18 @@ var Shared;
         return GetContentForPresentationInstance;
     })(Shared.APIRequest);
     Shared.GetContentForPresentationInstance = GetContentForPresentationInstance;
+    var ReplyQuestionForPresentationInstance = (function (_super) {
+        __extends(ReplyQuestionForPresentationInstance, _super);
+        function ReplyQuestionForPresentationInstance($http, contentId, content) {
+            var reqbody = {
+                contentid: contentId,
+                data: JSON.stringify(content)
+            };
+            _super.call(this, $http, "/replyQuestionForPresentationInstance", reqbody, APIMethod.POST);
+        }
+        return ReplyQuestionForPresentationInstance;
+    })(Shared.APIRequest);
+    Shared.ReplyQuestionForPresentationInstance = ReplyQuestionForPresentationInstance;
 })(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {
@@ -290,7 +302,10 @@ var Shared;
                     content: "=",
                     showThumbnail: "=",
                     expanded: "=",
-                    onToggle: "&"
+                    isForm: "=",
+                    replyValid: "=",
+                    onToggle: "&",
+                    onReply: "&"
                 },
                 controller: Shared.Controllers.FFContentBoxController,
                 controllerAs: "cc",
@@ -534,12 +549,12 @@ var PresenterApp;
                 var _this = this;
                 this.scope = $scope;
                 this.http = $http;
+                this.content = [];
+                this.questions = [];
                 this.scope.$on("instanceCreated", function (event, value) {
                     _this.presInstance = value;
                     _this.checkForContentContinuously();
                 });
-                this.content = [];
-                this.questions = [];
             }
             ContentCtrl.prototype.checkForContentContinuously = function () {
                 var _this = this;
@@ -552,21 +567,28 @@ var PresenterApp;
                     if (!submissions || !submissions.length) {
                         return;
                     }
-                    var qInc = 0;
                     var cInc = 0;
                     for (var sInc = 0; sInc < submissions.length; sInc++) {
                         var sub = submissions[sInc];
                         if (sub.type == FFContentType.Question) {
                             var qsub = sub;
-                            if (_this.questions.length <= qInc) {
+                            if (_this.questions.length === 0) {
                                 _this.questions.push(qsub);
+                                continue;
                             }
-                            else {
-                                if (_this.questions[qInc].replies.length < qsub.replies.length) {
-                                    _this.questions[qInc].replies = qsub.replies;
+                            var found = false;
+                            for (var qInc = 0; qInc < _this.questions.length; qInc++) {
+                                var q = _this.questions[qInc];
+                                if (q.id === qsub.id) {
+                                    if (q.replies.length < qsub.replies.length) {
+                                        q.replies = qsub.replies;
+                                    }
+                                    found = true;
                                 }
                             }
-                            qInc++;
+                            if (!found) {
+                                _this.questions.push(qsub);
+                            }
                         }
                         else {
                             if (_this.content.length <= cInc) {

@@ -72,6 +72,37 @@ module ViewerApp.Controllers {
 		}
 
 		/**
+		 * Posts a reply to a question
+		 */
+		reply(data: string, questionId: string){
+			if (data.length < 1) { return; }
+
+			var replyObj: FFTextContent = {
+				id: undefined,
+				text: data,
+				timestamp: new Date().getTime(),
+				presentationId: this.parentApp.presentationInstance.presentationId,
+				submitter: <FFUser>{ id: "-1", name: "Anonymous User" },
+				type: FFContentType.Question,
+				upvotes: 0,
+				flagged: 0
+			};
+
+			new Shared.ReplyQuestionForPresentationInstance(
+				this.http, questionId, replyObj
+			).then((data) => {
+				// not a great practice for searching, but given the expected
+				// scale of the app, this'll do
+				for (var i = 0; i < this.parentApp.content.length; i++){
+					if(this.parentApp.content[i].id === questionId){
+						this.parentApp.content[i] = (<any>data).data;
+						break
+					}
+				}
+			});
+		}
+
+		/**
 		 * Expands a question
 		 */
 		expandItem(index: number) {

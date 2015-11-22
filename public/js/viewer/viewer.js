@@ -144,6 +144,18 @@ var Shared;
         return GetContentForPresentationInstance;
     })(Shared.APIRequest);
     Shared.GetContentForPresentationInstance = GetContentForPresentationInstance;
+    var ReplyQuestionForPresentationInstance = (function (_super) {
+        __extends(ReplyQuestionForPresentationInstance, _super);
+        function ReplyQuestionForPresentationInstance($http, contentId, content) {
+            var reqbody = {
+                contentid: contentId,
+                data: JSON.stringify(content)
+            };
+            _super.call(this, $http, "/replyQuestionForPresentationInstance", reqbody, APIMethod.POST);
+        }
+        return ReplyQuestionForPresentationInstance;
+    })(Shared.APIRequest);
+    Shared.ReplyQuestionForPresentationInstance = ReplyQuestionForPresentationInstance;
 })(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {
@@ -351,7 +363,10 @@ var Shared;
                     content: "=",
                     showThumbnail: "=",
                     expanded: "=",
-                    onToggle: "&"
+                    isForm: "=",
+                    replyValid: "=",
+                    onToggle: "&",
+                    onReply: "&"
                 },
                 controller: Shared.Controllers.FFContentBoxController,
                 controllerAs: "cc",
@@ -605,6 +620,30 @@ var ViewerApp;
                         _this.expandedIndex += 1;
                         _this.questionText = "";
                         _this.parentApp.content.splice(0, 0, question);
+                    }
+                });
+            };
+            QuestionCtrl.prototype.reply = function (data, questionId) {
+                var _this = this;
+                if (data.length < 1) {
+                    return;
+                }
+                var replyObj = {
+                    id: undefined,
+                    text: data,
+                    timestamp: new Date().getTime(),
+                    presentationId: this.parentApp.presentationInstance.presentationId,
+                    submitter: { id: "-1", name: "Anonymous User" },
+                    type: FFContentType.Question,
+                    upvotes: 0,
+                    flagged: 0
+                };
+                new Shared.ReplyQuestionForPresentationInstance(this.http, questionId, replyObj).then(function (data) {
+                    for (var i = 0; i < _this.parentApp.content.length; i++) {
+                        if (_this.parentApp.content[i].id === questionId) {
+                            _this.parentApp.content[i] = data.data;
+                            break;
+                        }
                     }
                 });
             };

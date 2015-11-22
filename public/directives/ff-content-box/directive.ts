@@ -22,7 +22,10 @@ module Shared.Directives {
 				content: "=",
 				showThumbnail: "=",
 				expanded: "=",
-				onToggle: "&"
+				isForm: "=",
+				replyValid: "=",
+				onToggle: "&",
+				onReply: "&"
 			},
 			controller: Shared.Controllers.FFContentBoxController,
 			controllerAs: "cc",
@@ -45,6 +48,7 @@ module Shared.Controllers {
 		isFlagged: boolean;
 		expanded: boolean;
 		onToggle: Function;
+		onReply: Function;
 
 		// Template rendering settings
 		isQuestion: boolean;
