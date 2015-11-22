@@ -22,22 +22,14 @@ if(process.env.IISNODE_VERSION){
 
 // This project uses TypeScript
 // We compile at runtime
-require('typescript-require')({
-    nodeLib: false,
-    targetES5: true,
-    exitOnError: true
-});
-
-// Make sure we dont have any old pre-compiled scripts
-// Rimraf is essentially rm -rf
-require("rimraf").sync("./tmp/");
+require('ts-node/register');
 
 // Run everything in tests folder ending in .test.ts
 require('recursive-readdir')('./tests/', 
 	[function (file, stats){
 		var suffix = ".test.ts"
 		var hasSuffix = file.indexOf(suffix, file.length - suffix.length) !== -1;
-		return !hasSuffix;
+		return !stats.isDirectory() && !hasSuffix;
 	}], 
 	function (err, files) {
 		var failed = 0;
