@@ -11,6 +11,9 @@ class User extends Base.BaseModel implements FFUser {
 	public id: string = "Unknown";
 	public name: string = "Unknown";
 	
+	/** Generates a User model from a username and domain (e.g rpi.edu)
+	 *  Stores the user in the database.
+	 */
 	public static fromThirdParty(username: string, serviceDomain: string, cb: (User)=>void):void {	
 		// Third parties ensure unique identifiers. No validation needed.
 		// Identifiers stay the same too, so no lookups needed.
