@@ -48,6 +48,12 @@
 
 	<!-- ngRoute Magic -->
 	<main ng-view></main>
+	
+	<!-- Login iFrame Modal -->
+	<iframe class="loginframe" ng-show="app.showLoginModal"
+		ng-src="{{app.showLoginModal ? '/api/Login?redirect=/api/success' : '';}}"
+		frame-load="app.loginFrameChanged(loc)">
+	</iframe>
 
 	<!-- Single Page Navigation -->
 	<nav class="viewer">

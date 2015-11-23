@@ -63,7 +63,7 @@ module ViewerApp.Controllers {
 
 					var snippet;
 					try {
-						snippet = data.data.items[0].snippet;
+						snippet = data.data['items'][0].snippet;
 					} catch(e) {
 						alert("YouTube API provided invalid data. The video may have been deleted.");
 						return;
@@ -125,7 +125,13 @@ module ViewerApp.Controllers {
 		 * Actually post the content to the server
 		 */
 		post() {
-			new Shared.PostContentForPresentationInstance(this.http, this.instanceID, this.preview).then((ret)=>{
+			
+			if (!(<ViewerApp.AppController>this.scope['app']).isLoggedIn) {
+				var app = <ViewerApp.AppController>this.scope['app'];
+				return app.login().then(this.post.bind(this));
+			}
+			
+			new Shared.PostContentForPresentationInstance(this.http, this.instanceID, this.preview).then((ret: any)=>{
 				if (!ret.success){
 					return alert("Could not post content. Please try again later.");
 				}

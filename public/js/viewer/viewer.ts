@@ -8,6 +8,7 @@ module ViewerApp {
 	export class AppController {
 		scope: ng.IScope;
 		http: ng.IHttpService;
+		q: ng.IQService;
 
 		// Navigation
 		pageName: string;
@@ -16,15 +17,20 @@ module ViewerApp {
 		instanceID: string;
 		presentationInstance:FFPresentationInstance;
 		presentation:FFPresentation;
+		
+		// Login Stuff
+		showLoginModal: boolean;
+		isLoggedIn: boolean;
 
 		// Content
 		content: FFGenericContent[];
 
 		// Basically just create all sorts of dummy data
-		static $inject = ["$rootScope", "$scope", "$http"];
-		constructor($rootScope: ng.IScope, $scope: ng.IScope, $http:ng.IHttpService) {
+		static $inject = ["$rootScope", "$scope", "$http", "$q"];
+		constructor($rootScope: ng.IScope, $scope: ng.IScope, $http:ng.IHttpService, $q:ng.IQService) {
 			this.scope = $scope;
 			this.http = $http;
+			this.q = $q;
 			this.content = []
 
 			// Get current instanceID
@@ -42,12 +48,36 @@ module ViewerApp {
 				// Load the submitted content
 				this.loadSubmittedContent();
 			});
+			
+			// Check to see if the user is logged in
+			new Shared.GetCurrentUserInfo($http).then((data:any)=>{
+				this.isLoggedIn = data.success;
+			});
 
 			// Watch for page changes
 			this.pageName = "/";
 			$rootScope.$on('$routeChangeSuccess', (e, newVal)=> {
 				this.pageName = newVal.$$route.originalPath;
 			});
+		}
+		
+		// Show the login modal when necessary
+		public login() {
+			this.showLoginModal = true;
+			return this.q((resolve: ng.IQResolveReject<boolean>)=>{
+				this.scope.$watch("app.isLoggedIn", (value: boolean)=>{
+					console.log("CHANGED", value);
+					if (value) {resolve(true);}
+				})
+			});
+		}
+		
+		// Runs when the iFrame login changes in value
+		public loginFrameChanged(e: Location) {
+			if (e.pathname == "/api/success") {
+				this.showLoginModal = false;
+				this.isLoggedIn = true;
+			}
 		}
 
 		private loadSubmittedContent(){

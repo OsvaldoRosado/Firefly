@@ -102,6 +102,7 @@ module.exports = function(grunt) {
 					"public/directives/ff-content/*.ts",
 					"public/directives/ff-content-box/*.ts",
 					"public/directives/ff-question/*.ts",
+					"public/directives/frame-load/*.ts",
 					"public/js/viewer/controllers/*.ts",
 					"public/js/viewer/viewer.ts"
 				]),

@@ -156,6 +156,14 @@ var Shared;
         return ReplyQuestionForPresentationInstance;
     })(Shared.APIRequest);
     Shared.ReplyQuestionForPresentationInstance = ReplyQuestionForPresentationInstance;
+    var GetCurrentUserInfo = (function (_super) {
+        __extends(GetCurrentUserInfo, _super);
+        function GetCurrentUserInfo($http) {
+            _super.call(this, $http, "/GetCurrentUserInfo/", {});
+        }
+        return GetCurrentUserInfo;
+    })(Shared.APIRequest);
+    Shared.GetCurrentUserInfo = GetCurrentUserInfo;
 })(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {
@@ -456,6 +464,27 @@ var Shared;
         Directives.ffQuestion = ffQuestion;
     })(Directives = Shared.Directives || (Shared.Directives = {}));
 })(Shared || (Shared = {}));
+/// <reference path="../../js/typings/angular/angular.d.ts" />
+var Shared;
+(function (Shared) {
+    var Directives;
+    (function (Directives) {
+        function frameLoad() {
+            return {
+                restrict: "A",
+                link: function ($scope, element, attrs) {
+                    console.log(element);
+                    element.bind('load', function (evt) {
+                        $scope['loc'] = this.contentWindow.location;
+                        $scope.$apply(attrs['frameLoad']);
+                    });
+                }
+            };
+        }
+        Directives.frameLoad = frameLoad;
+        ;
+    })(Directives = Shared.Directives || (Shared.Directives = {}));
+})(Shared || (Shared = {}));
 /// <reference path="../../../shared/data-types.ts" />
 /// <reference path="../shared/api.ts" />
 /// <reference path="../shared/localWindow.ts" />
@@ -463,10 +492,11 @@ var Shared;
 var ViewerApp;
 (function (ViewerApp) {
     var AppController = (function () {
-        function AppController($rootScope, $scope, $http) {
+        function AppController($rootScope, $scope, $http, $q) {
             var _this = this;
             this.scope = $scope;
             this.http = $http;
+            this.q = $q;
             this.content = [];
             var params = window.location.search;
             var id = this.instanceID = params.split("&")[0].split("=")[1];
@@ -478,11 +508,32 @@ var ViewerApp;
                 });
                 _this.loadSubmittedContent();
             });
+            new Shared.GetCurrentUserInfo($http).then(function (data) {
+                _this.isLoggedIn = data.success;
+            });
             this.pageName = "/";
             $rootScope.$on('$routeChangeSuccess', function (e, newVal) {
                 _this.pageName = newVal.$$route.originalPath;
             });
         }
+        AppController.prototype.login = function () {
+            var _this = this;
+            this.showLoginModal = true;
+            return this.q(function (resolve) {
+                _this.scope.$watch("app.isLoggedIn", function (value) {
+                    console.log("CHANGED", value);
+                    if (value) {
+                        resolve(true);
+                    }
+                });
+            });
+        };
+        AppController.prototype.loginFrameChanged = function (e) {
+            if (e.pathname == "/api/success") {
+                this.showLoginModal = false;
+                this.isLoggedIn = true;
+            }
+        };
         AppController.prototype.loadSubmittedContent = function () {
             var _this = this;
             new Shared.GetContentForPresentationInstance(this.http, this.presentationInstance.id).then(function (data) {
@@ -505,7 +556,7 @@ var ViewerApp;
                 setTimeout(_this.loadSubmittedContent.bind(_this), 2000);
             });
         };
-        AppController.$inject = ["$rootScope", "$scope", "$http"];
+        AppController.$inject = ["$rootScope", "$scope", "$http", "$q"];
         return AppController;
     })();
     ViewerApp.AppController = AppController;
@@ -623,7 +674,11 @@ var ViewerApp;
                 this.instanceID = this.parentApp.instanceID;
             }
             QuestionCtrl.prototype.askQuestion = function () {
-                var _this = this;
+                if (!this.scope['app'].isLoggedIn) {
+                    var app = this.scope['app'];
+                    app.login().then(this.askQuestion.bind(this));
+                    return;
+                }
                 if (this.questionText.length < 1) {
                     return this.questionValid = false;
                 }
@@ -640,16 +695,19 @@ var ViewerApp;
                     replies: []
                 };
                 new Shared.PostContentForPresentationInstance(this.http, this.instanceID, question).then(function (data) {
-                    if (data.success) {
-                        _this.expandedIndex += 1;
-                        _this.questionText = "";
-                        _this.parentApp.content.splice(0, 0, question);
+                    if (!data.success) {
+                        alert("COULD NOT ASK QUESTION");
                     }
                 });
             };
             QuestionCtrl.prototype.reply = function (data, questionId) {
                 var _this = this;
                 if (data.length < 1) {
+                    return;
+                }
+                if (!this.scope['app'].isLoggedIn) {
+                    var app = this.scope['app'];
+                    app.login().then(this.reply.bind(this, data, questionId));
                     return;
                 }
                 var replyObj = {
@@ -721,7 +779,7 @@ var ViewerApp;
                         _this.loaded = true;
                         var snippet;
                         try {
-                            snippet = data.data.items[0].snippet;
+                            snippet = data.data['items'][0].snippet;
                         }
                         catch (e) {
                             alert("YouTube API provided invalid data. The video may have been deleted.");
@@ -770,6 +828,10 @@ var ViewerApp;
                 }
             };
             SubmitLinkController.prototype.post = function () {
+                if (!this.scope['app'].isLoggedIn) {
+                    var app = this.scope['app'];
+                    return app.login().then(this.post.bind(this));
+                }
                 new Shared.PostContentForPresentationInstance(this.http, this.instanceID, this.preview).then(function (ret) {
                     if (!ret.success) {
                         return alert("Could not post content. Please try again later.");
