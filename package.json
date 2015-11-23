@@ -1,8 +1,11 @@
 {
   "name": "firefly",
-  "version": "0.0.1",
+  "version": "0.9",
   "description": "Firefly - A new way to lecture",
   "main": "app.js",
+  "engines": {
+    "node": ">= 0.12"
+  },
   "dependencies": {
     "body-parser": "^1.14.1",
     "express": "^4.13.3",
