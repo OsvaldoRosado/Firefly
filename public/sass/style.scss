@@ -380,6 +380,10 @@ div.uploadPresentation {
 					color: $primary-yellow-light;
 				}
 			}
+			input:disabled {
+				cursor: not-allowed;
+				color: #DDDDDD;
+			}
 		}
 	}
 }

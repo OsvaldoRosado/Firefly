@@ -53,6 +53,7 @@ $(function() {
 			},
 			beforeSend: function() {
 				$('progress').show();
+				$('.uploadOptions input').prop("disabled",true);
 			},
 			success: function(data, status,jqXHR) {
 				data = JSON.parse(data);
