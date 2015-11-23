@@ -47,7 +47,7 @@ class PresentationContent extends Base.BaseModel implements FFGenericContent {
 		});
 	}
 
-	// applies to questions only
+	/** Add a reply the the `replies` key. Only questions have this key. */
 	public addReply(reply: FFTextContent, user:FFUser, cb:(PresentationContent)=>void) {
 
 		if (user) { reply.submitter = user; }
@@ -60,6 +60,34 @@ class PresentationContent extends Base.BaseModel implements FFGenericContent {
 		}
 
 		// Edit db entry
+		this.save((success)=>{
+			if (success) {
+				return cb(this);
+			} else {
+				return cb(null);
+			}
+		});
+	}
+
+	/** Increment the vote count by 1 */
+	public upvote(cb: (PresentationContent)=>void){
+		this.upvotes++;
+
+		this.save((success)=>{
+			if (success) {
+				return cb(this);
+			} else {
+				return cb(null);
+			}
+		});
+	}
+
+	/** Set the flag on this content, used to report it as inappropriate to
+	  * the presenter. No method is provided to undo this action.
+	  */
+	public flag(cb: (PresentationContent)=>void){
+		this.flagged = 1;
+
 		this.save((success)=>{
 			if (success) {
 				return cb(this);

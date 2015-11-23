@@ -342,7 +342,7 @@ var Shared;
     var UpvoteAPIRequest = (function (_super) {
         __extends(UpvoteAPIRequest, _super);
         function UpvoteAPIRequest($http, contentId) {
-            _super.call(this, $http, "/UpvotePresContent", { id: contentId }, Shared.APIMethod.GET);
+            _super.call(this, $http, "/UpvotePresentationContent/" + contentId, Shared.APIMethod.GET);
         }
         return UpvoteAPIRequest;
     })(Shared.APIRequest);
@@ -350,7 +350,7 @@ var Shared;
     var FlagAPIRequest = (function (_super) {
         __extends(FlagAPIRequest, _super);
         function FlagAPIRequest($http, contentId) {
-            _super.call(this, $http, "/FlagPresContent", { id: contentId }, Shared.APIMethod.GET);
+            _super.call(this, $http, "/FlagPresentationContent/" + contentId, Shared.APIMethod.GET);
         }
         return FlagAPIRequest;
     })(Shared.APIRequest);
@@ -393,7 +393,8 @@ var Shared;
             function FFContentBoxController($scope, $element, $http) {
                 this.scope = $scope;
                 this.http = $http;
-                this.isFlagged = false;
+                this.isFlagged = Boolean(this.content.flagged);
+                this.userVoted = false;
                 this.isQuestion = (this.content.type == FFContentType.Question);
                 if (this.showThumbnail !== undefined) {
                     return;
@@ -410,16 +411,24 @@ var Shared;
             };
             FFContentBoxController.prototype.upvoteContent = function () {
                 var _this = this;
-                this.content.upvotes += 1;
-                new Shared.UpvoteAPIRequest(this.http, this.content.id).catch(function () {
+                if (this.userVoted) {
+                    return;
+                }
+                new Shared.UpvoteAPIRequest(this.http, this.content.id).then(function (res) {
+                    _this.content.upvotes += 1;
+                    _this.userVoted = true;
+                }).catch(function () {
                     _this.content.upvotes -= 1;
                 });
             };
             FFContentBoxController.prototype.flagContent = function () {
                 var _this = this;
+                if (this.isFlagged) {
+                    return;
+                }
                 new Shared.FlagAPIRequest(this.http, this.content.id).catch(function () {
                     alert("ERROR: Could not flag content. It may already be deleted");
-                }).then(function () {
+                }).then(function (res) {
                     _this.isFlagged = true;
                 });
             };

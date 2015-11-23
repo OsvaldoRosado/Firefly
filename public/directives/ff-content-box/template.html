@@ -1,4 +1,4 @@
-<div class="ffContentBox" ng-class="{expanded: cc.expanded, isQuestion: cc.isQuestion}">
+<div class="ffContentBox" ng-class="{expanded: cc.expanded, isQuestion: cc.isQuestion, flagged: cc.isFlagged}">
 
 	<!-- This this large view is displayed when the element is displayed -->
 	<collapse expanded="cc.expanded">
@@ -56,7 +56,7 @@
 				<img src="/images/Actions-Flag.svg" alt="Flag">
 				<p>Flag Content</p>
 			</div>
-			<div class="action" ng-hide="cc.isQuestion">
+			<div class="action" ng-hide="cc.isQuestion" ng-click="cc.shareContent()">
 				<img src="/images/Actions-Share.svg" alt="Share">
 				<p>Share</p>
 			</div>

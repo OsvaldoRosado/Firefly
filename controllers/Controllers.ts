@@ -11,3 +11,5 @@ export import GenerateShortInstanceURL = require("./GenerateShortInstanceURL");
 export import PostContentForPresentationInstance = require("./PostContentForPresentationInstance");
 export import GetContentForPresentationInstance = require("./GetContentForPresentationInstance");
 export import ReplyQuestionForPresentationInstance = require("./ReplyQuestionForPresentationInstance");
+export import UpvotePresentationContent = require("./UpvotePresentationContent");
+export import FlagPresentationContent = require("./FlagPresentationContent");

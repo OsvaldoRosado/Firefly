@@ -281,7 +281,7 @@ var Shared;
     var UpvoteAPIRequest = (function (_super) {
         __extends(UpvoteAPIRequest, _super);
         function UpvoteAPIRequest($http, contentId) {
-            _super.call(this, $http, "/UpvotePresContent", { id: contentId }, Shared.APIMethod.GET);
+            _super.call(this, $http, "/UpvotePresentationContent/" + contentId, Shared.APIMethod.GET);
         }
         return UpvoteAPIRequest;
     })(Shared.APIRequest);
@@ -289,7 +289,7 @@ var Shared;
     var FlagAPIRequest = (function (_super) {
         __extends(FlagAPIRequest, _super);
         function FlagAPIRequest($http, contentId) {
-            _super.call(this, $http, "/FlagPresContent", { id: contentId }, Shared.APIMethod.GET);
+            _super.call(this, $http, "/FlagPresentationContent/" + contentId, Shared.APIMethod.GET);
         }
         return FlagAPIRequest;
     })(Shared.APIRequest);
@@ -332,7 +332,8 @@ var Shared;
             function FFContentBoxController($scope, $element, $http) {
                 this.scope = $scope;
                 this.http = $http;
-                this.isFlagged = false;
+                this.isFlagged = Boolean(this.content.flagged);
+                this.userVoted = false;
                 this.isQuestion = (this.content.type == FFContentType.Question);
                 if (this.showThumbnail !== undefined) {
                     return;
@@ -349,16 +350,24 @@ var Shared;
             };
             FFContentBoxController.prototype.upvoteContent = function () {
                 var _this = this;
-                this.content.upvotes += 1;
-                new Shared.UpvoteAPIRequest(this.http, this.content.id).catch(function () {
+                if (this.userVoted) {
+                    return;
+                }
+                new Shared.UpvoteAPIRequest(this.http, this.content.id).then(function (res) {
+                    _this.content.upvotes += 1;
+                    _this.userVoted = true;
+                }).catch(function () {
                     _this.content.upvotes -= 1;
                 });
             };
             FFContentBoxController.prototype.flagContent = function () {
                 var _this = this;
+                if (this.isFlagged) {
+                    return;
+                }
                 new Shared.FlagAPIRequest(this.http, this.content.id).catch(function () {
                     alert("ERROR: Could not flag content. It may already be deleted");
-                }).then(function () {
+                }).then(function (res) {
                     _this.isFlagged = true;
                 });
             };
@@ -582,18 +591,16 @@ var PresenterApp;
                 this.questions = [];
                 this.scope.$on("instanceCreated", function (event, value) {
                     _this.presInstance = value;
-                    _this.checkForContentContinuously();
+                    window.setTimeout(_this.checkForContentContinuously.bind(_this), 1000);
                 });
             }
             ContentCtrl.prototype.checkForContentContinuously = function () {
                 var _this = this;
-                if (this.presInstance == undefined) {
-                    return window.setTimeout(this.checkForContentContinuously.bind(this), 1000);
-                }
                 new Shared.GetContentForPresentationInstance(this.http, this.presInstance.id)
                     .then(function (result) {
                     var submissions = result.data;
                     if (!submissions || !submissions.length) {
+                        window.setTimeout(_this.checkForContentContinuously.bind(_this), 1000);
                         return;
                     }
                     var cInc = 0;
@@ -613,6 +620,8 @@ var PresenterApp;
                                         q.replies = qsub.replies;
                                     }
                                     found = true;
+                                    q.upvotes = qsub.upvotes;
+                                    q.flagged = qsub.flagged;
                                 }
                             }
                             if (!found) {
@@ -622,6 +631,10 @@ var PresenterApp;
                         else {
                             if (_this.content.length <= cInc) {
                                 _this.content.push(sub);
+                            }
+                            else {
+                                _this.content[cInc].upvotes = sub.upvotes;
+                                _this.content[cInc].flagged = sub.flagged;
                             }
                             cInc++;
                         }
