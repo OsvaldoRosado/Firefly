@@ -1,5 +1,6 @@
 import BaseTest = require("../BaseTest");
 import BaseController = require("../../controllers/BaseController");
+import Mocks = require("../Mocks");
 
 var testObject = {abc:"DEF",ghi:["j","k","l"]};
 
@@ -13,8 +14,8 @@ class BaseControllerTest extends BaseTest {
 	public test() {		
 		// Make mock objects
 		var sent = "";
-		var req:any = {};
-		var res:any = {send:(s)=>sent=s};
+		var req:any = Mocks.Request();
+		var res:any = Mocks.Response({sendCB:(s)=>sent=s});
 		
 		// Test raw controller
 		var failed = true;

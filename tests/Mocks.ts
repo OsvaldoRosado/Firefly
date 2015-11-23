@@ -1,7 +1,7 @@
 // Common Firefly Mocks
 
 class Mocks {
-	static Request(args:{withUser?:Object,withParams?:Object,withQuery?:Object,logoutCB?:()=>any}) {
+	static Request(args:{withUser?:Object,withParams?:Object,withQuery?:Object,logoutCB?:()=>any}={}) {
 		return {
 			user:args.withUser || null,
 			params:args.withParams || {},
@@ -9,7 +9,7 @@ class Mocks {
 			logout:args.logoutCB||(()=>null)
 		}
 	}
-	static Response(args:{redirectCB?:(any)=>any,sendCB?:(any)=>any}) {
+	static Response(args:{redirectCB?:(any)=>any,sendCB?:(any)=>any}={}) {
 		return {
 			redirect:args.redirectCB||((s)=>null),
 			send:args.sendCB||((s)=>null)

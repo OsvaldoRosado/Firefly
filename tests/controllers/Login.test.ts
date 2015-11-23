@@ -1,6 +1,7 @@
 import BaseTest = require("../BaseTest");
 import Login = require("../../controllers/Login");
-import User = require("../../models/User")
+import User = require("../../models/User");
+import Mocks = require("../Mocks");
 
 class LoginTest extends BaseTest {
 	public test() {
@@ -9,8 +10,8 @@ class LoginTest extends BaseTest {
 		
 		// Make mock objects
 		var redirected = "";
-		var req:any = {query:{redirect:"TEST"}};
-		var res:any = {redirect:(s)=>redirected=s};
+		var req:any = Mocks.Request({withQuery:{redirect:"TEST"}});
+		var res:any = Mocks.Response({redirectCB:(s)=>redirected=s});
 		
 		// Test without credentials
 		login.do(req,res);
