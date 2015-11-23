@@ -55,6 +55,7 @@ class Presentation extends Base.BaseModel implements FFPresentation {
 		// Parse the response
 		var payload = JSON.parse(body);				
 		if (!payload.success) {
+			console.log(payload);
 			return cb(null);	
 		}
 		
