@@ -101,7 +101,7 @@ module Shared.Controllers {
 		flagContent() {
 			new FlagAPIRequest(this.http, this.content.id).catch(()=> {
 				alert("ERROR: Could not flag content. It may already be deleted");
-			}).then(()=> {
+			}).then((res)=> {
 				this.isFlagged = true;
 			});
 		}

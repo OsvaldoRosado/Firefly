@@ -425,7 +425,7 @@ var Shared;
                 var _this = this;
                 new Shared.FlagAPIRequest(this.http, this.content.id).catch(function () {
                     alert("ERROR: Could not flag content. It may already be deleted");
-                }).then(function () {
+                }).then(function (res) {
                     _this.isFlagged = true;
                 });
             };

@@ -73,6 +73,7 @@ Database.notifyOnReady((dbConnected)=>{
 	app.get("/api/getContentForPresentationInstance/:instanceid", Controllers.GetContentForPresentationInstance.asHandler());
 	app.post("/api/replyQuestionForPresentationInstance", Controllers.ReplyQuestionForPresentationInstance.asHandler());
 	app.get("/api/upvotePresentationContent/:contentid", Controllers.UpvotePresentationContent.asHandler());
+	app.get("/api/flagPresentationContent/:contentid", Controllers.FlagPresentationContent.asHandler());
 
 	// If no matches, use the static files directory
 	// We do a special rewrite for .html

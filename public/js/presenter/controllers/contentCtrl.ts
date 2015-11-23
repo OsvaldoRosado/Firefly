@@ -71,6 +71,7 @@ module PresenterApp.Controllers {
 									}
 									found = true;
 									q.upvotes = qsub.upvotes;
+									q.flagged = qsub.flagged;
 								}
 							}
 							if(!found){
@@ -84,6 +85,7 @@ module PresenterApp.Controllers {
 							}
 							else {
 								this.content[cInc].upvotes = sub.upvotes;
+								this.content[cInc].flagged = sub.flagged;
 							}
 							cInc++;
 						}

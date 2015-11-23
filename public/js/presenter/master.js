@@ -364,7 +364,7 @@ var Shared;
                 var _this = this;
                 new Shared.FlagAPIRequest(this.http, this.content.id).catch(function () {
                     alert("ERROR: Could not flag content. It may already be deleted");
-                }).then(function () {
+                }).then(function (res) {
                     _this.isFlagged = true;
                 });
             };
@@ -620,6 +620,7 @@ var PresenterApp;
                                     }
                                     found = true;
                                     q.upvotes = qsub.upvotes;
+                                    q.flagged = qsub.flagged;
                                 }
                             }
                             if (!found) {
@@ -632,6 +633,7 @@ var PresenterApp;
                             }
                             else {
                                 _this.content[cInc].upvotes = sub.upvotes;
+                                _this.content[cInc].flagged = sub.flagged;
                             }
                             cInc++;
                         }

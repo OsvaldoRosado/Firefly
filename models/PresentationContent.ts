@@ -81,6 +81,21 @@ class PresentationContent extends Base.BaseModel implements FFGenericContent {
 			}
 		});
 	}
+
+	/** Set the flag on this content, used to report it as inappropriate to
+	  * the presenter. No method is provided to undo this action.
+	  */
+	public flag(cb: (PresentationContent)=>void){
+		this.flagged = 1;
+
+		this.save((success)=>{
+			if (success) {
+				return cb(this);
+			} else {
+				return cb(null);
+			}
+		});
+	}
 }
 
 export = PresentationContent;

@@ -12,3 +12,4 @@ export import PostContentForPresentationInstance = require("./PostContentForPres
 export import GetContentForPresentationInstance = require("./GetContentForPresentationInstance");
 export import ReplyQuestionForPresentationInstance = require("./ReplyQuestionForPresentationInstance");
 export import UpvotePresentationContent = require("./UpvotePresentationContent");
+export import FlagPresentationContent = require("./FlagPresentationContent");
