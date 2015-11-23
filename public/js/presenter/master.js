@@ -156,6 +156,14 @@ var Shared;
         return ReplyQuestionForPresentationInstance;
     })(Shared.APIRequest);
     Shared.ReplyQuestionForPresentationInstance = ReplyQuestionForPresentationInstance;
+    var GetCurrentUserInfo = (function (_super) {
+        __extends(GetCurrentUserInfo, _super);
+        function GetCurrentUserInfo($http) {
+            _super.call(this, $http, "/GetCurrentUserInfo/", {});
+        }
+        return GetCurrentUserInfo;
+    })(Shared.APIRequest);
+    Shared.GetCurrentUserInfo = GetCurrentUserInfo;
 })(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {
@@ -534,6 +542,27 @@ var Shared;
             };
         }
         Directives.floatingContent = floatingContent;
+    })(Directives = Shared.Directives || (Shared.Directives = {}));
+})(Shared || (Shared = {}));
+/// <reference path="../../js/typings/angular/angular.d.ts" />
+var Shared;
+(function (Shared) {
+    var Directives;
+    (function (Directives) {
+        function frameLoad() {
+            return {
+                restrict: "A",
+                link: function ($scope, element, attrs) {
+                    console.log(element);
+                    element.bind('load', function (evt) {
+                        $scope['loc'] = this.contentWindow.location;
+                        $scope.$apply(attrs['frameLoad']);
+                    });
+                }
+            };
+        }
+        Directives.frameLoad = frameLoad;
+        ;
     })(Directives = Shared.Directives || (Shared.Directives = {}));
 })(Shared || (Shared = {}));
 /// <reference path="../../../../shared/data-types.ts" />

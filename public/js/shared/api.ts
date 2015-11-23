@@ -131,4 +131,13 @@ module Shared {
 			super($http, "/replyQuestionForPresentationInstance", reqbody, APIMethod.POST);
 		}
 	}
+	
+	
+	// LOGIN ===============================================================================
+	
+	export class GetCurrentUserInfo extends Shared.APIRequest<FFGenericContent[]> {
+		constructor($http: ng.IHttpService) {
+			super($http, "/GetCurrentUserInfo/", {});
+		}
+	}
 }
