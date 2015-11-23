@@ -332,7 +332,7 @@ var Shared;
             function FFContentBoxController($scope, $element, $http) {
                 this.scope = $scope;
                 this.http = $http;
-                this.isFlagged = false;
+                this.isFlagged = this.content.flagged;
                 this.userVoted = false;
                 this.isQuestion = (this.content.type == FFContentType.Question);
                 if (this.showThumbnail !== undefined) {
@@ -362,6 +362,9 @@ var Shared;
             };
             FFContentBoxController.prototype.flagContent = function () {
                 var _this = this;
+                if (this.isFlagged) {
+                    return;
+                }
                 new Shared.FlagAPIRequest(this.http, this.content.id).catch(function () {
                     alert("ERROR: Could not flag content. It may already be deleted");
                 }).then(function (res) {

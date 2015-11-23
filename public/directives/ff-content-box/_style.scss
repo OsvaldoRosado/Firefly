@@ -18,6 +18,9 @@
 			background-color: $callout-light;
 		}
 	}
+	&.flagged {
+		background-color: $secondary-red !important; // sorry
+	}
 
 	// Top Content
 	ff-content.full {

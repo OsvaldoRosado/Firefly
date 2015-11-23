@@ -62,7 +62,7 @@ module Shared.Controllers {
 			this.http = $http;
 
 			// Analyze the content for ideal display
-			this.isFlagged = false;
+			this.isFlagged = this.content.flagged;
 			this.userVoted = false;
 			this.isQuestion = (this.content.type == FFContentType.Question);
 
@@ -99,6 +99,7 @@ module Shared.Controllers {
 
 		// Flag handler
 		flagContent() {
+			if (this.isFlagged) { return; }
 			new FlagAPIRequest(this.http, this.content.id).catch(()=> {
 				alert("ERROR: Could not flag content. It may already be deleted");
 			}).then((res)=> {
