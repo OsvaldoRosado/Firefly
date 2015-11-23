@@ -24,6 +24,7 @@ Grunt is used for all code compilation (technically transcompilation). Each outp
 	* *BaseController.ts:* All API controllers inherit from this one, which defines a basic data structure
 	* *Controllers.ts:* Imports all controllers
 	* **Other Files:** See each file for a description of what it does. It is often self-explanatory from the name.
+* **design:** Design documents created during the inception phase.
 * **models:** Node classes to represent and operate on different data types.
 	* *BaseModel.ts:* All other data models inherit from this one
 	* *Presentation.ts:* Uploads presentations to the conversion server and stores its output.
