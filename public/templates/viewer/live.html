@@ -5,5 +5,11 @@
 
 	<div class="pastSubmissions row">
 		<h4>User Submissions</h4>
+		
+		<ff-content-box
+			ng-repeat="content in app.content"
+			display="0" content="content"
+			expanded="live.expandedIndex | equals:$index" on-toggle="live.expandItem($index)"
+		></ff-content-box>
 	</div>
 </div>

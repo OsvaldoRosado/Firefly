@@ -33,6 +33,7 @@
 	<ff-content-box 
 		display="0" content="app.questionContent"
 		expanded="app.expandedIndex | equals:3" on-toggle="app.expandItem($scope,3)"
+		is-form="1" on-reply="app.reply(data, app.questionContent.id)" reply-valid="app.replyValid"
 	></ff-content-box>
 
 	</body>

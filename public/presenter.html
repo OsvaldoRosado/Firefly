@@ -9,7 +9,7 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
 		<script src="js/presenter/master.js"></script>
 		<script src="js/presenter/templates.js"></script>
-		<link rel="stylesheet" href="css/style.css">
+		<link rel="stylesheet" href="css/presenter.css">
 	</head>
 	<body ng-app="presenter" ng-controller="SlideCtrl as sc" class="presenter">
 		<header>
@@ -17,18 +17,29 @@
 			<span><h2 class="mainTitle u-pull-right">Firefly</h2></span>
 		</header>
 		<div ng-controller="ContentCtrl as cnc" class="row mainConsole">
-				<div class="six columns">
-					<div class="livePresentation">
-						<iframe ng-show="sc.presRunning" src="presentation.html" class="u-full-width" id="presPreview"></iframe>
-						<button ng-click="sc.startPresentation()" ng-show="!sc.presRunning" class="button-primary">Start presentation!</button>
-						<button ng-show="sc.presRunning && sc.presInstance.currentSlide > 0" ng-click="sc.prevSlide()" class="button-primary">Previous</button>
-						<button ng-show="sc.presRunning && sc.presInstance.currentSlide < sc.presentation.slideCount-1" ng-click="sc.nextSlide()" class="button-primary">Next</button>
-						<button ng-show="sc.presRunning" ng-click="sc.endPresentation()" class="button endPresentation">End Presentation</button>
+			<div class="six columns">
+				<div class="livePresentation">
+					<iframe ng-show="sc.presRunning" src="presentation.html" class="u-full-width" id="presPreview"></iframe>
+					<div class="fakePreviewContain" ng-if="!sc.presRunning" 
+						style="background-image: url('{{ sc.presentation.slideUrls[0] }}');">
+						<div class="fakePreview">
+							<button ng-click="sc.startPresentation()" class="button startPresentation">Start presentation!</button>
+						</div>
+					</div>
+					<button ng-show="sc.presRunning" ng-click="sc.prevSlide()" class="button-primary" ng-disabled="sc.presInstance.currentSlide === 0">Previous</button>
+					<button ng-show="sc.presRunning" ng-click="sc.nextSlide()" class="button-primary" ng-disabled="sc.presInstance.currentSlide >= sc.presentation.slideUrls.length-1">Next</button>
+					<button ng-show="sc.presRunning" ng-click="sc.endPresentation()" class="button endPresentation">End Presentation</button>
+					<div class="nextSlidePreviewContainer" ng-if="sc.presRunning && sc.presInstance.currentSlide < sc.presentation.slideUrls.length">
+						<h2>Next Slide:</h2>
+						<img class="nextSlidePreview" ng-src="{{ sc.presentation.slideUrls[sc.presInstance.currentSlide+1] }}"/>
 					</div>
 				</div>
-				<div class="three columns container contentBoxColumn">
-					<div class="contentBox">
-						<h2>Content</h2>
+			</div>
+			<div class="three columns container contentBoxColumn">
+				<div class="contentBox" id="mediaContentBox">
+					<h2>Content</h2>
+					<div class="noContent" ng-if="!cnc.content.length">No content yet!</div>
+					<div class="contentBoxContentContainer" ng-if="cnc.content.length">
 						<div ng-repeat="submission in cnc.content.slice().reverse()">
 							<ff-content-box 
 								display="0" content="submission" expanded="1" show-thumbnail="0"
@@ -37,15 +48,21 @@
 						</div>
 					</div>
 				</div>
-				<div class="three columns container contentBoxColumn">
-					<div class="contentBox">
-						<h2>Questions</h2>
-						<div ng-if="!cnc.questions">No questions yet!</div>
+			</div>
+			<div class="three columns container contentBoxColumn">
+				<div class="contentBox" id="questionContentBox">
+					<h2>Questions</h2>
+					<div class="noContent" ng-if="!cnc.questions.length">No questions yet!</div>
+					<div class="contentBoxContentContainer" ng-if="cnc.questions.length">
 						<div ng-repeat="question in cnc.questions.slice().reverse()">
-							<ff-content-box display="0" content="question" expanded="1" on-toggle="sc.toggleQASidebar(question)"></ff-content-box>
+							<ff-content-box 
+								display="0" content="question" expanded="1" 
+								on-toggle="sc.toggleQASidebar(question)"
+							></ff-content-box>
 						</div>
 					</div>
 				</div>
+			</div>
 		</div>
 		<div ng-show="sc.error">{{ sc.error }}</div>
 	</body>

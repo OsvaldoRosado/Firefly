@@ -16,7 +16,11 @@ class PresentationContent extends Base.BaseModel implements FFGenericContent {
 	public upvotes: number = 0;
 	public flagged: number = 0;
 	public presentationId: string = null;
+	public replies: Array<FFTextContent> = null;
 	
+	/** Store arbitrary content deriving from FFGenericContent in the database for a given presentation.
+	 * 	Any key/value pairs provided in the data object will be applied directly as properties on the data model.
+	 */
 	public static forPresentation(pres:Presentation,data:any,user:FFUser,cb:(PresentationContent)=>void) {
 		var content = new PresentationContent();
 		
@@ -37,6 +41,28 @@ class PresentationContent extends Base.BaseModel implements FFGenericContent {
 		content.save((success)=>{
 			if (success) {
 				return cb(content);
+			} else {
+				return cb(null);
+			}
+		});
+	}
+
+	// applies to questions only
+	public addReply(reply: FFTextContent, user:FFUser, cb:(PresentationContent)=>void) {
+
+		if (user) { reply.submitter = user; }
+
+		if(!this.replies) {
+			this.replies = [reply];
+		}
+		else {
+			this.replies.push(reply);
+		}
+
+		// Edit db entry
+		this.save((success)=>{
+			if (success) {
+				return cb(this);
 			} else {
 				return cb(null);
 			}

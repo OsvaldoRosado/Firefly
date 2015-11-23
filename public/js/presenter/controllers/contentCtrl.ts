@@ -27,122 +27,65 @@ module PresenterApp.Controllers {
 		constructor($scope: ng.IScope, $http: ng.IHttpService) {
 			this.scope = $scope;
 			this.http = $http;
+			this.content = [];
+			this.questions = [];
 
 			this.scope.$on("instanceCreated", (event, value) => {
 				this.presInstance = value;
 				this.checkForContentContinuously();
 			});
-				
-			// Test stuff, all temporary
-			var testUser1 = {
-				id: "1",
-				name: "Keaton Brandt"
-			};
-			var testUser2 = {
-				id: "2",
-				name: "Liam Jones"
-			};
-
-			this.content = [
-				<FFGenericContent> {
-					id: "9",
-					presentationId: "1",
-					type: FFContentType.Image,
-					submitter: testUser1,
-					timestamp: new Date().getTime(),
-					upvotes: 0,
-					flagged: 0,
-					filename: "presenter-mock.png",
-					text: "Page from our doc detailing the presenter view",
-					link: "/images/dummy/presenter-mock.png"
-				},
-				<FFGenericContent> {
-					id: "8",
-					presentationId: "1",
-					type: FFContentType.Image,
-					submitter: testUser1,
-					timestamp: new Date().getTime(),
-					upvotes: 0,
-					flagged: 0,
-					filename: "mobile-upload.png",
-					text: "This is what people should see when they submit content",
-					link: "/images/dummy/mobile-upload.png"
-				},
-				<FFGenericContent> {
-					id: "7",
-					presentationId: "1",
-					type: FFContentType.Image,
-					submitter: testUser1,
-					timestamp: new Date().getTime(),
-					upvotes: 0,
-					flagged: 0,
-					filename: "mobile-live.png",
-					text: "Mockup of the main view the audience sees.",
-					link: "/images/dummy/mobile-live.png"
-				},
-				<FFGenericContent> {
-					id: "4",
-					presentationId: "1",
-					type: FFContentType.Video,
-					submitter: testUser2,
-					timestamp: new Date().getTime(),
-					upvotes: 0,
-					flagged: 0,
-					title: "Bueller, Bueller",
-					youtubeId: "f4zyjLyBp64",
-					channelTitle: "blc3211"
-				},
-			];
-
-			// Test questions
-			this.questions = [
-				{
-					id: "4",
-					presentationId: "1",
-					type: FFContentType.Question,
-					submitter: testUser1,
-					timestamp: new Date().getTime(),
-					upvotes: 3,
-					flagged: 0,
-					text: "What would be a good number of collaborators to have?",
-					replies: [
-						{
-							id: "5",
-							presentationId: "1",
-							type: FFContentType.QuestionResponse,
-							submitter: testUser2,
-							timestamp: new Date().getTime(),
-							upvotes: 0,
-							flagged: 0,
-							text: "I think it might depend on how complicated your overall class structure is."
-						}
-					]
-				}
-			];
 		}
 
-		// Horribly inefficient
+		/**
+		 * Query the database every second for new content and questions to update
+		 * the feed.
+		 */
 		checkForContentContinuously(){
+			// TEMPORARY SOLUTION
+			// Assumes submissions are always in the same order and never deleted.
 			if (this.presInstance == undefined){
 				return window.setTimeout(this.checkForContentContinuously.bind(this), 1000);
 			}
 			new Shared.GetContentForPresentationInstance(this.http, this.presInstance.id)
 				.then((result: ng.IHttpPromiseCallbackArg<Array<FFGenericContent>>) => {
-					var _questions = [];
-					// content not handled yet
-					// var _content = [];
-					if (!result.data) {return;}
-					result.data.forEach((submission) => {
-						if (submission.type == FFContentType.Question) {
-							_questions.push(submission);
+					var submissions = result.data;
+					if (!submissions || !submissions.length) { return; }
+
+					var cInc = 0; // content iteration
+					for (var sInc = 0; sInc < submissions.length; sInc++){
+						var sub = submissions[sInc];
+						if( sub.type == FFContentType.Question){
+							
+							var qsub = <FFQuestion>sub;
+							if(this.questions.length === 0){
+								this.questions.push(qsub);
+								continue;
+							}
+
+							// I'm not proud of this, but it's the only way to edit
+							// the replies of a question without resetting the whole object
+							var found = false;
+							for (var qInc = 0; qInc < this.questions.length; qInc++){
+								var q = this.questions[qInc];
+								if(q.id === qsub.id){
+									if (q.replies.length < qsub.replies.length){
+										q.replies = qsub.replies;
+									}
+									found = true;
+								}
+							}
+							if(!found){
+								this.questions.push(qsub);
+							}
 						}
 						else {
-							//_content.push(submission);
+							// content doesn't have replies (thank goodness)
+							if (this.content.length <= cInc){
+								this.content.push(sub)
+							}
+							cInc++;
 						}
-					});
-					this.questions = _questions;
-					//this.content = _content;
-
+					}
 					window.setTimeout(this.checkForContentContinuously.bind(this), 1000);
 				});
 		}

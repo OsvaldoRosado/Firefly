@@ -144,6 +144,18 @@ var Shared;
         return GetContentForPresentationInstance;
     })(Shared.APIRequest);
     Shared.GetContentForPresentationInstance = GetContentForPresentationInstance;
+    var ReplyQuestionForPresentationInstance = (function (_super) {
+        __extends(ReplyQuestionForPresentationInstance, _super);
+        function ReplyQuestionForPresentationInstance($http, contentId, content) {
+            var reqbody = {
+                contentid: contentId,
+                data: JSON.stringify(content)
+            };
+            _super.call(this, $http, "/replyQuestionForPresentationInstance", reqbody, APIMethod.POST);
+        }
+        return ReplyQuestionForPresentationInstance;
+    })(Shared.APIRequest);
+    Shared.ReplyQuestionForPresentationInstance = ReplyQuestionForPresentationInstance;
 })(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {
@@ -283,8 +295,10 @@ var Shared;
         var FFContentViewController = (function () {
             function FFContentViewController($scope) {
                 this.thumbnailCutoffWidth = 150;
-                this.updateRenderDetails();
-                $scope.$watch(function () { return this.content; }, this.updateRenderDetails.bind(this));
+                if (this.content) {
+                    this.updateRenderDetails();
+                }
+                $scope.$watch(function () { return this.content && this.content['timestamp']; }.bind(this), this.updateRenderDetails.bind(this));
             }
             FFContentViewController.prototype.getThumbnail = function () {
                 return "http://img.youtube.com/vi/" + this.content.youtubeId + "/0.jpg";
@@ -325,6 +339,14 @@ var Shared;
         return UpvoteAPIRequest;
     })(Shared.APIRequest);
     Shared.UpvoteAPIRequest = UpvoteAPIRequest;
+    var FlagAPIRequest = (function (_super) {
+        __extends(FlagAPIRequest, _super);
+        function FlagAPIRequest($http, contentId) {
+            _super.call(this, $http, "/FlagPresContent", { id: contentId }, Shared.APIMethod.GET);
+        }
+        return FlagAPIRequest;
+    })(Shared.APIRequest);
+    Shared.FlagAPIRequest = FlagAPIRequest;
 })(Shared || (Shared = {}));
 /// <reference path="../../../shared/data-types.ts" />
 /// <reference path="../../js/typings/angular/angular.d.ts" />
@@ -341,7 +363,10 @@ var Shared;
                     content: "=",
                     showThumbnail: "=",
                     expanded: "=",
-                    onToggle: "&"
+                    isForm: "=",
+                    replyValid: "=",
+                    onToggle: "&",
+                    onReply: "&"
                 },
                 controller: Shared.Controllers.FFContentBoxController,
                 controllerAs: "cc",
@@ -360,6 +385,7 @@ var Shared;
             function FFContentBoxController($scope, $element, $http) {
                 this.scope = $scope;
                 this.http = $http;
+                this.isFlagged = false;
                 this.isQuestion = (this.content.type == FFContentType.Question);
                 if (this.showThumbnail !== undefined) {
                     return;
@@ -375,7 +401,34 @@ var Shared;
                     this.content.type == FFContentType.Video) && width > 300;
             };
             FFContentBoxController.prototype.upvoteContent = function () {
-                this.content.upvotes = 1;
+                var _this = this;
+                this.content.upvotes += 1;
+                new Shared.UpvoteAPIRequest(this.http, this.content.id).catch(function () {
+                    _this.content.upvotes -= 1;
+                });
+            };
+            FFContentBoxController.prototype.flagContent = function () {
+                var _this = this;
+                new Shared.FlagAPIRequest(this.http, this.content.id).catch(function () {
+                    alert("ERROR: Could not flag content. It may already be deleted");
+                }).then(function () {
+                    _this.isFlagged = true;
+                });
+            };
+            FFContentBoxController.prototype.shareContent = function () {
+                var link = "";
+                if (this.content.youtubeId !== undefined) {
+                    link = "https://www.youtube.com/watch?v=" + this.content.youtubeId;
+                }
+                else if (this.content.link !== undefined) {
+                    link = this.content.link;
+                }
+                else if (this.content.text !== undefined) {
+                    var w = window.open("", "_blank");
+                    w.document.write(this.content.text);
+                    return;
+                }
+                window.open(link, "_blank");
             };
             FFContentBoxController.$inject = ["$scope", "$element", "$http"];
             return FFContentBoxController;
@@ -481,6 +534,7 @@ var Playground;
                     }
                 ]
             };
+            this.replyValid = true;
         }
         AppController.prototype.expandItem = function ($scope, index) {
             if (this.expandedIndex == index) {
@@ -489,6 +543,13 @@ var Playground;
             else {
                 this.expandedIndex = index;
             }
+        };
+        AppController.prototype.reply = function (data, questionId) {
+            if (data.length < 1) {
+                return this.replyValid = false;
+            }
+            this.replyValid = true;
+            alert("Replied to " + questionId + " with " + data);
         };
         AppController.$inject = ["$scope"];
         return AppController;

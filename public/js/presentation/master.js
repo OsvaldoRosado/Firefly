@@ -144,6 +144,18 @@ var Shared;
         return GetContentForPresentationInstance;
     })(Shared.APIRequest);
     Shared.GetContentForPresentationInstance = GetContentForPresentationInstance;
+    var ReplyQuestionForPresentationInstance = (function (_super) {
+        __extends(ReplyQuestionForPresentationInstance, _super);
+        function ReplyQuestionForPresentationInstance($http, contentId, content) {
+            var reqbody = {
+                contentid: contentId,
+                data: JSON.stringify(content)
+            };
+            _super.call(this, $http, "/replyQuestionForPresentationInstance", reqbody, APIMethod.POST);
+        }
+        return ReplyQuestionForPresentationInstance;
+    })(Shared.APIRequest);
+    Shared.ReplyQuestionForPresentationInstance = ReplyQuestionForPresentationInstance;
 })(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {
@@ -213,8 +225,10 @@ var Shared;
         var FFContentViewController = (function () {
             function FFContentViewController($scope) {
                 this.thumbnailCutoffWidth = 150;
-                this.updateRenderDetails();
-                $scope.$watch(function () { return this.content; }, this.updateRenderDetails.bind(this));
+                if (this.content) {
+                    this.updateRenderDetails();
+                }
+                $scope.$watch(function () { return this.content && this.content['timestamp']; }.bind(this), this.updateRenderDetails.bind(this));
             }
             FFContentViewController.prototype.getThumbnail = function () {
                 return "http://img.youtube.com/vi/" + this.content.youtubeId + "/0.jpg";
@@ -361,10 +375,15 @@ var PresentationApp;
                 this.timeout = $timeout;
                 this.slides = [];
                 this.isLoading = false;
+                this.lastData = "";
                 window.addEventListener("message", function (event) {
                     if (event.origin !== Config.HOST) {
                         return;
                     }
+                    if (event.data == _this.lastData) {
+                        return;
+                    }
+                    _this.lastData = event.data;
                     var order = JSON.parse(event.data);
                     switch (order.action) {
                         case "changeSlide":
@@ -498,7 +517,8 @@ var PresentationApp;
                     this.timeout(this.reallyShowQA.bind(this, question), 800);
                 }
                 else if (this.qaActive) {
-                    return;
+                    this.qaActive = false;
+                    this.timeout(this.reallyShowQA.bind(this, question), 800);
                 }
                 else {
                     this.reallyShowQA(question);

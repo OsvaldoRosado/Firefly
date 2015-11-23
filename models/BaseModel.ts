@@ -1,4 +1,4 @@
-import Database = require('../database');
+import Database = require("../database");
 
 export class BaseModel {
 	public id:string;

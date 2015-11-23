@@ -38,6 +38,7 @@ interface FFGenericContent {
   upvotes: number;
   flagged: number;
   presentationId: string;
+  text?: string; // Used here for notes
 }
 
 interface FFTextContent extends FFGenericContent {
@@ -47,7 +48,6 @@ interface FFTextContent extends FFGenericContent {
 interface FFLinkContent extends FFGenericContent {
   link: string;
   filename: string;
-  text?: string; // Used here for notes
 }
 
 interface FFYoutubeContent extends FFGenericContent {

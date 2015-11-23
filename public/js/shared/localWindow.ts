@@ -3,7 +3,7 @@ module Shared{
 	/**
 	 * A special version of the Window object that should only be used for
 	 * windows opened locally. In particular, calling `postMessage` does not
-	 * require a target domain. The `command` function is a utility to post a 
+	 * require a target domain. The `command` function is a utility to post a
 	 * message with the instruction formally separated from the arguments.
 	 */
 	export class LocalWindow{
@@ -30,7 +30,7 @@ module Shared{
 	}
 
 	/**
-	 * Utility for talking to clone windows. Can post a message to a set of 
+	 * Utility for talking to clone windows. Can post a message to a set of
 	 * LocalWindows.
 	 */
 	export class LocalWindowManager{

@@ -9,6 +9,7 @@ export class BaseController {
 		throw "Controllers must implement process";
 	}
 	
+	/** Use the controller for a given express request object, outputting to the given response object */
 	public do(req: Request, res: Response) {
 		if(this.requireLogin && !req.user) {
 			res.send(JSON.stringify(<DataContract>{success:false, data:"Not Logged In"}));
@@ -17,6 +18,7 @@ export class BaseController {
 		}
 	}
 	
+	/** Convert a Firefly Controller to a Express RequestHandler */
 	public static asHandler():RequestHandler {
 		var controller = new this();
 		return (req,res)=>controller.do(req,res);
