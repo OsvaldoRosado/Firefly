@@ -32,7 +32,7 @@ module PresenterApp.Controllers {
 
 			this.scope.$on("instanceCreated", (event, value) => {
 				this.presInstance = value;
-				this.checkForContentContinuously();
+				window.setTimeout(this.checkForContentContinuously.bind(this), 1000);
 			});
 		}
 
@@ -41,13 +41,13 @@ module PresenterApp.Controllers {
 		 * the feed.
 		 */
 		checkForContentContinuously(){
-			if (this.presInstance == undefined){
-				return window.setTimeout(this.checkForContentContinuously.bind(this), 1000);
-			}
 			new Shared.GetContentForPresentationInstance(this.http, this.presInstance.id)
 				.then((result: ng.IHttpPromiseCallbackArg<Array<FFGenericContent>>) => {
 					var submissions = result.data;
-					if (!submissions || !submissions.length) { return; }
+					if (!submissions || !submissions.length) {
+						window.setTimeout(this.checkForContentContinuously.bind(this), 1000);
+						return;
+					}
 
 					var cInc = 0; // content iteration
 					for (var sInc = 0; sInc < submissions.length; sInc++){

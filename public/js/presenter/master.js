@@ -332,7 +332,7 @@ var Shared;
             function FFContentBoxController($scope, $element, $http) {
                 this.scope = $scope;
                 this.http = $http;
-                this.isFlagged = this.content.flagged;
+                this.isFlagged = Boolean(this.content.flagged);
                 this.userVoted = false;
                 this.isQuestion = (this.content.type == FFContentType.Question);
                 if (this.showThumbnail !== undefined) {
@@ -591,18 +591,16 @@ var PresenterApp;
                 this.questions = [];
                 this.scope.$on("instanceCreated", function (event, value) {
                     _this.presInstance = value;
-                    _this.checkForContentContinuously();
+                    window.setTimeout(_this.checkForContentContinuously.bind(_this), 1000);
                 });
             }
             ContentCtrl.prototype.checkForContentContinuously = function () {
                 var _this = this;
-                if (this.presInstance == undefined) {
-                    return window.setTimeout(this.checkForContentContinuously.bind(this), 1000);
-                }
                 new Shared.GetContentForPresentationInstance(this.http, this.presInstance.id)
                     .then(function (result) {
                     var submissions = result.data;
                     if (!submissions || !submissions.length) {
+                        window.setTimeout(_this.checkForContentContinuously.bind(_this), 1000);
                         return;
                     }
                     var cInc = 0;

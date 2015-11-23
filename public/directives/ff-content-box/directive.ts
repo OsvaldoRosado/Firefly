@@ -62,7 +62,7 @@ module Shared.Controllers {
 			this.http = $http;
 
 			// Analyze the content for ideal display
-			this.isFlagged = this.content.flagged;
+			this.isFlagged = Boolean(this.content.flagged);
 			this.userVoted = false;
 			this.isQuestion = (this.content.type == FFContentType.Question);
 
