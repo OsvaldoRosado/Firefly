@@ -50,4 +50,4 @@ Grunt is used for all code compilation (technically transcompilation). Each outp
 * *test.js:* Similar to app.js but launches the FlySwatter testing system
 * *tsd.json:* Configures the typescript compiler
 
-Ignored folders such as node_modules and tmp can be created by following the instructions in "Running Firefly on Your Own"
+Ignored folders such as node_modules can be created by following the instructions in ["Running Firefly on Your Own"](https://github.com/OsvaldoRosado/Firefly/wiki/Running-Firefly-on-Your-Own)
