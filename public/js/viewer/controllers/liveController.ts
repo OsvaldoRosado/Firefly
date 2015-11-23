@@ -17,6 +17,7 @@ module ViewerApp.Controllers {
 
 		instanceID: string;
 		presentationInstance:FFPresentationInstance;
+		expandedIndex: number;
 
 		// Set to false when the user leaves the page, allows the HTTP requests to stop
 		active: boolean;
@@ -26,6 +27,7 @@ module ViewerApp.Controllers {
 			this.scope = $scope;
 			this.http = $http;
 			this.active = true;
+			this.expandedIndex = -1;
 
 			// Get the instance ID from the parent
 			// This is the sort of strong coupling your mom warned you about.
@@ -47,8 +49,8 @@ module ViewerApp.Controllers {
 
 			// Detect when the user leaves the page
 			$scope.$on("$destroy", ()=> {
-	    	this.active = false;
-	    });
+				this.active = false;
+			});
 		}
 
 		/**
@@ -70,9 +72,18 @@ module ViewerApp.Controllers {
 
 				// Make a new request, if the page is still active
 				if (this.active == false) {return;}
-				window.setTimeout(this.managePresentationView.bind(this), 300);
+				window.setTimeout(this.managePresentationView.bind(this), 500);
 			});
 		}
+		
+		/**
+		 * Changes the expanded content (only one box can be open at a time)
+		 */
+		expandItem(index: number) {
+			if (this.expandedIndex == index) {return this.expandedIndex = -1};
+			this.expandedIndex = index;
+		}
+		
 	}
 
 }

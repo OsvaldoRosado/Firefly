@@ -486,7 +486,23 @@ var ViewerApp;
         AppController.prototype.loadSubmittedContent = function () {
             var _this = this;
             new Shared.GetContentForPresentationInstance(this.http, this.presentationInstance.id).then(function (data) {
-                _this.content = data.data;
+                var newContent = data.data;
+                for (var nI in newContent) {
+                    var nRow = newContent[nI];
+                    var isDuplicate = false;
+                    for (var rI in _this.content) {
+                        var rRow = _this.content[rI];
+                        if (nRow.id == rRow.id) {
+                            isDuplicate = true;
+                            break;
+                        }
+                    }
+                    if (isDuplicate) {
+                        continue;
+                    }
+                    _this.content.splice(0, 0, nRow);
+                }
+                setTimeout(_this.loadSubmittedContent.bind(_this), 2000);
             });
         };
         AppController.$inject = ["$rootScope", "$scope", "$http"];
@@ -545,6 +561,7 @@ var ViewerApp;
                 this.scope = $scope;
                 this.http = $http;
                 this.active = true;
+                this.expandedIndex = -1;
                 this.parentApp = $scope["app"];
                 this.instanceID = this.parentApp.instanceID;
                 var presPreview = document.getElementById("presPreview");
@@ -570,8 +587,15 @@ var ViewerApp;
                     if (_this.active == false) {
                         return;
                     }
-                    window.setTimeout(_this.managePresentationView.bind(_this), 300);
+                    window.setTimeout(_this.managePresentationView.bind(_this), 500);
                 });
+            };
+            LiveCtrl.prototype.expandItem = function (index) {
+                if (this.expandedIndex == index) {
+                    return this.expandedIndex = -1;
+                }
+                ;
+                this.expandedIndex = index;
             };
             LiveCtrl.$inject = ["$scope", "$http"];
             return LiveCtrl;
@@ -727,6 +751,7 @@ var ViewerApp;
                         _this.scope.$apply(function () {
                             _this.loading = false;
                             _this.loaded = true;
+                            var linkComponents = _this.link.split("/");
                             _this.preview = {
                                 id: undefined,
                                 presentationId: undefined,
@@ -736,6 +761,7 @@ var ViewerApp;
                                 upvotes: 0,
                                 flagged: 0,
                                 link: _this.link,
+                                filename: linkComponents[linkComponents.length - 1],
                                 text: ""
                             };
                         });
