@@ -281,7 +281,7 @@ var Shared;
     var UpvoteAPIRequest = (function (_super) {
         __extends(UpvoteAPIRequest, _super);
         function UpvoteAPIRequest($http, contentId) {
-            _super.call(this, $http, "/UpvotePresContent", { id: contentId }, Shared.APIMethod.GET);
+            _super.call(this, $http, "/UpvotePresentationContent/" + contentId, Shared.APIMethod.GET);
         }
         return UpvoteAPIRequest;
     })(Shared.APIRequest);
@@ -289,7 +289,7 @@ var Shared;
     var FlagAPIRequest = (function (_super) {
         __extends(FlagAPIRequest, _super);
         function FlagAPIRequest($http, contentId) {
-            _super.call(this, $http, "/FlagPresContent", { id: contentId }, Shared.APIMethod.GET);
+            _super.call(this, $http, "/FlagPresentationContent/" + contentId, Shared.APIMethod.GET);
         }
         return FlagAPIRequest;
     })(Shared.APIRequest);
@@ -333,6 +333,7 @@ var Shared;
                 this.scope = $scope;
                 this.http = $http;
                 this.isFlagged = false;
+                this.userVoted = false;
                 this.isQuestion = (this.content.type == FFContentType.Question);
                 if (this.showThumbnail !== undefined) {
                     return;
@@ -349,8 +350,13 @@ var Shared;
             };
             FFContentBoxController.prototype.upvoteContent = function () {
                 var _this = this;
-                this.content.upvotes += 1;
-                new Shared.UpvoteAPIRequest(this.http, this.content.id).catch(function () {
+                if (this.userVoted) {
+                    return;
+                }
+                new Shared.UpvoteAPIRequest(this.http, this.content.id).then(function (res) {
+                    _this.content.upvotes += 1;
+                    _this.userVoted = true;
+                }).catch(function () {
                     _this.content.upvotes -= 1;
                 });
             };
@@ -613,6 +619,7 @@ var PresenterApp;
                                         q.replies = qsub.replies;
                                     }
                                     found = true;
+                                    q.upvotes = qsub.upvotes;
                                 }
                             }
                             if (!found) {
@@ -622,6 +629,9 @@ var PresenterApp;
                         else {
                             if (_this.content.length <= cInc) {
                                 _this.content.push(sub);
+                            }
+                            else {
+                                _this.content[cInc].upvotes = sub.upvotes;
                             }
                             cInc++;
                         }
