@@ -146,6 +146,20 @@ button.secondary {
   background-color: $callout-light;
 }
 
+iframe.loginframe {
+	width: 92%;
+    height: 94%;
+    position: absolute;
+    top: 0px;
+    margin: 3% 4%;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    z-index: 100;
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.4);
+	outline: 100px solid rgba(0,0,0,0.5);
+}
+
 
 // LIVE PAGE ===============================================================================
 

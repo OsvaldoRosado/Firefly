@@ -156,6 +156,14 @@ var Shared;
         return ReplyQuestionForPresentationInstance;
     })(Shared.APIRequest);
     Shared.ReplyQuestionForPresentationInstance = ReplyQuestionForPresentationInstance;
+    var GetCurrentUserInfo = (function (_super) {
+        __extends(GetCurrentUserInfo, _super);
+        function GetCurrentUserInfo($http) {
+            _super.call(this, $http, "/GetCurrentUserInfo/", {});
+        }
+        return GetCurrentUserInfo;
+    })(Shared.APIRequest);
+    Shared.GetCurrentUserInfo = GetCurrentUserInfo;
 })(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {

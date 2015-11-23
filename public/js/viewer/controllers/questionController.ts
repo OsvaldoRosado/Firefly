@@ -40,6 +40,12 @@ module ViewerApp.Controllers {
 		 * Submits the user's question to the server
 		 */
 		askQuestion(){
+			
+			if (!(<ViewerApp.AppController>this.scope['app']).isLoggedIn) {
+				var app = <ViewerApp.AppController>this.scope['app'];
+				app.login().then(this.askQuestion.bind(this));
+				return
+			}
 
 			// Validate the question
 			if (this.questionText.length < 1) {
@@ -63,10 +69,8 @@ module ViewerApp.Controllers {
 
 			// Send it to the server
 			new Shared.PostContentForPresentationInstance(this.http, this.instanceID, question).then((data)=>{
-				if((<any>data).success) {
-					this.expandedIndex += 1;
-					this.questionText = "";
-					this.parentApp.content.splice(0, 0, question);
+				if(!(<any>data).success) {
+					alert("COULD NOT ASK QUESTION");
 				}
 			});
 		}
@@ -76,6 +80,12 @@ module ViewerApp.Controllers {
 		 */
 		reply(data: string, questionId: string){
 			if (data.length < 1) { return; }
+			
+			if (!(<ViewerApp.AppController>this.scope['app']).isLoggedIn) {
+				var app = <ViewerApp.AppController>this.scope['app'];
+				app.login().then(this.reply.bind(this, data, questionId));
+				return
+			}
 
 			var replyObj: FFTextContent = {
 				id: undefined,
