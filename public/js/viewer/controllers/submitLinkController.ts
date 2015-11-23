@@ -99,6 +99,8 @@ module ViewerApp.Controllers {
 					this.scope.$apply(()=>{
 						this.loading = false;
 						this.loaded = true;
+						
+						var linkComponents = this.link.split("/")
 
 						this.preview = <FFLinkContent>{
 							id: undefined,
@@ -109,6 +111,7 @@ module ViewerApp.Controllers {
 							upvotes: 0,
 							flagged: 0,
 							link: this.link,
+							filename: linkComponents[linkComponents.length - 1],
 							text: ""
 						};
 					});

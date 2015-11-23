@@ -52,9 +52,24 @@ module ViewerApp {
 
 		private loadSubmittedContent(){
 			new Shared.GetContentForPresentationInstance(this.http, this.presentationInstance.id).then((data)=>{
-				this.content = (<any>data).data;
+				var newContent : FFGenericContent[] = <FFGenericContent[]>(<any>data).data;
+				for (var nI in newContent) {
+					var nRow = newContent[nI];
+					
+					var isDuplicate = false;
+					for (var rI in this.content) {
+						var rRow = this.content[rI];
+						if (nRow.id == rRow.id) {
+							isDuplicate = true;
+							break;
+						}
+					}
+					if (isDuplicate) {continue;}
+					
+					this.content.splice(0, 0, nRow);
+				}
 
-				//setTimeout(this.loadSubmittedContent.bind(this), 2000);
+				setTimeout(this.loadSubmittedContent.bind(this), 2000);
 			});
 		}
 	}
