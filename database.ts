@@ -45,6 +45,9 @@ class Database {
 		});
 	}
 	
+	/** Subscribe to database ready notification. Database is not usable before this fires.
+	 *  Subscriber is immediately notified in the case of the database already being ready.
+	 */
 	public notifyOnReady(cb:(ok:boolean)=>void) {
 		if(this.isReady) {
 			cb(this.database !== null);
@@ -53,6 +56,7 @@ class Database {
 		}
 	}
 	
+	/** Method to push a Firefly Model to the Mongo database. */
 	public pushModel(model:BaseModel.BaseModel, cb:(success:Boolean)=>void) {
 		var collection = this.database.collection(model.getType());
 		collection.updateOne({id:model.id}, model.toJSON(), {upsert:true, w:1}, function(err, result) {
@@ -62,6 +66,7 @@ class Database {
 		});
 	}
 	
+	/** Method to get a Firefly Model from the Mongo database using an id as the identifier. */
 	public pullModel<T extends BaseModel.BaseModel>(id:string, model:T, cb:(success:T)=>void) {
 		var collection = this.database.collection(model.getType());
 		collection.findOne({id:id}, function(err, data) {
@@ -78,6 +83,7 @@ class Database {
 		});
 	}
 	
+	/** Method to get Firefly Models out of the Mongo database using an object of the form {key:value} to specify matches. */
 	public pullModels<T extends BaseModel.BaseModel>(match:Object, model:T, cb:(success:T[])=>void) {
 		var collection = this.database.collection(model.getType());
 		collection.find(match, function(err, data) {

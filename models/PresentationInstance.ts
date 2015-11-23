@@ -14,6 +14,9 @@ class PresentationInstance extends Base.BaseModel implements FFPresentationInsta
 	public currentSlide: number = 0;
 	public currentContentId: string = null;
 	
+	/** Create an "instance" of a presentation.
+	 * 	Generates a unique id indicating a specific "viewing" of a presentation and stores it in the database.
+	 */
 	public static fromPresentation(pres:Presentation,cb:(PresentationInstance)=>void) {
 		var instance = new PresentationInstance();
 		
@@ -33,6 +36,9 @@ class PresentationInstance extends Base.BaseModel implements FFPresentationInsta
 		});
 	}
 	
+	/** Updates the current slide number and content id(if any) for the current presentation instance.
+	 *  This is used to keep all clients in sync with the presenter's presentation state.
+	 */
 	public updateCurrentSlideAndContent(slide:number, contentId:string, cb:(success:boolean)=>void) {
 		// Validate slide number
 		Presentation.fromID(this.presentationId, (presentation:Presentation)=>{
