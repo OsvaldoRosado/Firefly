@@ -1,6 +1,6 @@
 {
   "name": "firefly",
-  "version": "0.9",
+  "version": "0.9.0",
   "description": "Firefly - A new way to lecture",
   "main": "app.js",
   "engines": {
