@@ -17,6 +17,9 @@ class PresentationContent extends Base.BaseModel implements FFGenericContent {
 	public flagged: number = 0;
 	public presentationId: string = null;
 	
+	/** Store arbitrary content deriving from FFGenericContent in the database for a given presentation.
+	 * 	Any key/value pairs provided in the data object will be applied directly as properties on the data model.
+	 */
 	public static forPresentation(pres:Presentation,data:any,user:FFUser,cb:(PresentationContent)=>void) {
 		var content = new PresentationContent();
 		

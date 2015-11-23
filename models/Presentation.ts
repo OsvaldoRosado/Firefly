@@ -23,6 +23,9 @@ class Presentation extends Base.BaseModel implements FFPresentation {
 	private static _presentationBase = Config.FILE_SERVER + "/convert/";
 	private static _conversionURL = Config.PROCESSING_SERVER + "/convert";
 	
+	/** Method to construct a Presentation object from a Multer upload.
+	 *  This method will process the uploaded file w/ the processing server and create a database record for it.
+	 */
 	public static fromFile(name: string, user:User, file:Express.Multer.File, cb:(Presentation)=>void):void {	
 		// Prepare the POST payload
 		var form = new FormData();
