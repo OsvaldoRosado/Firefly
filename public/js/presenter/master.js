@@ -144,6 +144,18 @@ var Shared;
         return GetContentForPresentationInstance;
     })(Shared.APIRequest);
     Shared.GetContentForPresentationInstance = GetContentForPresentationInstance;
+    var ReplyQuestionForPresentationInstance = (function (_super) {
+        __extends(ReplyQuestionForPresentationInstance, _super);
+        function ReplyQuestionForPresentationInstance($http, contentId, content) {
+            var reqbody = {
+                contentid: contentId,
+                data: JSON.stringify(content)
+            };
+            _super.call(this, $http, "/replyQuestionForPresentationInstance", reqbody, APIMethod.POST);
+        }
+        return ReplyQuestionForPresentationInstance;
+    })(Shared.APIRequest);
+    Shared.ReplyQuestionForPresentationInstance = ReplyQuestionForPresentationInstance;
 })(Shared || (Shared = {}));
 var Shared;
 (function (Shared) {
@@ -290,7 +302,10 @@ var Shared;
                     content: "=",
                     showThumbnail: "=",
                     expanded: "=",
-                    onToggle: "&"
+                    isForm: "=",
+                    replyValid: "=",
+                    onToggle: "&",
+                    onReply: "&"
                 },
                 controller: Shared.Controllers.FFContentBoxController,
                 controllerAs: "cc",
@@ -534,92 +549,12 @@ var PresenterApp;
                 var _this = this;
                 this.scope = $scope;
                 this.http = $http;
+                this.content = [];
+                this.questions = [];
                 this.scope.$on("instanceCreated", function (event, value) {
                     _this.presInstance = value;
                     _this.checkForContentContinuously();
                 });
-                var testUser1 = {
-                    id: "1",
-                    name: "Keaton Brandt"
-                };
-                var testUser2 = {
-                    id: "2",
-                    name: "Liam Jones"
-                };
-                this.content = [
-                    {
-                        id: "9",
-                        presentationId: "1",
-                        type: FFContentType.Image,
-                        submitter: testUser1,
-                        timestamp: new Date().getTime(),
-                        upvotes: 0,
-                        flagged: 0,
-                        filename: "presenter-mock.png",
-                        text: "Page from our doc detailing the presenter view",
-                        link: "/images/dummy/presenter-mock.png"
-                    },
-                    {
-                        id: "8",
-                        presentationId: "1",
-                        type: FFContentType.Image,
-                        submitter: testUser1,
-                        timestamp: new Date().getTime(),
-                        upvotes: 0,
-                        flagged: 0,
-                        filename: "mobile-upload.png",
-                        text: "This is what people should see when they submit content",
-                        link: "/images/dummy/mobile-upload.png"
-                    },
-                    {
-                        id: "7",
-                        presentationId: "1",
-                        type: FFContentType.Image,
-                        submitter: testUser1,
-                        timestamp: new Date().getTime(),
-                        upvotes: 0,
-                        flagged: 0,
-                        filename: "mobile-live.png",
-                        text: "Mockup of the main view the audience sees.",
-                        link: "/images/dummy/mobile-live.png"
-                    },
-                    {
-                        id: "4",
-                        presentationId: "1",
-                        type: FFContentType.Video,
-                        submitter: testUser2,
-                        timestamp: new Date().getTime(),
-                        upvotes: 0,
-                        flagged: 0,
-                        title: "Bueller, Bueller",
-                        youtubeId: "f4zyjLyBp64",
-                        channelTitle: "blc3211"
-                    },
-                ];
-                this.questions = [
-                    {
-                        id: "4",
-                        presentationId: "1",
-                        type: FFContentType.Question,
-                        submitter: testUser1,
-                        timestamp: new Date().getTime(),
-                        upvotes: 3,
-                        flagged: 0,
-                        text: "What would be a good number of collaborators to have?",
-                        replies: [
-                            {
-                                id: "5",
-                                presentationId: "1",
-                                type: FFContentType.QuestionResponse,
-                                submitter: testUser2,
-                                timestamp: new Date().getTime(),
-                                upvotes: 0,
-                                flagged: 0,
-                                text: "I think it might depend on how complicated your overall class structure is."
-                            }
-                        ]
-                    }
-                ];
             }
             ContentCtrl.prototype.checkForContentContinuously = function () {
                 var _this = this;
@@ -628,21 +563,40 @@ var PresenterApp;
                 }
                 new Shared.GetContentForPresentationInstance(this.http, this.presInstance.id)
                     .then(function (result) {
-                    var _questions = [];
-                    var _content = [];
-                    if (!result.data || !result.data.length) {
+                    var submissions = result.data;
+                    if (!submissions || !submissions.length) {
                         return;
                     }
-                    result.data.forEach(function (submission) {
-                        if (submission.type == FFContentType.Question) {
-                            _questions.push(submission);
+                    var cInc = 0;
+                    for (var sInc = 0; sInc < submissions.length; sInc++) {
+                        var sub = submissions[sInc];
+                        if (sub.type == FFContentType.Question) {
+                            var qsub = sub;
+                            if (_this.questions.length === 0) {
+                                _this.questions.push(qsub);
+                                continue;
+                            }
+                            var found = false;
+                            for (var qInc = 0; qInc < _this.questions.length; qInc++) {
+                                var q = _this.questions[qInc];
+                                if (q.id === qsub.id) {
+                                    if (q.replies.length < qsub.replies.length) {
+                                        q.replies = qsub.replies;
+                                    }
+                                    found = true;
+                                }
+                            }
+                            if (!found) {
+                                _this.questions.push(qsub);
+                            }
                         }
                         else {
-                            _content.push(submission);
+                            if (_this.content.length <= cInc) {
+                                _this.content.push(sub);
+                            }
+                            cInc++;
                         }
-                    });
-                    _this.questions = _questions;
-                    _this.content = _content;
+                    }
                     window.setTimeout(_this.checkForContentContinuously.bind(_this), 1000);
                 });
             };

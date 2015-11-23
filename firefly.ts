@@ -71,7 +71,8 @@ Database.notifyOnReady((dbConnected)=>{
 	app.get("/api/generateShortInstanceURL/:instance", Controllers.GenerateShortInstanceURL.asHandler());
 	app.post("/api/postContentForPresentationInstance", Controllers.PostContentForPresentationInstance.asHandler());
 	app.get("/api/getContentForPresentationInstance/:instanceid", Controllers.GetContentForPresentationInstance.asHandler());
-	
+	app.post("/api/replyQuestionForPresentationInstance", Controllers.ReplyQuestionForPresentationInstance.asHandler());
+
 	// If no matches, use the static files directory
 	// We do a special rewrite for .html
 	app.use((req, res, next) => {
