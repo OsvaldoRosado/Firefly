@@ -46,6 +46,7 @@ module Shared.Controllers {
 		content: FFGenericContent;
 		showThumbnail: boolean;
 		isFlagged: boolean;
+		userVoted: boolean;
 		expanded: boolean;
 		onToggle: Function;
 		onReply: Function;
@@ -61,7 +62,8 @@ module Shared.Controllers {
 			this.http = $http;
 
 			// Analyze the content for ideal display
-			this.isFlagged = false;
+			this.isFlagged = this.content.flagged;
+			this.userVoted = false;
 			this.isQuestion = (this.content.type == FFContentType.Question);
 
 			// If the user specifies a value, our work is done
@@ -86,17 +88,21 @@ module Shared.Controllers {
 
 		// Upvote handler
 		upvoteContent() {
-			this.content.upvotes += 1;
-			new UpvoteAPIRequest(this.http, this.content.id).catch(()=> {
+			if (this.userVoted) { return; }
+			new UpvoteAPIRequest(this.http, this.content.id).then((res)=> {
+				this.content.upvotes += 1;
+				this.userVoted = true;
+			}).catch(() => {
 				this.content.upvotes -= 1;
 			});
 		}
 
 		// Flag handler
 		flagContent() {
+			if (this.isFlagged) { return; }
 			new FlagAPIRequest(this.http, this.content.id).catch(()=> {
 				alert("ERROR: Could not flag content. It may already be deleted");
-			}).then(()=> {
+			}).then((res)=> {
 				this.isFlagged = true;
 			});
 		}

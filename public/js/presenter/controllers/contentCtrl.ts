@@ -41,8 +41,6 @@ module PresenterApp.Controllers {
 		 * the feed.
 		 */
 		checkForContentContinuously(){
-			// TEMPORARY SOLUTION
-			// Assumes submissions are always in the same order and never deleted.
 			if (this.presInstance == undefined){
 				return window.setTimeout(this.checkForContentContinuously.bind(this), 1000);
 			}
@@ -72,6 +70,8 @@ module PresenterApp.Controllers {
 										q.replies = qsub.replies;
 									}
 									found = true;
+									q.upvotes = qsub.upvotes;
+									q.flagged = qsub.flagged;
 								}
 							}
 							if(!found){
@@ -82,6 +82,10 @@ module PresenterApp.Controllers {
 							// content doesn't have replies (thank goodness)
 							if (this.content.length <= cInc){
 								this.content.push(sub)
+							}
+							else {
+								this.content[cInc].upvotes = sub.upvotes;
+								this.content[cInc].flagged = sub.flagged;
 							}
 							cInc++;
 						}
