@@ -16,6 +16,7 @@ module ViewerApp.Controllers {
 		instanceID: string;
 
 		questionText: string;
+		lastQuestionText: string;
 		questionValid: boolean;
 
 		expandedIndex: number;
@@ -40,7 +41,7 @@ module ViewerApp.Controllers {
 		 * Submits the user's question to the server
 		 */
 		askQuestion(){
-			
+
 			if (!(<ViewerApp.AppController>this.scope['app']).isLoggedIn) {
 				var app = <ViewerApp.AppController>this.scope['app'];
 				app.login().then(this.askQuestion.bind(this));
@@ -49,6 +50,8 @@ module ViewerApp.Controllers {
 
 			// Validate the question
 			if (this.questionText.length < 1) {
+				return this.questionValid = false;
+			} else if (this.questionText == this.lastQuestionText) {
 				return this.questionValid = false;
 			}
 			this.questionValid = true;
@@ -71,6 +74,9 @@ module ViewerApp.Controllers {
 			new Shared.PostContentForPresentationInstance(this.http, this.instanceID, question).then((data)=>{
 				if(!(<any>data).success) {
 					alert("COULD NOT ASK QUESTION");
+				} else {
+					this.lastQuestionText = this.questionText;
+					this.questionText = "";
 				}
 			});
 		}
@@ -80,7 +86,7 @@ module ViewerApp.Controllers {
 		 */
 		reply(data: string, questionId: string){
 			if (data.length < 1) { return; }
-			
+
 			if (!(<ViewerApp.AppController>this.scope['app']).isLoggedIn) {
 				var app = <ViewerApp.AppController>this.scope['app'];
 				app.login().then(this.reply.bind(this, data, questionId));
