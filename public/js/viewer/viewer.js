@@ -683,12 +683,16 @@ var ViewerApp;
                 this.instanceID = this.parentApp.instanceID;
             }
             QuestionCtrl.prototype.askQuestion = function () {
+                var _this = this;
                 if (!this.scope['app'].isLoggedIn) {
                     var app = this.scope['app'];
                     app.login().then(this.askQuestion.bind(this));
                     return;
                 }
                 if (this.questionText.length < 1) {
+                    return this.questionValid = false;
+                }
+                else if (this.questionText == this.lastQuestionText) {
                     return this.questionValid = false;
                 }
                 this.questionValid = true;
@@ -706,6 +710,10 @@ var ViewerApp;
                 new Shared.PostContentForPresentationInstance(this.http, this.instanceID, question).then(function (data) {
                     if (!data.success) {
                         alert("COULD NOT ASK QUESTION");
+                    }
+                    else {
+                        _this.lastQuestionText = _this.questionText;
+                        _this.questionText = "";
                     }
                 });
             };
